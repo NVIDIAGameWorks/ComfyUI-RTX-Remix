@@ -1,0 +1,26 @@
+########################################################################################################################
+# Repo tool base settings
+########################################################################################################################
+
+[repo]
+logging = "warn"
+
+# Reposiory Name. It is used for solution name and final package name
+name = "ComfyUI-RTX_Remix"
+
+
+# python is formatted with black+isort:
+[repo_format.python]
+files.include = ["nodes/*.py"]
+files.exclude = []
+python_version = "py311"
+job_count = 1
+
+
+########################################################################################################################
+# Python lint tool
+########################################################################################################################
+
+[repo_lint.flake8]
+files.include = ["nodes/*.py"]
+files.exclude = []
