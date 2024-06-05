@@ -1,0 +1,9 @@
+<config remotes="urm gtl">
+    <remote2 name="urm">
+        <transport actions="download" protocol="https" packageLocation="urm.nvidia.com/artifactory/ct-omniverse-generic/pkgs/${name}/${name}@${version}" />
+    </remote2>
+    <remote2 name="gtl">
+        <transport actions="download list upload"
+            configUrl="https://gitlab-master.nvidia.com/hfannar/packman-transports/raw/main/gtl.toml" />
+    </remote2>
+</config>

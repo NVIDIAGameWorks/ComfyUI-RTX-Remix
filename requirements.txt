@@ -1,0 +1,6 @@
+numpy
+pillow>=10.0.1
+requests
+torch
+torchvision
+torchaudio
