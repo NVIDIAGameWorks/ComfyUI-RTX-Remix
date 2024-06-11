@@ -34,6 +34,7 @@ _file_name = pathlib.Path(__file__).stem
 
 @add_context_input_and_output
 class IngestTexture:
+    """Ingest an image as a texture and save it to disk"""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802

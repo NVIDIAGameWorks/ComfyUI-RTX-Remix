@@ -61,6 +61,7 @@ def validate_texture_types(texture_types: list[str], address: str, port: str):
 
 @add_context_input_and_output
 class GetTextures:
+    """Read the textures matching provided criteria from the currently open project"""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
@@ -185,6 +186,7 @@ class GetTextures:
 
 @add_context_input_and_output
 class TexturesTypes:
+    """Select multiple texture types from a list of supported texture types."""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
@@ -218,6 +220,7 @@ class TexturesTypes:
 
 @add_context_input_and_output
 class TexturesType:
+    """Select from a list of supported texture types."""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
@@ -242,6 +245,7 @@ class TexturesType:
 
 @add_context_input_and_output
 class SetTexture:
+    """Set the texture path on an asset"""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
@@ -284,6 +288,7 @@ class SetTexture:
 
 @add_context_input_and_output
 class TextureTypeToUSDAttribute:
+    """Use this node to get the proper texture attribute on the same asset but for a different texture type"""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802

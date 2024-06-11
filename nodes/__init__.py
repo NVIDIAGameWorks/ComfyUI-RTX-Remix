@@ -72,7 +72,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "RTXRemixStringConstant": "RTX Remix String Constant",
     "RTXRemixTexturesType": "RTX Remix Texture Type",
     "RTXRemixTexturesTypes": "RTX Remix Texture Types",
-    "RTXRemixDefineLayerId": "RTX Remix Define Layer",
+    "RTXRemixDefineLayerId": "RTX Remix Define Layer ID",
     "RTXRemixCreateLayer": "RTX Remix Create Layer",
     "RTXRemixGetLayers": "RTX Remix Get Layers",
     "RTXRemixRemoveLayer": "RTX Remix Remove Layer",

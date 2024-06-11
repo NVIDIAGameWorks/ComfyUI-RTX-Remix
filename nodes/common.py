@@ -92,6 +92,7 @@ def add_context_input_and_output(cls):
 
 
 class RestAPIDetails:
+    """Provide the port information to connect to the RTX Remix Toolkit"""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
@@ -124,6 +125,7 @@ class RestAPIDetails:
 
 @add_context_outputs
 class StartContext:
+    """Use this node to begin a graph, then pass context along to determine execution order."""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
@@ -143,6 +145,7 @@ class StartContext:
 
 
 class EndContext:
+    """Put this node at the end of your graph to evaluate prior nodes"""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
@@ -162,6 +165,8 @@ class EndContext:
 
 
 class StringConstant:
+    """Declare a string constant"""
+
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
         return {

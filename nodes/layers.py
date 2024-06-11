@@ -119,6 +119,7 @@ class DefineLayerId:
 
 @add_context_input_and_output
 class CreateLayer:
+    """Create or Insert a sublayer in the current stage"""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
@@ -198,6 +199,7 @@ class CreateLayer:
 
 @add_context_input_and_output
 class LayerType:
+    """Select from a list of supported layer types."""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
@@ -223,6 +225,7 @@ class LayerType:
 
 @add_context_input_and_output
 class LayerTypes:
+    """Select multiple layer types from a list of supported layer types."""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
@@ -255,6 +258,7 @@ class LayerTypes:
 
 @add_context_input_and_output
 class GetLayers:
+    """Query layer ids from the currently open project"""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
@@ -385,6 +389,7 @@ class _LayerOp:
 
 @add_context_input_and_output
 class MuteLayer(_LayerOp):
+    """Mute or unmute a project layer"""
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -416,6 +421,7 @@ class MuteLayer(_LayerOp):
 
 @add_context_input_and_output
 class RemoveLayer(_LayerOp):
+    """Remove a layer from the project"""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
@@ -447,6 +453,7 @@ class RemoveLayer(_LayerOp):
 
 @add_context_input_and_output
 class SaveLayer(_LayerOp):
+    """Save a project layer"""
 
     def execute(self, layer_id: str) -> tuple[str]:
         address, port = self.context
@@ -460,6 +467,7 @@ class SaveLayer(_LayerOp):
 
 @add_context_input_and_output
 class GetEditTarget:
+    """Get the edit target from the currently open project"""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
@@ -493,6 +501,7 @@ class GetEditTarget:
 
 @add_context_input_and_output
 class SetEditTarget(_LayerOp):
+    """Designate the edit target on the open project to receive modifications"""
 
     def execute(self, layer_id: str) -> tuple[str]:
         address, port = self.context
