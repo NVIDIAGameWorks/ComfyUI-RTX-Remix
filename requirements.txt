@@ -1,6 +1,4 @@
-numpy
-pillow>=10.0.1
-requests
-torch
-torchvision
-torchaudio
+numpy               # SWIPAT filed under: https://nvbugs/4702469
+pillow>=10.0.1      # SWIPAT filed under: https://nvbugs/4702475
+requests            # SWIPAT filed under: https://nvbugs/4702237
+torch               # SWIPAT filed under: https://nvbugs/4702252
