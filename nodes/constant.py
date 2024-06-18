@@ -17,3 +17,4 @@
 
 PREFIX_MENU = "RTXRemix"
 HEADER_LSS_REMIX_VERSION_1_0 = {"Accept": "application/lightspeed.remix.service+json; version=1.0"}
+CONTEXT_TYPE = "RTXRemixContext"

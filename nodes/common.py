@@ -16,14 +16,79 @@
 """
 
 import pathlib
+from collections import namedtuple
 
-from .constant import PREFIX_MENU
+from .constant import PREFIX_MENU, CONTEXT_TYPE
+from .utils import merge_dict
+
 
 _file_name = pathlib.Path(__file__).stem
 
+RemixContext = namedtuple("RemixContext", ["address", "port"])
 
-def get_rest_api_inputs() -> dict[str, dict[str, tuple[str, dict]]]:
-    return {"required": {"address": ("STRING", {"forceInput": True}), "port": ("INT", {"forceInput": True})}}
+
+def get_context_inputs() -> dict[str, dict[str, tuple[str, dict]]]:
+    return {"required": {"context": (CONTEXT_TYPE, {"forceInput": True})}}
+
+
+def get_remix_api_inputs() -> dict[str, dict[str, tuple[str, dict]]]:
+    return {"required": {"address": ("STRING", {"forceInput": True}),"port": ("INT", {"forceInput": True})},}
+
+
+def wrap_input_types_with_context(func):
+    """Decorator to wrap the INPUT_TYPES classmethod and add context input"""
+    def wrapper(*args, **kwargs):
+        return merge_dict(get_context_inputs(), func())
+
+    return wrapper
+
+
+class ContextExecutionFuncWrapper:
+    """Decorator to wrap the execution function providing context and passing it through"""
+    
+    def __init__(self, func):
+        self.func = func
+
+    def __get__(self, instance, owner):
+        def wrapper(*args, **kwargs):
+            # store on instance in case node needs access
+            instance.context: RemixContext = kwargs.pop("context")  # noqa
+            return (instance.context,) + self.func(instance, *args, **kwargs)
+    
+        return wrapper
+
+
+def add_context_outputs(cls):
+    """Node class decorator for adding context outputs"""
+    # add it as first return item (will also usually be first input alphabetically)
+    cls.RETURN_TYPES = (CONTEXT_TYPE,) + getattr(cls, "RETURN_TYPES", ())
+    cls.RETURN_NAMES = ("context",) + getattr(cls, "RETURN_NAMES", ())
+    # this one is optional
+    if hasattr(cls, "OUTPUT_IS_LIST"):
+        cls.OUTPUT_IS_LIST = (False,) + getattr(cls, "OUTPUT_IS_LIST", ())
+    return cls
+
+
+def add_context_input_and_output(cls):
+    """
+    Node class decorator for adding context inputs and outputs.
+
+    This should seamlessly wrap a comfy node class and take care of
+    creating the context input and output and piping it through the
+    node. Access it using self.context within the execution func.
+    """
+    add_context_outputs(cls)
+
+    # wrap input types func
+    setattr(cls, "INPUT_TYPES", wrap_input_types_with_context(cls.INPUT_TYPES))
+
+    # wrap execution function
+    function_name = getattr(cls, "FUNCTION")
+    func = getattr(cls, function_name)
+    wrapped_func = ContextExecutionFuncWrapper(func)
+    setattr(cls, function_name, wrapped_func)
+
+    return cls
 
 
 class RestAPIDetails:
@@ -51,12 +116,49 @@ class RestAPIDetails:
 
     FUNCTION = "get_address"
 
-    # OUTPUT_NODE = False
-
     CATEGORY = f"{PREFIX_MENU}/{_file_name}"
 
     def get_address(self, address, port):
         return address, port
+
+
+@add_context_outputs
+class StartContext:
+
+    @classmethod
+    def INPUT_TYPES(cls):  # noqa N802
+        return {
+            "required": {"address": ("STRING", {"forceInput": True}),"port": ("INT", {"forceInput": True})}
+        }
+
+    RETURN_TYPES = ()
+    RETURN_NAMES = ()
+
+    FUNCTION = "execute"
+
+    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+
+    def execute(self, address, port):
+        return (RemixContext(address, port),)
+
+
+class EndContext:
+
+    @classmethod
+    def INPUT_TYPES(cls):  # noqa N802
+        return {"required": {"context": (CONTEXT_TYPE, {"forceInput": True})}}
+
+    RETURN_TYPES = ()
+    RETURN_NAMES = ()
+
+    FUNCTION = "execute"
+
+    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+
+    OUTPUT_NODE = True
+
+    def execute(self, context):
+        return ()
 
 
 class StringConstant:
@@ -64,7 +166,7 @@ class StringConstant:
     def INPUT_TYPES(cls):  # noqa N802
         return {
             "required": {
-                "string": ("STRING", {"default": "", "multiline": False}),
+                "string": ("STRING", {"default": "", "multiline": True}),
             }
         }
 

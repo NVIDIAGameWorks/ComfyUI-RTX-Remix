@@ -23,9 +23,9 @@ import requests
 import torch
 from PIL import Image, ImageOps
 
-from .common import get_rest_api_inputs
+from .common import get_context_inputs, add_context_input_and_output
 from .constant import HEADER_LSS_REMIX_VERSION_1_0, PREFIX_MENU
-from .utils import merge_dict
+from .utils import merge_dict, check_response_status_code, posix
 
 _texture_types = [
     "DIFFUSE",
@@ -49,9 +49,7 @@ _file_name = pathlib.Path(__file__).stem
 
 def validate_texture_types(texture_types: list[str], address: str, port: str):
     r = requests.get(f"http://{address}:{port}/stagecraft/textures/types", headers=HEADER_LSS_REMIX_VERSION_1_0)
-    if r.status_code != 200:
-        response_dict = json.loads(r.text)
-        raise ValueError(response_dict.get("detail", "Wrong request value"))
+    check_response_status_code(r)
 
     valid_texture_types = set(json.loads(r.text).get("texture_types", []))
 
@@ -61,6 +59,7 @@ def validate_texture_types(texture_types: list[str], address: str, port: str):
             raise ValueError(f"Wrong texture type value {texture_type}. Only those values are supported: {supported_str}")
 
 
+@add_context_input_and_output
 class GetTextures:
 
     @classmethod
@@ -102,9 +101,11 @@ class GetTextures:
                         "forceInput": True,
                     },
                 ),
+                "layer_id": ("STRING", {"forceInput": True}),
+                "exists": ("BOOLEAN", {"default": False}),
             },
         }
-        return merge_dict(get_rest_api_inputs(), inputs)
+        return inputs
 
     RETURN_TYPES = (
         "STRING",
@@ -123,33 +124,36 @@ class GetTextures:
     )
 
     FUNCTION = "get_texture_prims_assets"
-
-    # OUTPUT_NODE = False
-
     CATEGORY = f"{PREFIX_MENU}/{_file_name}"
 
     def get_texture_prims_assets(
         self,
         return_selection: bool,
         filter_session_prims: bool,
-        address: str,
-        port: str,
         asset_hashes: str | None = None,
         texture_types: str | None = None,
+        layer_id: str | None = None,
+        exists: bool = True,
     ) -> tuple[list[str], list[torch.Tensor]]:
 
-        payload = {"selection": return_selection, "filter_session_prims": filter_session_prims}
+        payload = {"selection": return_selection, "filter_session_prims": filter_session_prims, "exists": exists}
         if asset_hashes is not None:
             payload["asset_hashes"] = [item.strip() for item in asset_hashes.split(",")]
         if texture_types is not None:
             payload["texture_types"] = [item.strip() for item in texture_types.split(",")]
+        if layer_id is not None:
+            payload["layer_identifier"] = posix(layer_id)
 
+        address, port = self.context
         r = requests.get(
             f"http://{address}:{port}/stagecraft/textures", params=payload, headers=HEADER_LSS_REMIX_VERSION_1_0
         )
-        if r.status_code != 200:
-            response_dict = json.loads(r.text)
-            raise ValueError(response_dict.get("detail", "Wrong request value"))
+        check_response_status_code(r)
+
+        textures = json.loads(r.text).get("textures", [])
+        if not textures:
+            raise ValueError("No textures found. Please check the parameters of your node.\n"
+                             f"URL: {r.url}, PARAMS: {payload}")
 
         result_attrs = []
         texture_names = []
@@ -167,9 +171,9 @@ class GetTextures:
                     result_attrs.append(usd_attr)
 
         if not result_images:
-            raise ValueError("No texture found. Please check the parameters of your node")
+            raise ValueError(f"No textures found on disk. paths: {', '.join(t[1] for t in textures)}")
 
-        return result_attrs, texture_names, result_images
+        return (result_attrs, texture_names, result_images)
 
     @classmethod
     def IS_CHANGED(cls, **kwargs):  # noqa N802
@@ -179,6 +183,7 @@ class GetTextures:
         return float("nan")
 
 
+@add_context_input_and_output
 class TexturesTypes:
 
     @classmethod
@@ -196,24 +201,22 @@ class TexturesTypes:
                 ),
             }
         }
-        return merge_dict(get_rest_api_inputs(), inputs)
+        return inputs
 
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("texture_types",)
 
     FUNCTION = "get_texture_types"
-
-    # OUTPUT_NODE = False
-
     CATEGORY = f"{PREFIX_MENU}/{_file_name}"
 
-    def get_texture_types(self, texture_types: str, address: str, port: str) -> tuple[str]:
+    def get_texture_types(self, texture_types: str) -> tuple[str]:
         texture_types_list = [tx.strip() for tx in texture_types.split(",")]
-        validate_texture_types(texture_types_list, address, port)
+        validate_texture_types(texture_types_list, self.context.address, self.context.port)
 
         return (texture_types,)
 
 
+@add_context_input_and_output
 class TexturesType:
 
     @classmethod
@@ -224,22 +227,20 @@ class TexturesType:
                 "texture_type": (_texture_types,),
             }
         }
-        return merge_dict(get_rest_api_inputs(), inputs)
+        return inputs
 
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("texture_type",)
 
     FUNCTION = "get_texture_type"
-
-    # OUTPUT_NODE = False
-
     CATEGORY = f"{PREFIX_MENU}/{_file_name}"
 
-    def get_texture_type(self, texture_type: str, address: str, port: str) -> tuple[str]:
-        validate_texture_types([texture_type], address, port)
+    def get_texture_type(self, texture_type: str) -> tuple[str]:
+        validate_texture_types([texture_type], self.context.address, self.context.port)
         return (texture_type,)
 
 
+@add_context_input_and_output
 class SetTexture:
 
     @classmethod
@@ -256,32 +257,32 @@ class SetTexture:
                 ),
             },
         }
-        return merge_dict(get_rest_api_inputs(), inputs)
+        return inputs
 
     FUNCTION = "set_texture"
 
     RETURN_TYPES = ()
+    RETURN_NAMES = ()
 
-    OUTPUT_NODE = True
 
     CATEGORY = f"{PREFIX_MENU}/{_file_name}"
 
-    def set_texture(self, usd_attribute: str, texture_path: str, address: str, port: str, force: bool = False):
+    def set_texture(self, usd_attribute: str, texture_path: str, force: bool = False):
 
         payload = {"force": force, "textures": [[usd_attribute, texture_path]]}
 
         data = json.dumps(payload)
 
+        address, port = self.context
         r = requests.put(
             f"http://{address}:{port}/stagecraft/textures", data=data, headers=HEADER_LSS_REMIX_VERSION_1_0
         )
-        if r.status_code != 200:
-            response_dict = json.loads(r.text)
-            raise ValueError(response_dict.get("detail", "Wrong request value"))
+        check_response_status_code(r)
 
-        return {}  # need to return something
+        return ()  # need to return something
 
 
+@add_context_input_and_output
 class TextureTypeToUSDAttribute:
 
     @classmethod
@@ -299,7 +300,7 @@ class TextureTypeToUSDAttribute:
                 ),
             },
         }
-        return merge_dict(get_rest_api_inputs(), inputs)
+        return inputs
 
     FUNCTION = "get_attr_from_texture_type"
 
@@ -309,16 +310,15 @@ class TextureTypeToUSDAttribute:
 
     CATEGORY = f"{PREFIX_MENU}/{_file_name}"
 
-    def get_attr_from_texture_type(self, usd_attribute: str, texture_type: str, address: str, port: str):
+    def get_attr_from_texture_type(self, usd_attribute: str, texture_type: str):
 
+        address, port = self.context
         r = requests.get(
             f"http://{address}:{port}/stagecraft/textures/{usd_attribute}/material/inputs",
             params={"texture_type": texture_type},
             headers=HEADER_LSS_REMIX_VERSION_1_0
         )
-        if r.status_code != 200:
-            response_dict = json.loads(r.text)
-            raise ValueError(response_dict.get("detail", "Wrong request value"))
+        check_response_status_code(r)
         result_texture_types = json.loads(r.text).get("asset_paths", [])
 
         if not result_texture_types:
