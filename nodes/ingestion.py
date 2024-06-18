@@ -25,13 +25,14 @@ import requests
 import torch
 from PIL import Image
 
-from .common import get_rest_api_inputs
+from .common import get_context_inputs, add_context_input_and_output, RemixContext
 from .constant import HEADER_LSS_REMIX_VERSION_1_0, PREFIX_MENU
-from .utils import merge_dict
+from .utils import merge_dict, check_response_status_code
 
 _file_name = pathlib.Path(__file__).stem
 
 
+@add_context_input_and_output
 class IngestTexture:
 
     @classmethod
@@ -74,7 +75,7 @@ class IngestTexture:
                 ),
             },
         }
-        return merge_dict(get_rest_api_inputs(), inputs)
+        return inputs
 
     FUNCTION = "ingest_texture"
 
@@ -82,7 +83,6 @@ class IngestTexture:
 
     RETURN_NAMES = ("texture_path",)
 
-    OUTPUT_NODE = True
 
     CATEGORY = f"{PREFIX_MENU}/{_file_name}"
 
@@ -93,9 +93,8 @@ class IngestTexture:
         texture_name: str,
         enable_override_output_folder: bool,
         override_output_folder: str,
-        address: str,
-        port: str,
     ):
+        address, port = self.context
         if enable_override_output_folder:
             if not pathlib.Path(override_output_folder).exists():
                 raise FileNotFoundError("Can't overwrite output folder, folder doesn't exist.")
@@ -106,9 +105,7 @@ class IngestTexture:
                 f"http://{address}:{port}/stagecraft/assets/default-directory",
                 headers=HEADER_LSS_REMIX_VERSION_1_0,
             )
-            if r.status_code != 200:
-                response_dict = json.loads(r.text)
-                raise ValueError(response_dict.get("detail", "Wrong request value"))
+            check_response_status_code(r)
             output_folder = json.loads(r.text).get("asset_path", {})
 
         if not os.path.exists(output_folder):
@@ -140,9 +137,7 @@ class IngestTexture:
             headers=HEADER_LSS_REMIX_VERSION_1_0,
         )
         os.remove(str(tmp_image_path))
-        if r.status_code != 200:
-            response_dict = json.loads(r.text)
-            raise ValueError(response_dict.get("detail", "Wrong request value"))
+        check_response_status_code(r)
 
         completed_schemas = json.loads(r.text).get("completed_schemas", {})
         results = None

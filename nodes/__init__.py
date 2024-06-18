@@ -15,7 +15,7 @@
 * limitations under the License.
 """
 
-from .common import RestAPIDetails, StringConstant
+from .common import RestAPIDetails, StringConstant, StartContext, EndContext
 from .ingestion import IngestTexture
 from .textures import (
     GetTextures,
@@ -23,6 +23,18 @@ from .textures import (
     TexturesType,
     TexturesTypes,
     TextureTypeToUSDAttribute,
+)
+from .layers import (
+    SetEditTarget,
+    CreateLayer,
+    DefineLayerId,
+    GetEditTarget,
+    RemoveLayer,
+    GetLayers,
+    SaveLayer,
+    LayerTypes,
+    LayerType,
+    MuteLayer
 )
 
 # A dictionary that contains all nodes you want to export with their names
@@ -36,6 +48,18 @@ NODE_CLASS_MAPPINGS = {
     "RTXRemixStringConstant": StringConstant,
     "RTXRemixTexturesType": TexturesType,
     "RTXRemixTexturesTypes": TexturesTypes,
+    "RTXRemixDefineLayerId": DefineLayerId,
+    "RTXRemixCreateLayer": CreateLayer,
+    "RTXRemixGetLayers": GetLayers,
+    "RTXRemixRemoveLayer": RemoveLayer,
+    "RTXRemixSaveLayer": SaveLayer,
+    "RTXRemixMuteLayer": MuteLayer,
+    "RTXRemixSetEditTarget": SetEditTarget,
+    "RTXRemixGetEditTarget": GetEditTarget,
+    "RTXRemixLayerTypes": LayerTypes,
+    "RTXRemixLayerType": LayerType,
+    "RTXRemixStartContext": StartContext,
+    "RTXRemixEndContext": EndContext,
 }
 
 # A dictionary that contains the friendly/humanly readable titles for the nodes
@@ -48,6 +72,18 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "RTXRemixStringConstant": "RTX Remix String Constant",
     "RTXRemixTexturesType": "RTX Remix Texture Type",
     "RTXRemixTexturesTypes": "RTX Remix Texture Types",
+    "RTXRemixDefineLayerId": "RTX Remix Define Layer",
+    "RTXRemixCreateLayer": "RTX Remix Create Layer",
+    "RTXRemixGetLayers": "RTX Remix Get Layers",
+    "RTXRemixRemoveLayer": "RTX Remix Remove Layer",
+    "RTXRemixSaveLayer": "RTX Remix Save Layer",
+    "RTXRemixMuteLayer": "RTX Remix Mute Layer",
+    "RTXRemixSetEditTarget": "RTX Remix Set Edit Target",
+    "RTXRemixGetEditTarget": "RTX Remix Get Edit Target",
+    "RTXRemixLayerTypes": "RTX Remix Layer Types",
+    "RTXRemixLayerType": "RTX Remix Layer Type",
+    "RTXRemixStartContext": "RTX Remix Start Context",
+    "RTXRemixEndContext": "RTX Remix End Context",
 }
 
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]

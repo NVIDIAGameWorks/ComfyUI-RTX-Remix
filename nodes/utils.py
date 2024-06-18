@@ -14,6 +14,13 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 """
+import logging
+import pathlib
+import json
+
+import requests
+
+_logger = logging.getLogger(__name__)
 
 
 def merge_dict(source: dict, destination: dict) -> dict:
@@ -38,3 +45,20 @@ def merge_dict(source: dict, destination: dict) -> dict:
             destination[key] = value
 
     return destination
+
+
+def check_response_status_code(response: requests.Response) -> None:
+    import pprint
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        r = response.json()
+        _logger.error(f"Requested URL: {response.url}\n"
+                      f"Raw Response: \n\n{pprint.pformat(r)}\n")
+        raise err
+
+
+def posix(layer_id: str | None) -> str:
+    if layer_id is None:
+        return layer_id
+    return pathlib.Path(layer_id).as_posix()
