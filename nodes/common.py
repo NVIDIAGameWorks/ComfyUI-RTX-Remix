@@ -181,3 +181,27 @@ class StringConstant:
 
     def get_string(self, string):
         return (string,)
+
+
+class StringConcatenate:
+    """Concatenate two strings"""
+
+    @classmethod
+    def INPUT_TYPES(cls):  # noqa N802
+        return {
+            "required": {
+                "string1": ("STRING", {"default": "", "forceInput": True}),
+                "string2": ("STRING", {"default": "", "forceInput": True}),
+            },
+            "optional": {
+                "separator": ("STRING", {"default": "_"}),
+            }
+
+        }
+
+    RETURN_TYPES = ("STRING",)
+    FUNCTION = "execute"
+    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+
+    def execute(self, string1, string2, separator="_"):
+        return (string1 + separator + string2,)
