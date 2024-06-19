@@ -15,7 +15,7 @@
 * limitations under the License.
 """
 
-from .common import RestAPIDetails, StringConstant, StartContext, EndContext
+from .common import RestAPIDetails, StringConstant, StartContext, EndContext, StringConcatenate
 from .ingestion import IngestTexture
 from .textures import (
     GetTextures,
@@ -46,6 +46,7 @@ NODE_CLASS_MAPPINGS = {
     "RTXRemixRestAPIDetails": RestAPIDetails,
     "RTXRemixSetTexture": SetTexture,
     "RTXRemixStringConstant": StringConstant,
+    "RTXRemixStringConcatenate": StringConcatenate,
     "RTXRemixTexturesType": TexturesType,
     "RTXRemixTexturesTypes": TexturesTypes,
     "RTXRemixDefineLayerId": DefineLayerId,
@@ -70,6 +71,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "RTXRemixRestAPIDetails": "RTX Remix Rest API Details",
     "RTXRemixSetTexture": "RTX Remix Set Texture",
     "RTXRemixStringConstant": "RTX Remix String Constant",
+    "RTXRemixStringConcatenate": "RTX Remix String Concatenate",
     "RTXRemixTexturesType": "RTX Remix Texture Type",
     "RTXRemixTexturesTypes": "RTX Remix Texture Types",
     "RTXRemixDefineLayerId": "RTX Remix Define Layer ID",

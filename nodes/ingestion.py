@@ -109,9 +109,6 @@ class IngestTexture:
             check_response_status_code(r)
             output_folder = json.loads(r.text).get("asset_path", {})
 
-        if not os.path.exists(output_folder):
-            raise ValueError(f"Output folder doesn't exist: {output_folder}")
-
         full_output_folder, filename, _counter, _subfolder, _filename_prefix = folder_paths.get_save_image_path(
             texture_name, folder_paths.get_output_directory(), texture[0].shape[1], texture[0].shape[0]
         )
