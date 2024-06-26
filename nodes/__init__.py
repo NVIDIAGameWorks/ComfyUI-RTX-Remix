@@ -15,8 +15,30 @@
 * limitations under the License.
 """
 
-from .common import RestAPIDetails, StringConstant, StartContext, EndContext, StringConcatenate
+from .common import (
+    EndContext,
+    InvertBool,
+    RestAPIDetails,
+    StartContext,
+    StringConcatenate,
+    StringConstant,
+    StrToList,
+    Switch,
+)
+from .file import DeleteFile
 from .ingestion import IngestTexture
+from .layers import (
+    CreateLayer,
+    DefineLayerId,
+    GetEditTarget,
+    GetLayers,
+    LayerType,
+    LayerTypes,
+    MuteLayer,
+    RemoveLayer,
+    SaveLayer,
+    SetEditTarget,
+)
 from .textures import (
     GetTextures,
     SetTexture,
@@ -24,68 +46,64 @@ from .textures import (
     TexturesTypes,
     TextureTypeToUSDAttribute,
 )
-from .layers import (
-    SetEditTarget,
-    CreateLayer,
-    DefineLayerId,
-    GetEditTarget,
-    RemoveLayer,
-    GetLayers,
-    SaveLayer,
-    LayerTypes,
-    LayerType,
-    MuteLayer
-)
 
 # A dictionary that contains all nodes you want to export with their names
 # NOTE: names should be globally unique
 NODE_CLASS_MAPPINGS = {
+    "RTXRemixCreateLayer": CreateLayer,
+    "RTXRemixDefineLayerId": DefineLayerId,
+    "RTXRemixDeleteFile": DeleteFile,
+    "RTXRemixEndContext": EndContext,
+    "RTXRemixGetEditTarget": GetEditTarget,
+    "RTXRemixGetLayers": GetLayers,
     "RTXRemixGetTextures": GetTextures,
-    "RTXRemixTextureTypeToUSDAttribute": TextureTypeToUSDAttribute,
     "RTXRemixIngestTexture": IngestTexture,
+    "RTXRemixInvertBool": InvertBool,
+    "RTXRemixLayerType": LayerType,
+    "RTXRemixLayerTypes": LayerTypes,
+    "RTXRemixMuteLayer": MuteLayer,
+    "RTXRemixRemoveLayer": RemoveLayer,
     "RTXRemixRestAPIDetails": RestAPIDetails,
+    "RTXRemixSaveLayer": SaveLayer,
+    "RTXRemixSetEditTarget": SetEditTarget,
     "RTXRemixSetTexture": SetTexture,
-    "RTXRemixStringConstant": StringConstant,
+    "RTXRemixStartContext": StartContext,
     "RTXRemixStringConcatenate": StringConcatenate,
+    "RTXRemixStringConstant": StringConstant,
+    "RTXRemixStrToList": StrToList,
+    "RTXRemixSwitch": Switch,
     "RTXRemixTexturesType": TexturesType,
     "RTXRemixTexturesTypes": TexturesTypes,
-    "RTXRemixDefineLayerId": DefineLayerId,
-    "RTXRemixCreateLayer": CreateLayer,
-    "RTXRemixGetLayers": GetLayers,
-    "RTXRemixRemoveLayer": RemoveLayer,
-    "RTXRemixSaveLayer": SaveLayer,
-    "RTXRemixMuteLayer": MuteLayer,
-    "RTXRemixSetEditTarget": SetEditTarget,
-    "RTXRemixGetEditTarget": GetEditTarget,
-    "RTXRemixLayerTypes": LayerTypes,
-    "RTXRemixLayerType": LayerType,
-    "RTXRemixStartContext": StartContext,
-    "RTXRemixEndContext": EndContext,
+    "RTXRemixTextureTypeToUSDAttribute": TextureTypeToUSDAttribute,
 }
 
 # A dictionary that contains the friendly/humanly readable titles for the nodes
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "RTXRemixCreateLayer": "RTX Remix Create Layer",
+    "RTXRemixDefineLayerId": "RTX Remix Define Layer ID",
+    "RTXRemixDeleteFile": "RTX Remix Delete File",
+    "RTXRemixEndContext": "RTX Remix End Context",
+    "RTXRemixGetEditTarget": "RTX Remix Get Edit Target",
+    "RTXRemixGetLayers": "RTX Remix Get Layers",
     "RTXRemixGetTextures": "RTX Remix Get Textures",
-    "RTXRemixTextureTypeToUSDAttribute": "RTX Remix Texture Type To USD Attribute",
     "RTXRemixIngestTexture": "RTX Remix Ingest Texture",
+    "RTXRemixInvertBool": "RTX Remix Invert Boolean Value",
+    "RTXRemixLayerType": "RTX Remix Layer Type",
+    "RTXRemixLayerTypes": "RTX Remix Layer Types",
+    "RTXRemixMuteLayer": "RTX Remix Mute Layer",
+    "RTXRemixRemoveLayer": "RTX Remix Remove Layer",
     "RTXRemixRestAPIDetails": "RTX Remix Rest API Details",
+    "RTXRemixSaveLayer": "RTX Remix Save Layer",
+    "RTXRemixSetEditTarget": "RTX Remix Set Edit Target",
     "RTXRemixSetTexture": "RTX Remix Set Texture",
-    "RTXRemixStringConstant": "RTX Remix String Constant",
+    "RTXRemixStartContext": "RTX Remix Start Context",
     "RTXRemixStringConcatenate": "RTX Remix String Concatenate",
+    "RTXRemixStringConstant": "RTX Remix String Constant",
+    "RTXRemixStrToList": "RTX Remix String to List",
+    "RTXRemixSwitch": "RTX Remix Switch",
     "RTXRemixTexturesType": "RTX Remix Texture Type",
     "RTXRemixTexturesTypes": "RTX Remix Texture Types",
-    "RTXRemixDefineLayerId": "RTX Remix Define Layer ID",
-    "RTXRemixCreateLayer": "RTX Remix Create Layer",
-    "RTXRemixGetLayers": "RTX Remix Get Layers",
-    "RTXRemixRemoveLayer": "RTX Remix Remove Layer",
-    "RTXRemixSaveLayer": "RTX Remix Save Layer",
-    "RTXRemixMuteLayer": "RTX Remix Mute Layer",
-    "RTXRemixSetEditTarget": "RTX Remix Set Edit Target",
-    "RTXRemixGetEditTarget": "RTX Remix Get Edit Target",
-    "RTXRemixLayerTypes": "RTX Remix Layer Types",
-    "RTXRemixLayerType": "RTX Remix Layer Type",
-    "RTXRemixStartContext": "RTX Remix Start Context",
-    "RTXRemixEndContext": "RTX Remix End Context",
+    "RTXRemixTextureTypeToUSDAttribute": "RTX Remix Texture Type To USD Attribute",
 }
 
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]

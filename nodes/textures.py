@@ -23,9 +23,9 @@ import requests
 import torch
 from PIL import Image, ImageOps
 
-from .common import get_context_inputs, add_context_input_and_output
+from .common import add_context_input_enabled_and_output
 from .constant import HEADER_LSS_REMIX_VERSION_1_0, PREFIX_MENU
-from .utils import merge_dict, check_response_status_code, posix
+from .utils import check_response_status_code, posix
 
 _texture_types = [
     "DIFFUSE",
@@ -55,11 +55,13 @@ def validate_texture_types(texture_types: list[str], address: str, port: str):
 
     for texture_type in texture_types:
         if texture_type not in valid_texture_types:
-            supported_str = ','.join(valid_texture_types)
-            raise ValueError(f"Wrong texture type value {texture_type}. Only those values are supported: {supported_str}")
+            supported_str = ",".join(valid_texture_types)
+            raise ValueError(
+                f"Wrong texture type value {texture_type}. Only those values are supported: {supported_str}"
+            )
 
 
-@add_context_input_and_output
+@add_context_input_enabled_and_output
 class GetTextures:
     """Read the textures matching provided criteria from the currently open project"""
 
@@ -137,6 +139,9 @@ class GetTextures:
         exists: bool = True,
     ) -> tuple[list[str], list[torch.Tensor]]:
 
+        if not self.enable_this_node:  # noqa
+            return ([], [], [])
+
         payload = {"selection": return_selection, "filter_session_prims": filter_session_prims, "exists": exists}
         if asset_hashes is not None:
             payload["asset_hashes"] = [item.strip() for item in asset_hashes.split(",")]
@@ -145,7 +150,7 @@ class GetTextures:
         if layer_id is not None:
             payload["layer_identifier"] = posix(layer_id)
 
-        address, port = self.context
+        address, port = self.context  # noqa
         r = requests.get(
             f"http://{address}:{port}/stagecraft/textures", params=payload, headers=HEADER_LSS_REMIX_VERSION_1_0
         )
@@ -153,8 +158,9 @@ class GetTextures:
 
         textures = json.loads(r.text).get("textures", [])
         if not textures:
-            raise ValueError("No textures found. Please check the parameters of your node.\n"
-                             f"URL: {r.url}, PARAMS: {payload}")
+            raise ValueError(
+                "No textures found. Please check the parameters of your node.\n" f"URL: {r.url}, PARAMS: {payload}"
+            )
 
         result_attrs = []
         texture_names = []
@@ -184,7 +190,7 @@ class GetTextures:
         return float("nan")
 
 
-@add_context_input_and_output
+@add_context_input_enabled_and_output
 class TexturesTypes:
     """Select multiple texture types from a list of supported texture types."""
 
@@ -212,13 +218,15 @@ class TexturesTypes:
     CATEGORY = f"{PREFIX_MENU}/{_file_name}"
 
     def get_texture_types(self, texture_types: str) -> tuple[str]:
+        if not self.enable_this_node:  # noqa
+            return ("",)
         texture_types_list = [tx.strip() for tx in texture_types.split(",")]
-        validate_texture_types(texture_types_list, self.context.address, self.context.port)
+        validate_texture_types(texture_types_list, self.context.address, self.context.port)  # noqa
 
         return (texture_types,)
 
 
-@add_context_input_and_output
+@add_context_input_enabled_and_output
 class TexturesType:
     """Select from a list of supported texture types."""
 
@@ -239,11 +247,13 @@ class TexturesType:
     CATEGORY = f"{PREFIX_MENU}/{_file_name}"
 
     def get_texture_type(self, texture_type: str) -> tuple[str]:
-        validate_texture_types([texture_type], self.context.address, self.context.port)
+        if not self.enable_this_node:  # noqa
+            return ("",)
+        validate_texture_types([texture_type], self.context.address, self.context.port)  # noqa
         return (texture_type,)
 
 
-@add_context_input_and_output
+@add_context_input_enabled_and_output
 class SetTexture:
     """Set the texture path on an asset"""
 
@@ -268,16 +278,18 @@ class SetTexture:
     RETURN_TYPES = ()
     RETURN_NAMES = ()
 
-
     CATEGORY = f"{PREFIX_MENU}/{_file_name}"
 
     def set_texture(self, usd_attribute: str, texture_path: str, force: bool = False):
+
+        if not self.enable_this_node:  # noqa
+            return ()
 
         payload = {"force": force, "textures": [[usd_attribute, texture_path]]}
 
         data = json.dumps(payload)
 
-        address, port = self.context
+        address, port = self.context  # noqa
         r = requests.put(
             f"http://{address}:{port}/stagecraft/textures", data=data, headers=HEADER_LSS_REMIX_VERSION_1_0
         )
@@ -286,7 +298,7 @@ class SetTexture:
         return ()  # need to return something
 
 
-@add_context_input_and_output
+@add_context_input_enabled_and_output
 class TextureTypeToUSDAttribute:
     """Use this node to get the proper texture attribute on the same asset but for a different texture type"""
 
@@ -317,11 +329,14 @@ class TextureTypeToUSDAttribute:
 
     def get_attr_from_texture_type(self, usd_attribute: str, texture_type: str):
 
-        address, port = self.context
+        if not self.enable_this_node:  # noqa
+            return ("",)
+
+        address, port = self.context  # noqa
         r = requests.get(
             f"http://{address}:{port}/stagecraft/textures/{usd_attribute}/material/inputs",
             params={"texture_type": texture_type},
-            headers=HEADER_LSS_REMIX_VERSION_1_0
+            headers=HEADER_LSS_REMIX_VERSION_1_0,
         )
         check_response_status_code(r)
         result_texture_types = json.loads(r.text).get("asset_paths", [])
