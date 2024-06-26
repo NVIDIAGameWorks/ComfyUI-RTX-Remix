@@ -18,9 +18,8 @@
 import pathlib
 from collections import namedtuple
 
-from .constant import PREFIX_MENU, CONTEXT_TYPE
+from .constant import CONTEXT_TYPE, PREFIX_MENU
 from .utils import merge_dict
-
 
 _file_name = pathlib.Path(__file__).stem
 
@@ -31,21 +30,28 @@ def get_context_inputs() -> dict[str, dict[str, tuple[str, dict]]]:
     return {"required": {"context": (CONTEXT_TYPE, {"forceInput": True})}}
 
 
+def get_enabled_inputs() -> dict[str, dict[str, tuple[str, dict]]]:
+    return {"required": {"enable_this_node": ("BOOLEAN", {"default": True})}}
+
+
 def get_remix_api_inputs() -> dict[str, dict[str, tuple[str, dict]]]:
-    return {"required": {"address": ("STRING", {"forceInput": True}),"port": ("INT", {"forceInput": True})},}
+    return {
+        "required": {"address": ("STRING", {"forceInput": True}), "port": ("INT", {"forceInput": True})},
+    }
 
 
-def wrap_input_types_with_context(func):
+def wrap_input_types_with(func, input_fn):
     """Decorator to wrap the INPUT_TYPES classmethod and add context input"""
+
     def wrapper(*args, **kwargs):
-        return merge_dict(get_context_inputs(), func())
+        return merge_dict(input_fn(), func())
 
     return wrapper
 
 
 class ContextExecutionFuncWrapper:
     """Decorator to wrap the execution function providing context and passing it through"""
-    
+
     def __init__(self, func):
         self.func = func
 
@@ -53,8 +59,9 @@ class ContextExecutionFuncWrapper:
         def wrapper(*args, **kwargs):
             # store on instance in case node needs access
             instance.context: RemixContext = kwargs.pop("context")  # noqa
+            instance.enable_this_node: bool = kwargs.pop("enable_this_node")  # noqa, we don't return this as output
             return (instance.context,) + self.func(instance, *args, **kwargs)
-    
+
         return wrapper
 
 
@@ -69,7 +76,7 @@ def add_context_outputs(cls):
     return cls
 
 
-def add_context_input_and_output(cls):
+def add_context_input_enabled_and_output(cls):
     """
     Node class decorator for adding context inputs and outputs.
 
@@ -80,10 +87,11 @@ def add_context_input_and_output(cls):
     add_context_outputs(cls)
 
     # wrap input types func
-    setattr(cls, "INPUT_TYPES", wrap_input_types_with_context(cls.INPUT_TYPES))
+    setattr(cls, "INPUT_TYPES", wrap_input_types_with(cls.INPUT_TYPES, get_context_inputs))  # noqa
+    setattr(cls, "INPUT_TYPES", wrap_input_types_with(cls.INPUT_TYPES, get_enabled_inputs))  # noqa
 
     # wrap execution function
-    function_name = getattr(cls, "FUNCTION")
+    function_name = getattr(cls, "FUNCTION")  # noqa
     func = getattr(cls, function_name)
     wrapped_func = ContextExecutionFuncWrapper(func)
     setattr(cls, function_name, wrapped_func)
@@ -129,9 +137,7 @@ class StartContext:
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
-        return {
-            "required": {"address": ("STRING", {"forceInput": True}),"port": ("INT", {"forceInput": True})}
-        }
+        return {"required": {"address": ("STRING", {"forceInput": True}), "port": ("INT", {"forceInput": True})}}
 
     RETURN_TYPES = ()
     RETURN_NAMES = ()
@@ -195,8 +201,7 @@ class StringConcatenate:
             },
             "optional": {
                 "separator": ("STRING", {"default": "_"}),
-            }
-
+            },
         }
 
     RETURN_TYPES = ("STRING",)
@@ -205,3 +210,83 @@ class StringConcatenate:
 
     def execute(self, string1, string2, separator="_"):
         return (string1 + separator + string2,)
+
+
+# Hack: string type that is always equal in not equal comparisons
+class AnyType(str):
+    def __ne__(self, __value: object) -> bool:
+        return False
+
+
+_any = AnyType("*")
+
+
+class Switch:
+    """Switch to one branch or another depending on the bool value"""
+
+    @classmethod
+    def INPUT_TYPES(cls):  # noqa N802
+        return {
+            "required": {
+                "if_true": (_any, {}),
+                "if_false": (_any, {}),
+                "switcher": (
+                    "BOOLEAN",
+                    {"default": True, "forceInput": True},
+                ),
+            },
+        }
+
+    RETURN_TYPES = (_any,)
+    INPUT_IS_LIST = True  # need this or it will crash
+    OUTPUT_IS_LIST = (True,)
+    FUNCTION = "execute"
+    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+
+    def execute(self, if_true: _any, if_false: _any, switcher: list[bool]):
+        return (if_true if switcher[0] else if_false,)
+
+
+class InvertBool:
+    """Invert a boolean value. For example, True to False, or False to True"""
+
+    @classmethod
+    def INPUT_TYPES(cls):  # noqa N802
+        return {
+            "required": {
+                "value": (
+                    "BOOLEAN",
+                    {"default": True, "forceInput": True},
+                ),
+            },
+        }
+
+    RETURN_TYPES = ("BOOLEAN",)
+    FUNCTION = "execute"
+    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+
+    def execute(self, value: bool):
+        return (not value,)
+
+
+class StrToList:
+    """Convert a string input as a list of strings"""
+
+    @classmethod
+    def INPUT_TYPES(cls):  # noqa N802
+        return {
+            "required": {
+                "value": (
+                    "STRING",
+                    {"forceInput": True},
+                ),
+            },
+        }
+
+    RETURN_TYPES = ("STRING",)
+    OUTPUT_IS_LIST = (True,)
+    FUNCTION = "execute"
+    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+
+    def execute(self, value: str):
+        return ([value],)

@@ -18,15 +18,19 @@
 import abc
 import collections
 import json
-from urllib.parse import quote_plus, unquote
 import pathlib
 import re
+from urllib.parse import quote_plus, unquote
 
 import requests
 
-from .common import get_context_inputs, add_context_input_and_output, RemixContext
+from .common import (
+    RemixContext,
+    add_context_input_enabled_and_output,
+    get_context_inputs,
+)
 from .constant import HEADER_LSS_REMIX_VERSION_1_0, PREFIX_MENU
-from .utils import merge_dict, check_response_status_code, posix
+from .utils import check_response_status_code, merge_dict, posix
 
 NONE = "None"
 _layer_types = [
@@ -36,7 +40,7 @@ _layer_types = [
     "replacement",
     "workfile",
     NONE,
-]   # RestAPI should not be called here. Or if there is a crash, the whole graph would not load
+]  # RestAPI should not be called here. Or if there is a crash, the whole graph would not load
 
 
 _file_name = pathlib.Path(__file__).stem
@@ -59,7 +63,7 @@ def validate_layer_types(layer_types: list[str], address: str, port: str):
 
     for layer_type in layer_types:
         if layer_type not in valid_layer_types:
-            supported_str = ','.join(valid_layer_types)
+            supported_str = ",".join(valid_layer_types)
             raise ValueError(f"Wrong layer type value {layer_type}. Only those values are supported: {supported_str}")
 
 
@@ -91,15 +95,9 @@ class DefineLayerId:
         }
         return inputs
 
-    RETURN_TYPES = (
-        "STRING",
-    )
-    OUTPUT_IS_LIST = (
-        False,
-    )
-    RETURN_NAMES = (
-        "layer_id",
-    )
+    RETURN_TYPES = ("STRING",)
+    OUTPUT_IS_LIST = (False,)
+    RETURN_NAMES = ("layer_id",)
 
     FUNCTION = "execute"
     CATEGORY = f"{PREFIX_MENU}/{_file_name}"
@@ -117,7 +115,7 @@ class DefineLayerId:
         return (layer_id.as_posix(),)
 
 
-@add_context_input_and_output
+@add_context_input_enabled_and_output
 class CreateLayer:
     """Create or Insert a sublayer in the current stage"""
 
@@ -152,15 +150,9 @@ class CreateLayer:
         }
         return inputs
 
-    RETURN_TYPES = (
-        "STRING",
-    )
-    OUTPUT_IS_LIST = (
-        False,
-    )
-    RETURN_NAMES = (
-        "layer_id",
-    )
+    RETURN_TYPES = ("STRING",)
+    OUTPUT_IS_LIST = (False,)
+    RETURN_NAMES = ("layer_id",)
 
     FUNCTION = "create_layer"
 
@@ -178,26 +170,26 @@ class CreateLayer:
         parent_layer_id: str | None = None,
         create_or_insert: bool = True,
     ) -> str:
+        if not self.enable_this_node:  # noqa
+            return ("",)
         payload = {
-          "layer_path": posix(layer_id),
-          "layer_type": None if layer_type == NONE else layer_type,
-          "set_edit_target": set_edit_target,
-          "sublayer_position": sublayer_position,
-          "parent_layer_id": posix(parent_layer_id),
-          "create_or_insert": create_or_insert,
-          "replace_existing": replace_existing,
+            "layer_path": posix(layer_id),
+            "layer_type": None if layer_type == NONE else layer_type,
+            "set_edit_target": set_edit_target,
+            "sublayer_position": sublayer_position,
+            "parent_layer_id": posix(parent_layer_id),
+            "create_or_insert": create_or_insert,
+            "replace_existing": replace_existing,
         }
         data = json.dumps(payload)
-        address, port = self.context
-        r = requests.post(
-            f"http://{address}:{port}/stagecraft/layers", data=data, headers=HEADER_LSS_REMIX_VERSION_1_0
-        )
+        address, port = self.context  # noqa
+        r = requests.post(f"http://{address}:{port}/stagecraft/layers", data=data, headers=HEADER_LSS_REMIX_VERSION_1_0)
         check_response_status_code(r)
 
         return (layer_id,)
 
 
-@add_context_input_and_output
+@add_context_input_enabled_and_output
 class LayerType:
     """Select from a list of supported layer types."""
 
@@ -219,11 +211,13 @@ class LayerType:
     CATEGORY = f"{PREFIX_MENU}/{_file_name}"
 
     def get_layer_type(self, layer_type: str) -> tuple[str]:
-        validate_layer_types([layer_type], self.context.address, self.context.port)
+        if not self.enable_this_node:  # noqa
+            return ("",)
+        validate_layer_types([layer_type], self.context.address, self.context.port)  # noqa
         return (layer_type,)
 
 
-@add_context_input_and_output
+@add_context_input_enabled_and_output
 class LayerTypes:
     """Select multiple layer types from a list of supported layer types."""
 
@@ -251,12 +245,14 @@ class LayerTypes:
     CATEGORY = f"{PREFIX_MENU}/{_file_name}"
 
     def get_layer_types(self, layer_types: str) -> tuple[str]:
+        if not self.enable_this_node:  # noqa
+            return ("",)
         layer_types_list = [t.strip() for t in layer_types.split(",")]
-        validate_layer_types(layer_types_list, self.context.address, self.context.port)
+        validate_layer_types(layer_types_list, self.context.address, self.context.port)  # noqa
         return (layer_types,)
 
 
-@add_context_input_and_output
+@add_context_input_enabled_and_output
 class GetLayers:
     """Query layer ids from the currently open project"""
 
@@ -274,27 +270,34 @@ class GetLayers:
                         "label_off": "immediate only",
                     },
                 ),
+                "crash_if_not_exist": (
+                    "BOOLEAN",
+                    {
+                        "default": True,
+                    },
+                ),
             },
             "optional": {
                 "parent_layer_id": ("STRING", {"forceInput": True}),
-                "regex_filter": ("STRING",
-                                 {"forceInput": True,
-                                  "default": None})
-            }
+                "regex_filter": ("STRING", {"forceInput": True, "default": None}),
+            },
         }
         return inputs
 
     RETURN_TYPES = (
         "STRING",
         "STRING",
+        "BOOLEAN",
     )
     OUTPUT_IS_LIST = (
         True,
         True,
+        False,
     )
     RETURN_NAMES = (
         "layer_ids",
         "layer_types",
+        "all_layer_type_exist",
     )
 
     FUNCTION = "execute"
@@ -306,20 +309,23 @@ class GetLayers:
         layer_types: str,
         layer_count: int = -1,
         sublayers: bool = True,
+        crash_if_not_exist: bool = True,
         parent_layer_id: str | None = None,
         regex_filter: str | None = None,
-    ) -> list[str]:
+    ) -> tuple[list[str], list[str], bool]:
+        if not self.enable_this_node:  # noqa
+            return ([], [], False)
         layer_types_list = [t.strip() for t in layer_types.split(",")]
         params = {
             "layer_types": layer_types_list,
             "layer_count": layer_count,
         }
-        address, port = self.context
+        address, port = self.context  # noqa
         if parent_layer_id:
             r = requests.get(
                 f"http://{address}:{port}/stagecraft/layers/{quote_plus(posix(parent_layer_id))}/sublayers",
                 params=params,
-                headers=HEADER_LSS_REMIX_VERSION_1_0
+                headers=HEADER_LSS_REMIX_VERSION_1_0,
             )
         else:
             r = requests.get(
@@ -327,14 +333,18 @@ class GetLayers:
             )
         check_response_status_code(r)
 
+        layer_ids: list[str] = []
+        layer_types: list[str] = []
+
         layers = json.loads(r.text).get("layers", [])
-        if not layers:
+        if not layers and crash_if_not_exist:
             raise ValueError("No layers found. Please check the parameters of your node")
+        if not layers and not crash_if_not_exist:
+            return (layer_ids, layer_types, False)
 
         seen: set[str] = set()
         layers_to_process = collections.deque(layers)
-        layer_ids: list[str] = []
-        layer_types: list[str] = []
+
         while layers_to_process:
             layer = layers_to_process.popleft()
             layer_id = posix(unquote(layer["layer_id"]))
@@ -347,7 +357,7 @@ class GetLayers:
             if sublayers:
                 layers_to_process.extend(layer["children"])
 
-        return (layer_ids, layer_types)
+        return (layer_ids, layer_types, bool(layer_ids))
 
     @classmethod
     def IS_CHANGED(cls, **kwargs):  # noqa N802
@@ -366,10 +376,7 @@ class _LayerOp:
             "required": {
                 "layer_id": (
                     "STRING",
-                    {
-                        "default": "",
-                        "forceInput": True
-                    },
+                    {"default": "", "forceInput": True},
                 ),
             }
         }
@@ -387,12 +394,12 @@ class _LayerOp:
         raise NotImplementedError()
 
 
-@add_context_input_and_output
+@add_context_input_enabled_and_output
 class MuteLayer(_LayerOp):
     """Mute or unmute a project layer"""
 
     @classmethod
-    def INPUT_TYPES(cls):
+    def INPUT_TYPES(cls):  # noqa
         inputs = {
             "required": {
                 "mute": (
@@ -407,19 +414,21 @@ class MuteLayer(_LayerOp):
         }
         return merge_dict(super().INPUT_TYPES(), inputs)
 
-    def execute(self, layer_id: str, mute: bool) -> tuple[str]:
+    def execute(self, layer_id: str, mute: bool) -> tuple[str]:  # noqa
+        if not self.enable_this_node:  # noqa
+            return ("",)
         payload = {"value": mute}
-        address, port = self.context
+        address, port = self.context  # noqa
         r = requests.put(
             f"http://{address}:{port}/stagecraft/layers/{quote_plus(posix(layer_id))}/mute",
             data=json.dumps(payload),
-            headers=HEADER_LSS_REMIX_VERSION_1_0
+            headers=HEADER_LSS_REMIX_VERSION_1_0,
         )
         check_response_status_code(r)
         return (layer_id,)
 
 
-@add_context_input_and_output
+@add_context_input_enabled_and_output
 class RemoveLayer(_LayerOp):
     """Remove a layer from the project"""
 
@@ -430,42 +439,43 @@ class RemoveLayer(_LayerOp):
             "required": {
                 "parent_layer_id": (
                     "STRING",
-                    {
-                        "default": "",
-                        "forceInput": True
-                    },
+                    {"default": "", "forceInput": True},
                 ),
             }
         }
         return merge_dict(super().INPUT_TYPES(), inputs)
 
-    def execute(self, layer_id: str, parent_layer_id: str) -> tuple[str]:
+    def execute(self, layer_id: str, parent_layer_id: str) -> tuple[str]:  # noqa
+        if not self.enable_this_node:  # noqa
+            return ("",)
         payload = {"parent_layer_id": posix(parent_layer_id)}
-        address, port = self.context
+        address, port = self.context  # noqa
         r = requests.delete(
             f"http://{address}:{port}/stagecraft/layers/{quote_plus(posix(layer_id))}",
             data=json.dumps(payload),
-            headers=HEADER_LSS_REMIX_VERSION_1_0
+            headers=HEADER_LSS_REMIX_VERSION_1_0,
         )
         check_response_status_code(r)
         return (layer_id,)
 
 
-@add_context_input_and_output
+@add_context_input_enabled_and_output
 class SaveLayer(_LayerOp):
     """Save a project layer"""
 
     def execute(self, layer_id: str) -> tuple[str]:
-        address, port = self.context
+        if not self.enable_this_node:  # noqa
+            return ("",)
+        address, port = self.context  # noqa
         r = requests.post(
             f"http://{address}:{port}/stagecraft/layers/{quote_plus(posix(layer_id))}/save",
-            headers=HEADER_LSS_REMIX_VERSION_1_0
+            headers=HEADER_LSS_REMIX_VERSION_1_0,
         )
         check_response_status_code(r)
         return (layer_id,)
 
 
-@add_context_input_and_output
+@add_context_input_enabled_and_output
 class GetEditTarget:
     """Get the edit target from the currently open project"""
 
@@ -483,13 +493,13 @@ class GetEditTarget:
     CATEGORY = f"{PREFIX_MENU}/{_file_name}"
 
     def get_edit_target(self, context: RemixContext) -> tuple[str]:
-        address, port = self.context
-        r = requests.get(
-            f"http://{address}:{port}/stagecraft/layers/target", headers=HEADER_LSS_REMIX_VERSION_1_0
-        )
+        if not self.enable_this_node:  # noqa
+            return ("",)
+        address, port = self.context  # noqa
+        r = requests.get(f"http://{address}:{port}/stagecraft/layers/target", headers=HEADER_LSS_REMIX_VERSION_1_0)
         check_response_status_code(r)
 
-        return (urllib.parse.unquote(json.loads(r.text).get("layer_id")),)
+        return (unquote(json.loads(r.text).get("layer_id")),)
 
     @classmethod
     def IS_CHANGED(cls, **kwargs):  # noqa N802
@@ -499,15 +509,17 @@ class GetEditTarget:
         return float("nan")
 
 
-@add_context_input_and_output
+@add_context_input_enabled_and_output
 class SetEditTarget(_LayerOp):
     """Designate the edit target on the open project to receive modifications"""
 
     def execute(self, layer_id: str) -> tuple[str]:
-        address, port = self.context
+        if not self.enable_this_node:  # noqa
+            return ("",)
+        address, port = self.context  # noqa
         r = requests.put(
             f"http://{address}:{port}/stagecraft/layers/target/{quote_plus(posix(layer_id))}",
-            headers=HEADER_LSS_REMIX_VERSION_1_0
+            headers=HEADER_LSS_REMIX_VERSION_1_0,
         )
         check_response_status_code(r)
         return (layer_id,)  # return an output so that you can make sure this executes before other nodes

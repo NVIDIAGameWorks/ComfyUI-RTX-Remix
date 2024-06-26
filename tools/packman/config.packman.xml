@@ -1,9 +1,11 @@
-<config remotes="urm gtl">
+<config remotes="cloudfront urm">
+    <remote2 name="cloudfront">
+        <transport actions="download" protocol="http" packageLocation="d4i3qtqj3r0z5.cloudfront.net/${name}@${version}" />
+        <transport actions="list" protocol="http" packageLocation="omnipackages.nvidia.com/api/v1/list/cloudfront" timeout="600" />
+    </remote2>
     <remote2 name="urm">
         <transport actions="download" protocol="https" packageLocation="urm.nvidia.com/artifactory/ct-omniverse-generic/pkgs/${name}/${name}@${version}" />
-    </remote2>
-    <remote2 name="gtl">
-        <transport actions="download list upload"
-            configUrl="https://gitlab-master.nvidia.com/hfannar/packman-transports/raw/main/gtl.toml" />
+        <!-- OM-119867: Temporarily setting the timeout to 600s for infra issues -->
+        <transport actions="list" protocol="http" packageLocation="omnipackages.nvidia.com/api/v1/list/artifactory" timeout="600"/>
     </remote2>
 </config>

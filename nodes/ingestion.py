@@ -25,14 +25,14 @@ import requests
 import torch
 from PIL import Image
 
-from .common import get_context_inputs, add_context_input_and_output, RemixContext
+from .common import add_context_input_enabled_and_output
 from .constant import HEADER_LSS_REMIX_VERSION_1_0, PREFIX_MENU
-from .utils import merge_dict, check_response_status_code
+from .utils import check_response_status_code
 
 _file_name = pathlib.Path(__file__).stem
 
 
-@add_context_input_and_output
+@add_context_input_enabled_and_output
 class IngestTexture:
     """Ingest an image as a texture and save it to disk"""
 
@@ -84,7 +84,6 @@ class IngestTexture:
 
     RETURN_NAMES = ("texture_path",)
 
-
     CATEGORY = f"{PREFIX_MENU}/{_file_name}"
 
     def ingest_texture(
@@ -95,7 +94,9 @@ class IngestTexture:
         enable_override_output_folder: bool,
         override_output_folder: str,
     ):
-        address, port = self.context
+        if not self.enable_this_node:  # noqa
+            return ("",)
+        address, port = self.context  # noqa
         if enable_override_output_folder:
             if not pathlib.Path(override_output_folder).exists():
                 raise FileNotFoundError("Can't overwrite output folder, folder doesn't exist.")
