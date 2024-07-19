@@ -9,6 +9,38 @@ logging = "warn"
 name = "ComfyUI-RTX_Remix"
 
 
+########################################################################################################################
+# Package publishing to packman
+########################################################################################################################
+
+[repo_publish]
+enabled = true
+
+packages = ["*"]
+
+########################################################################################################################
+# Packaging
+########################################################################################################################
+
+[repo_package]
+
+[repo_package.packages.main_package]
+
+archive_name = "${conf:repo.name}"
+archive_format = "zip"
+
+windows_max_path_length = 240
+files = [
+    ["**"],
+]
+files_exclude = [
+    ["tools/**"],
+    ["_*/**"],
+    ["repo*"],
+    [".*"],
+]
+
+
 # python is formatted with black+isort:
 [repo_format.python]
 files.include = ["nodes/*.py"]

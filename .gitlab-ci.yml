@@ -1,0 +1,35 @@
+variables:
+  AWS_ACCESS_KEY_ID: $AWS_OMNIVERSEDOCS_ACCESS_KEY_ID
+  AWS_SECRET_ACCESS_KEY: $AWS_OMNIVERSEDOCS_SECRET_ACCESS_KEY
+  DXVK_REMIX_NVIDIA_MIN_DRIVER: 0
+
+stages:
+  - build_package
+  - publish_extensions
+  - publish_package
+  - publish_package_scheduled
+  - gitlab_release
+
+include:
+  # Job definitions
+  - local: tools/ci/gitlab/build/build_package.yml
+  - local: tools/ci/gitlab/gitlab/build_gitlab_package.yml
+  - local: tools/ci/gitlab/gitlab/publish_package.yml
+  - local: tools/ci/gitlab/gitlab/publish_release.yml
+  # Base definitions shared between jobs
+  - local: tools/ci/gitlab/defaults/defaults.yml
+  - local: tools/ci/gitlab/defaults/gitlab_release.yml
+  - local: tools/ci/gitlab/defaults/agents/gpu_agent.yml
+  - local: tools/ci/gitlab/defaults/agents/linux_agent.yml
+  - local: tools/ci/gitlab/defaults/agents/windows_agent.yml
+  - local: tools/ci/gitlab/defaults/vault/linux_vault.yml
+  - local: tools/ci/gitlab/defaults/vault/windows_vault.yml
+  # Vault definitions
+  - project: 'omniverse/sectools/vault'
+    file: '/templates/v3/linux/packman_s3.gitlab-ci.yml'
+  - project: 'omniverse/sectools/vault'
+    file: 'templates/v3/linux/codesign.gitlab-ci.yml'
+  - project: 'omniverse/sectools/vault'
+    file: 'templates/v3/windows/packman_s3.gitlab-ci.yml'
+  - project: 'omniverse/sectools/vault'
+    file: 'templates/v3/windows/codesign.gitlab-ci.yml'
