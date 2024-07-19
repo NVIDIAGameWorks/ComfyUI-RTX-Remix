@@ -1,0 +1,13 @@
+.linux_vault:
+  extends:
+    - .osec:vault:v3:prod_token_job
+  before_script:
+    - set -eu
+    - |
+      mkdir tempbin
+      curl -fsSL $VAULT_LINUX_URL \
+      | bsdtar -xvf- -C tempbin
+      chmod +x tempbin/vault
+      export PATH="$PWD/tempbin:$PATH"
+    - !reference [ .osec:vault:v3:linux, codesign:perform_vault_requests ]
+    - !reference [ .osec:vault:v3:linux, packman_s3:perform_vault_requests ]

@@ -1,0 +1,25 @@
+build-package-gitlab-windows:
+  extends:
+    - build-package-windows
+    - .gitlab_release
+  script:
+    - !reference [build-package-windows, script]
+    - echo (Get-ChildItem  -Filter "_build/packages/*.zip" -Force | ForEach-Object {"ARTEFACT_WIN_ZIP_NAME=$_"}) > gitlab_release_win.env
+  # Artifacts required to make the publishing step work
+  artifacts:
+    reports:
+      # To ensure we've access to this file in the next stage
+      dotenv: gitlab_release_win.env
+
+build-package-gitlab-linux:
+  extends:
+    - build-package-linux
+    - .gitlab_release
+  script:
+    - !reference [build-package-linux, script]
+    - find _build/packages -maxdepth 1 -name "*.zip" -type f -printf "ARTEFACT_LINUX_ZIP_NAME=%f\n" > gitlab_release_linux.env
+  # Artifacts required to make the publishing step work
+  artifacts:
+    reports:
+      # To ensure we've access to this file in the next stage
+      dotenv: gitlab_release_linux.env

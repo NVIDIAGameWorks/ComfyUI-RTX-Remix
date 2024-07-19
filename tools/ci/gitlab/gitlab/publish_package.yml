@@ -1,0 +1,17 @@
+publish-package-gitlab:
+  extends:
+    - .linux_agent
+    - .linux_vault
+    - .gitlab_release
+  needs:
+    - job: build-package-gitlab-linux
+      artifacts: true
+    - job: build-package-gitlab-windows
+      artifacts: true
+  before_script:
+    - !reference [ .linux_vault, before_script ]
+  script:
+    - fail_wr=0
+    - ./repo.sh publish || fail_wr=1
+    - echo "WinRel=${fail_wr}"
+    - '[ "$fail_wr" -eq 0 ] || exit 1'

@@ -1,0 +1,37 @@
+build-package-windows:
+  extends:
+    - .defaults
+    - .windows_agent
+  stage: build_package
+  script:
+    - .\repo.bat package --mode main_package --platform windows-x86_64
+  # Artifacts required to make the publishing step work
+  artifacts:
+    when: on_success
+    paths:
+      - _build/packages
+  rules: ## Automatically run publish job only on merge commit to main
+    - if: $CI_COMMIT_REF_NAME == "main" && $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: always
+    - if: $CI_COMMIT_REF_NAME == "main" && $CI_PIPELINE_SOURCE == "push"
+      when: always
+    - when: never
+
+build-package-linux:
+  extends:
+    - .defaults
+    - .linux_agent
+  stage: build_package
+  script:
+    - ./repo.sh package --mode main_package --platform linux-x86_64
+  # Artifacts required to make the publishing step work
+  artifacts:
+    when: on_success
+    paths:
+      - _build/packages
+  rules: ## Automatically run publish job only on merge commit to main
+    - if: $CI_COMMIT_REF_NAME == "main" && $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: always
+    - if: $CI_COMMIT_REF_NAME == "main" && $CI_PIPELINE_SOURCE == "push"
+      when: always
+    - when: never

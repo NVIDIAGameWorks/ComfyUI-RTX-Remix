@@ -5,7 +5,10 @@
   <dependency name="repo_format" linkPath="../_repo/deps/repo_format">
     <package name="repo_format" version="2.12.5" />
   </dependency>
-  <dependency name="repo_lint" linkPath="../_repo/deps/repo_lint">
-    <package name="repo_lint" version="1.6.1" />
+  <dependency name="repo_package" linkPath="../_repo/deps/repo_package">
+    <package name="repo_package" version="5.9.12" />
   </dependency>
+<!--  <dependency name="repo_lint" linkPath="../_repo/deps/repo_lint">-->
+<!--    <package name="repo_lint" version="1.6.1" />-->
+<!--  </dependency>-->
 </project>

@@ -1,0 +1,6 @@
+.windows_vault:
+  extends:
+    - .osec:vault:v3:prod_token_job
+  before_script:
+    - !reference [ .osec:vault:v3:windows:powershell, packman_s3:perform_vault_requests ]
+    - !reference [ .osec:vault:v3:windows:powershell, codesign:perform_vault_requests ]

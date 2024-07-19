@@ -1,0 +1,3 @@
+.gpu_agent:
+  tags:  &gpu_agent_tags
+    - quadro

@@ -2,7 +2,7 @@
 # Tool name
 command = "class_docs"
 # [python module name or path]:[function name]
-entry_point = "${root}/tools/repoman/class_docs.py:setup_repo_tool"
+entry_point = "${root}/tools/utils/class_docs.py:setup_repo_tool"
 # Python install to use
 python_install = "${root}/../../../python_embeded/python.exe"
 # Root module to import
@@ -12,3 +12,17 @@ module = "${root}/nodes/__init__.py"
 file_path = "${root}/README.md"
 # Header of section where change is required
 section_header = "## Nodes"
+
+
+[repo_get_release_changelog]
+# Tool name
+command = "get_release_changelog"
+# [python module name or path]:[function name]
+entry_point = "${root}/tools/utils/repo_get_release_changelog.py:setup_repo_tool"
+
+# Name of required file
+file_name = "CHANGELOG.md"
+# Header of section where change is required
+section_header = "[Unreleased]"
+# Pattern delineating sections
+section_pattern = "\n## "

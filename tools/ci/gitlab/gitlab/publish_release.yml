@@ -1,0 +1,43 @@
+publish-gitlab-release:
+  extends:
+    - .gitlab_release
+    - .windows_agent
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  tags:
+    - release-cli
+  needs:
+    - job: publish-package-gitlab
+      artifacts: true
+    - job: build-package-gitlab-linux  # to get the env
+      artifacts: true
+    - job: build-package-gitlab-windows  # to get the env
+      artifacts: true
+  script:
+    - echo "running release_job for $env:CI_COMMIT_TAG"
+    - echo "grabbing zip file $env:ARTEFACT_WIN_ZIP_NAME and $env:ARTEFACT_LINUX_ZIP_NAME"
+    - .\repo.bat get_release_changelog -s _current_changelog.md -sh "[$env:CI_COMMIT_TAG]"
+    - $env:ENCODED_ARTEFACT_WIN_ZIP_NAME=[URI]::EscapeDataString("$env:ARTEFACT_WIN_ZIP_NAME")
+    - echo "encoded window zip name is $env:ENCODED_ARTEFACT_WIN_ZIP_NAME"
+    - $env:ENCODED_ARTEFACT_LINUX_ZIP_NAME=[URI]::EscapeDataString("$env:ARTEFACT_LINUX_ZIP_NAME")
+    - echo "encoded linux zip name is $env:ENCODED_ARTEFACT_LINUX_ZIP_NAME"
+    - $env:WIN_URL="$env:PACKMAN_CLOUDFRONT_URL/$env:ENCODED_ARTEFACT_WIN_ZIP_NAME"
+    - echo "full asset url for WIN is $env:WIN_URL"
+    - $env:LINUX_URL="$env:PACKMAN_CLOUDFRONT_URL/$env:ENCODED_ARTEFACT_LINUX_ZIP_NAME"
+    - echo "full asset url for LINUX is $env:LINUX_URL"
+    - echo "token is $env:CI_JOB_TOKEN"
+    - echo "token is CI_JOB_TOKEN"
+
+    - $assets_win = @{}
+    - $assets_win.Add("name", "windows-x86_64.release")
+    - $assets_win.Add("url", $env:WIN_URL)
+    - $assets_win = $assets_win | ConvertTo-Json
+    - $assets_win = $assets_win.replace('"','\"')
+
+    - $assets_linux = @{}
+    - $assets_linux.Add("name", "linux-x86_64.release")
+    - $assets_linux.Add("url", $env:LINUX_URL)
+    - $assets_linux = $assets_linux | ConvertTo-Json
+    - $assets_linux = $assets_linux.replace('"','\"')
+
+    # using release feature from the yaml doesn't work with powershell. Need to run the CLI directly
+    - release-cli --private-token $env:GITLAB_RELEASE_TOKEN create --name "$env:CI_COMMIT_TAG" --description "_current_changelog.md" --tag-name "$env:CI_COMMIT_TAG" --ref "$env:CI_COMMIT_SHA" --assets-link=$assets_win --assets-link=$assets_linux
