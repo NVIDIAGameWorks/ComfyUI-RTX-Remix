@@ -26,6 +26,8 @@ packages = ["*"]
 
 [repo_package.packages.main_package]
 
+default = true
+omniverse_flow_version_scheme = true
 archive_name = "${conf:repo.name}"
 archive_format = "zip"
 
