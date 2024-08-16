@@ -1,0 +1,15 @@
+[project]
+name = "comfyui-rtx-remix"
+description = "Use ComfyUI with RTX Remix to remaster classic games [a/https://github.com/NVIDIAGameWorks/rtx-remix](https://github.com/NVIDIAGameWorks/rtx-remix)"
+version = "1.0.0"
+license = {file = "LICENSE"}
+dependencies = ["numpy               # SWIPAT filed under: https://nvbugs/4702469", "pillow>=10.0.1      # SWIPAT filed under: https://nvbugs/4702475", "requests            # SWIPAT filed under: https://nvbugs/4702237", "torch               # SWIPAT filed under: https://nvbugs/4702252"]
+
+[project.urls]
+Repository = "https://github.com/NVIDIAGameWorks/ComfyUI-RTX-Remix"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI-RTX-Remix"
+Icon = ""
