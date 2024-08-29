@@ -88,7 +88,7 @@ class DefineLayerId:
                 "directories": (
                     "STRING",
                     {
-                        "default": None,
+                        "default": "",
                     },
                 ),
             },
@@ -106,8 +106,8 @@ class DefineLayerId:
         self,
         name: str,
         parent_layer_id: str | None = None,
-        directories: str | None = None,
-    ) -> str:
+        directories: str = "",
+    ) -> tuple[str]:
         layer_id_dir = pathlib.Path(parent_layer_id).parent
         if directories:
             layer_id_dir = layer_id_dir / directories
@@ -279,7 +279,7 @@ class GetLayers:
             },
             "optional": {
                 "parent_layer_id": ("STRING", {"forceInput": True}),
-                "regex_filter": ("STRING", {"forceInput": True, "default": None}),
+                "regex_filter": ("STRING", {"forceInput": True, "default": ""}),
             },
         }
         return inputs
@@ -311,7 +311,7 @@ class GetLayers:
         sublayers: bool = True,
         crash_if_not_exist: bool = True,
         parent_layer_id: str | None = None,
-        regex_filter: str | None = None,
+        regex_filter: str = "",
     ) -> tuple[list[str], list[str], bool]:
         if not self.enable_this_node:  # noqa
             return ([], [], False)
