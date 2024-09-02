@@ -59,11 +59,11 @@ Note: for subsequent runs: disable the "Create Layer" portion of the graph since
 
 Use this graph to start your own ai workflow and modify textures in RTX Remix.
 
-### Plug n Play PBRify workflow
+### Plug n Play PBRify_Remix workflow
 `./workflows/rtx_remix_pbrify_workflow.png`
 
 ![Template](workflows/rtx_remix_pbrify_workflow.png "PBRify Workflow")
 
-A working example of an upscaling workflow to upscale the diffuse textures in your mod. This will create Normal, Roughness and Height maps using https://github.com/Kim2091/PBRify_Remix
+An upscaling workflow to upscale the diffuse textures in your mod. This will create Normal, Roughness and Height maps using [PBRify_Remix](https://github.com/Kim2091/PBRify_Remix) 
 
-This graph requires downloading some custom nodes and models from the above PBRify repo. Detailed instructions are located here: https://github.com/Kim2091/PBRify_Remix?tab=readme-ov-file#comfyui
+Steps to use it effectively are located [here](https://github.com/Kim2091/PBRify_Remix?tab=readme-ov-file#comfyui). This workflow requires additional files.
