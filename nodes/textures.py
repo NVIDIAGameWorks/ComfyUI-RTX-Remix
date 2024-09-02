@@ -114,8 +114,10 @@ class GetTextures:
         "STRING",
         "STRING",
         "IMAGE",
+        "MASK",
     )
     OUTPUT_IS_LIST = (
+        True,
         True,
         True,
         True,
@@ -124,6 +126,7 @@ class GetTextures:
         "usd_attributes",
         "texture_names",
         "textures",
+        "masks",
     )
 
     FUNCTION = "get_texture_prims_assets"
@@ -137,10 +140,10 @@ class GetTextures:
         texture_types: str | None = None,
         layer_id: str | None = None,
         exists: bool = True,
-    ) -> tuple[list[str], list[torch.Tensor]]:
+    ) -> tuple[list[str], list[str], list[torch.Tensor], list[torch.Tensor]]:
 
         if not self.enable_this_node:  # noqa
-            return ([], [], [])
+            return ([], [], [], [])
 
         payload = {"selection": return_selection, "filter_session_prims": filter_session_prims, "exists": exists}
         if asset_hashes is not None:
@@ -165,6 +168,7 @@ class GetTextures:
         result_attrs = []
         texture_names = []
         result_images = []
+        result_masks = []
         for usd_attr, texture_path in json.loads(r.text).get("textures", []):
             if not pathlib.Path(texture_path).exists():
                 continue
@@ -176,11 +180,19 @@ class GetTextures:
                     result_images.append(image)
                     texture_names.append(pathlib.Path(texture_path).stem)
                     result_attrs.append(usd_attr)
+                    
+                    if 'A' in img_1.getbands():
+                        mask = np.array(img_1.getchannel('A')).astype(np.float32) / 255.0
+                        mask = 1. - torch.from_numpy(mask)
+                    else:
+                        mask = torch.zeros((image.shape[2], image.shape[3]), dtype=torch.float32, device="cpu")
+                    result_masks.append(mask.unsqueeze(0))
 
         if not result_images:
             raise ValueError(f"No textures found on disk. paths: {', '.join(t[1] for t in textures)}")
 
-        return (result_attrs, texture_names, result_images)
+        return (result_attrs, texture_names, result_images, result_masks)
+
 
     @classmethod
     def IS_CHANGED(cls, **kwargs):  # noqa N802
@@ -188,6 +200,7 @@ class GetTextures:
         Always process the node in case the selection in the RTX Remix app changed
         """
         return float("nan")
+
 
 
 @add_context_input_enabled_and_output
