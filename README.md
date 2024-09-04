@@ -1,5 +1,7 @@
 # ComfyUI-RTX_Remix
 
+[_TOC_]
+
 ## Installation
 
 - Navigate to your `/ComfyUI/custom_nodes/` folder
