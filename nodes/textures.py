@@ -193,14 +193,12 @@ class GetTextures:
 
         return (result_attrs, texture_names, result_images, result_masks)
 
-
     @classmethod
     def IS_CHANGED(cls, **kwargs):  # noqa N802
         """
         Always process the node in case the selection in the RTX Remix app changed
         """
         return float("nan")
-
 
 
 @add_context_input_enabled_and_output
