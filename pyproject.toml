@@ -12,4 +12,4 @@ Repository = "https://github.com/NVIDIAGameWorks/ComfyUI-RTX-Remix"
 [tool.comfy]
 PublisherId = "nvida-gameworks"
 DisplayName = "ComfyUI-RTX-Remix"
-Icon = "remix.png"
+Icon = "images/remix.png"
