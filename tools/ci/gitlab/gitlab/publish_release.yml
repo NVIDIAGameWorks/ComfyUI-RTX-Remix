@@ -3,8 +3,6 @@ publish-gitlab-release:
     - .gitlab_release
     - .windows_agent
   image: registry.gitlab.com/gitlab-org/release-cli:latest
-  tags:
-    - release-cli
   needs:
     - job: publish-package-gitlab
       artifacts: true
