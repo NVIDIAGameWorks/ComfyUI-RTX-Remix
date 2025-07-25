@@ -146,7 +146,7 @@ class IngestTexture:
 
 @add_context_input_enabled_and_output
 class GetDefaultDirectory:
-    """Get the default directory from RTX Remix before closing project"""
+    """Get the default ingestion directory of the currently opened project"""
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802

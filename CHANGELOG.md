@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [1.1.1] - 2025-07-25
+
+### Fixed
+- Fixed docstring and aux ID for nodes in the template workflow
+
 ## [1.1.0] - 2025-07-24
 
 ### Added
@@ -31,15 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Path handling compatibility for URLs with spaces when calling toolkit
 
-### Removed
-
 ## [2024.0.0]
 
 ### Added
 - First release
-
-### Changed
-
-### Fixed
-
-### Removed

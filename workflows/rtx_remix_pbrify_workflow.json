@@ -36,7 +36,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixRestAPIDetails"
       },
@@ -81,7 +81,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStartContext"
       },
@@ -133,7 +133,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixLayerType"
       },
@@ -218,7 +218,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixGetLayers"
       },
@@ -281,7 +281,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixDeleteFile"
       },
@@ -1596,7 +1596,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConcatenate"
       },
@@ -1640,7 +1640,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConcatenate"
       },
@@ -1684,7 +1684,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConcatenate"
       },
@@ -1728,7 +1728,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConcatenate"
       },
@@ -2130,7 +2130,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixSetEditTarget"
       },
@@ -2212,7 +2212,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTexturesType"
       },
@@ -2279,7 +2279,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixIngestTexture"
       },
@@ -2326,7 +2326,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTexturesType"
       },
@@ -2393,7 +2393,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixIngestTexture"
       },
@@ -2510,7 +2510,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTexturesType"
       },
@@ -2577,7 +2577,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixIngestTexture"
       },
@@ -2694,7 +2694,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTexturesType"
       },
@@ -2741,7 +2741,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixLayerType"
       },
@@ -2817,7 +2817,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixGetLayers"
       },
@@ -3296,7 +3296,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTextureTypeToUSDAttribute"
       },
@@ -3527,7 +3527,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTextureTypeToUSDAttribute"
       },
@@ -3576,7 +3576,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixSetTexture"
       },
@@ -3633,7 +3633,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTextureTypeToUSDAttribute"
       },
@@ -4077,7 +4077,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTextureTypeToUSDAttribute"
       },
@@ -4110,7 +4110,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConstant"
       },
@@ -4143,7 +4143,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConstant"
       },
@@ -4176,7 +4176,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConstant"
       },
@@ -4209,7 +4209,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConstant"
       },
@@ -4258,7 +4258,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixSetTexture"
       },
@@ -4308,7 +4308,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixSetTexture"
       },
@@ -4358,7 +4358,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixSetTexture"
       },
@@ -4442,7 +4442,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixGetTextures"
       },
@@ -4492,7 +4492,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTexturesType"
       },
@@ -4570,7 +4570,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixGetLayers"
       },
@@ -4623,7 +4623,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixSwitch"
       },
@@ -4654,7 +4654,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConstant"
       },
@@ -4735,7 +4735,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixLayerType"
       },
@@ -4804,7 +4804,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConstant"
       },
@@ -4849,7 +4849,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixDefineLayerId"
       },
@@ -4974,7 +4974,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixLayerType"
       },
@@ -5813,7 +5813,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixCreateLayer"
       },
@@ -5848,7 +5848,7 @@
       ],
       "outputs": [],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixEndContext"
       },
@@ -5912,7 +5912,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixIngestTexture"
       },
@@ -6232,7 +6232,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixInvertBool"
       },
@@ -6305,7 +6305,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixGetLayers"
       },
@@ -6424,7 +6424,7 @@
         }
       ],
       "properties": {
-        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "aux_id": "NVIDIAGameWorks/ComfyUI-RTX-Remix",
         "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixGetDefaultDirectory"
       },
