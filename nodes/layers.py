@@ -20,7 +20,7 @@ import collections
 import json
 import pathlib
 import re
-from urllib.parse import quote_plus, unquote
+from urllib.parse import quote, unquote
 
 import requests
 
@@ -329,7 +329,7 @@ class GetLayers:
         address, port = self.context  # noqa
         if parent_layer_id:
             r = requests.get(
-                f"http://{address}:{port}/stagecraft/layers/{quote_plus(posix(parent_layer_id))}/sublayers",
+                f"http://{address}:{port}/stagecraft/layers/{quote(posix(parent_layer_id), safe='')}/sublayers",
                 params=params,
                 headers=HEADER_LSS_REMIX_VERSION_1_0,
             )
@@ -433,7 +433,7 @@ class MuteLayer(_LayerOp):
         payload = {"value": mute}
         address, port = self.context  # noqa
         r = requests.put(
-            f"http://{address}:{port}/stagecraft/layers/{quote_plus(posix(layer_id))}/mute",
+            f"http://{address}:{port}/stagecraft/layers/{quote(posix(layer_id), safe='')}/mute",
             data=json.dumps(payload),
             headers=HEADER_LSS_REMIX_VERSION_1_0,
         )
@@ -464,7 +464,7 @@ class RemoveLayer(_LayerOp):
         payload = {"parent_layer_id": posix(parent_layer_id)}
         address, port = self.context  # noqa
         r = requests.delete(
-            f"http://{address}:{port}/stagecraft/layers/{quote_plus(posix(layer_id))}",
+            f"http://{address}:{port}/stagecraft/layers/{quote(posix(layer_id), safe='')}",
             data=json.dumps(payload),
             headers=HEADER_LSS_REMIX_VERSION_1_0,
         )
@@ -481,7 +481,7 @@ class SaveLayer(_LayerOp):
             return ("",)
         address, port = self.context  # noqa
         r = requests.post(
-            f"http://{address}:{port}/stagecraft/layers/{quote_plus(posix(layer_id))}/save",
+            f"http://{address}:{port}/stagecraft/layers/{quote(posix(layer_id), safe='')}/save",
             headers=HEADER_LSS_REMIX_VERSION_1_0,
         )
         check_response_status_code(r)
@@ -531,8 +531,98 @@ class SetEditTarget(_LayerOp):
             return ("",)
         address, port = self.context  # noqa
         r = requests.put(
-            f"http://{address}:{port}/stagecraft/layers/target/{quote_plus(posix(layer_id))}",
+            f"http://{address}:{port}/stagecraft/layers/target/{quote(posix(layer_id), safe='')}",
             headers=HEADER_LSS_REMIX_VERSION_1_0,
         )
         check_response_status_code(r)
         return (layer_id,)  # return an output so that you can make sure this executes before other nodes
+
+
+@add_context_input_enabled_and_output
+class CloseProject:
+    """Close the currently open project"""
+
+    @classmethod
+    def INPUT_TYPES(cls):  # noqa N802
+        inputs = get_context_inputs()
+        inputs["optional"] = {
+            "force": ("BOOLEAN", {"default": False}),
+        }
+        return inputs
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("status",)
+
+    FUNCTION = "close_project"
+
+    OUTPUT_NODE = False
+
+    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+
+    def close_project(self, force: bool = False) -> tuple[str]:
+        if not self.enable_this_node:  # noqa
+            return ("disabled",)
+        address, port = self.context  # noqa
+        url = f"http://{address}:{port}/stagecraft/project"
+        if force:
+            url += "?force=true"
+        r = requests.delete(
+            url,
+            headers=HEADER_LSS_REMIX_VERSION_1_0,
+        )
+        check_response_status_code(r)
+        return ("closed",)
+
+
+@add_context_input_enabled_and_output
+class OpenProject(_LayerOp):
+    """Open a project using the specified layer ID"""
+
+    def execute(self, layer_id: str) -> tuple[str]:
+        if not self.enable_this_node:  # noqa
+            return ("",)
+        address, port = self.context  # noqa
+        r = requests.put(
+            f"http://{address}:{port}/stagecraft/project/{quote(posix(layer_id), safe='')}",
+            headers=HEADER_LSS_REMIX_VERSION_1_0,
+        )
+        check_response_status_code(r)
+        return (layer_id,)
+
+
+@add_context_input_enabled_and_output
+class GetLoadedProject:
+    """Get the currently loaded project"""
+
+    @classmethod
+    def INPUT_TYPES(cls):  # noqa N802
+        return get_context_inputs()
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("layer_id",)
+
+    FUNCTION = "get_loaded_project"
+
+    OUTPUT_NODE = False
+
+    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+
+    def get_loaded_project(self) -> tuple[str]:
+        if not self.enable_this_node:  # noqa
+            return ("",)
+        address, port = self.context  # noqa
+        r = requests.get(
+            f"http://{address}:{port}/stagecraft/project/",
+            headers=HEADER_LSS_REMIX_VERSION_1_0,
+        )
+        check_response_status_code(r)
+        response_data = json.loads(r.text)
+        layer_id = response_data.get("layer_id", "")
+        return (layer_id,)
+
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):  # noqa N802
+        """
+        Always process the node in case the loaded project in the RTX Remix app changed
+        """
+        return float("nan")

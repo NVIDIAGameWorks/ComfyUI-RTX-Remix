@@ -1,8 +1,8 @@
 {
   "id": "a10ffcc8-e192-40fd-8248-34af532b4f20",
   "revision": 0,
-  "last_node_id": 171,
-  "last_link_id": 273,
+  "last_node_id": 176,
+  "last_link_id": 283,
   "nodes": [
     {
       "id": 3,
@@ -36,6 +36,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixRestAPIDetails"
       },
       "widgets_values": [
@@ -79,6 +81,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStartContext"
       },
       "widgets_values": []
@@ -95,7 +99,7 @@
         102
       ],
       "flags": {},
-      "order": 133,
+      "order": 138,
       "mode": 0,
       "inputs": [
         {
@@ -129,6 +133,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixLayerType"
       },
       "widgets_values": [
@@ -148,7 +154,7 @@
         190
       ],
       "flags": {},
-      "order": 139,
+      "order": 144,
       "mode": 0,
       "inputs": [
         {
@@ -212,6 +218,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixGetLayers"
       },
       "widgets_values": [
@@ -233,7 +241,7 @@
         102
       ],
       "flags": {},
-      "order": 146,
+      "order": 151,
       "mode": 0,
       "inputs": [
         {
@@ -273,6 +281,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixDeleteFile"
       },
       "widgets_values": [
@@ -346,6 +356,8 @@
         }
       ],
       "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
         "Node name for S&R": "MaskToImage"
       },
       "widgets_values": []
@@ -386,6 +398,8 @@
         }
       ],
       "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
         "Node name for S&R": "ImageUpscaleWithModel"
       },
       "widgets_values": []
@@ -457,6 +471,8 @@
         }
       ],
       "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
         "Node name for S&R": "ImageToMask"
       },
       "widgets_values": [
@@ -499,6 +515,8 @@
         }
       ],
       "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
         "Node name for S&R": "ImageUpscaleWithModel"
       },
       "widgets_values": []
@@ -539,6 +557,8 @@
         }
       ],
       "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
         "Node name for S&R": "JoinImageWithAlpha"
       },
       "widgets_values": []
@@ -567,6 +587,8 @@
       "outputs": [],
       "title": "Before Preview",
       "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
         "Node name for S&R": "PreviewImage"
       },
       "widgets_values": []
@@ -583,7 +605,7 @@
         258
       ],
       "flags": {},
-      "order": 50,
+      "order": 51,
       "mode": 0,
       "inputs": [
         {
@@ -595,41 +617,11 @@
       "outputs": [],
       "title": "After Preview",
       "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
         "Node name for S&R": "PreviewImage"
       },
       "widgets_values": []
-    },
-    {
-      "id": 29,
-      "type": "UpscaleModelLoader",
-      "pos": [
-        11209.5498046875,
-        1402.4051513671875
-      ],
-      "size": [
-        270,
-        58
-      ],
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "UPSCALE_MODEL",
-          "type": "UPSCALE_MODEL",
-          "links": [
-            45,
-            49
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "UpscaleModelLoader"
-      },
-      "widgets_values": [
-        "4x-PBRify_UpscalerSPAN_Neutral.pth"
-      ]
     },
     {
       "id": 39,
@@ -678,7 +670,7 @@
         58
       ],
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -691,6 +683,8 @@
         }
       ],
       "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
         "Node name for S&R": "UpscaleModelLoader"
       },
       "widgets_values": [
@@ -709,7 +703,7 @@
         58
       ],
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -722,6 +716,8 @@
         }
       ],
       "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
         "Node name for S&R": "UpscaleModelLoader"
       },
       "widgets_values": [
@@ -740,7 +736,7 @@
         58
       ],
       "flags": {},
-      "order": 4,
+      "order": 3,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -753,6 +749,8 @@
         }
       ],
       "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
         "Node name for S&R": "UpscaleModelLoader"
       },
       "widgets_values": [
@@ -796,6 +794,8 @@
         }
       ],
       "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
         "Node name for S&R": "JoinImageWithAlpha"
       },
       "widgets_values": []
@@ -812,7 +812,7 @@
         26
       ],
       "flags": {},
-      "order": 51,
+      "order": 52,
       "mode": 0,
       "inputs": [
         {
@@ -931,7 +931,7 @@
           "name": "",
           "type": "RTXRemixContext",
           "links": [
-            93
+            274
           ]
         }
       ],
@@ -952,7 +952,7 @@
         46
       ],
       "flags": {},
-      "order": 47,
+      "order": 48,
       "mode": 0,
       "inputs": [
         {
@@ -976,6 +976,8 @@
         }
       ],
       "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
         "Node name for S&R": "ImageUpscaleWithModel"
       },
       "widgets_values": []
@@ -992,7 +994,7 @@
         26
       ],
       "flags": {},
-      "order": 56,
+      "order": 58,
       "mode": 0,
       "inputs": [
         {
@@ -1027,7 +1029,7 @@
         46
       ],
       "flags": {},
-      "order": 48,
+      "order": 49,
       "mode": 0,
       "inputs": [
         {
@@ -1051,6 +1053,8 @@
         }
       ],
       "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
         "Node name for S&R": "ImageUpscaleWithModel"
       },
       "widgets_values": []
@@ -1067,7 +1071,7 @@
         46
       ],
       "flags": {},
-      "order": 49,
+      "order": 50,
       "mode": 0,
       "inputs": [
         {
@@ -1091,6 +1095,8 @@
         }
       ],
       "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
         "Node name for S&R": "ImageUpscaleWithModel"
       },
       "widgets_values": []
@@ -1107,7 +1113,7 @@
         26
       ],
       "flags": {},
-      "order": 59,
+      "order": 61,
       "mode": 0,
       "inputs": [
         {
@@ -1142,7 +1148,7 @@
         26
       ],
       "flags": {},
-      "order": 57,
+      "order": 59,
       "mode": 0,
       "inputs": [
         {
@@ -1177,7 +1183,7 @@
         26
       ],
       "flags": {},
-      "order": 65,
+      "order": 68,
       "mode": 0,
       "inputs": [
         {
@@ -1212,7 +1218,7 @@
         26
       ],
       "flags": {},
-      "order": 58,
+      "order": 60,
       "mode": 0,
       "inputs": [
         {
@@ -1247,7 +1253,7 @@
         26
       ],
       "flags": {},
-      "order": 66,
+      "order": 69,
       "mode": 0,
       "inputs": [
         {
@@ -1282,7 +1288,7 @@
         26
       ],
       "flags": {},
-      "order": 67,
+      "order": 70,
       "mode": 0,
       "inputs": [
         {
@@ -1317,7 +1323,7 @@
         26
       ],
       "flags": {},
-      "order": 74,
+      "order": 78,
       "mode": 0,
       "inputs": [
         {
@@ -1566,7 +1572,7 @@
         78
       ],
       "flags": {},
-      "order": 55,
+      "order": 57,
       "mode": 0,
       "inputs": [
         {
@@ -1590,6 +1596,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConcatenate"
       },
       "widgets_values": [
@@ -1608,7 +1616,7 @@
         78
       ],
       "flags": {},
-      "order": 63,
+      "order": 66,
       "mode": 0,
       "inputs": [
         {
@@ -1632,6 +1640,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConcatenate"
       },
       "widgets_values": [
@@ -1650,7 +1660,7 @@
         78
       ],
       "flags": {},
-      "order": 70,
+      "order": 74,
       "mode": 0,
       "inputs": [
         {
@@ -1674,6 +1684,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConcatenate"
       },
       "widgets_values": [
@@ -1692,7 +1704,7 @@
         78
       ],
       "flags": {},
-      "order": 77,
+      "order": 81,
       "mode": 0,
       "inputs": [
         {
@@ -1716,6 +1728,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConcatenate"
       },
       "widgets_values": [
@@ -1769,7 +1783,7 @@
         26
       ],
       "flags": {},
-      "order": 46,
+      "order": 47,
       "mode": 0,
       "inputs": [
         {
@@ -1805,7 +1819,7 @@
         26
       ],
       "flags": {},
-      "order": 54,
+      "order": 56,
       "mode": 0,
       "inputs": [
         {
@@ -1841,7 +1855,7 @@
         26
       ],
       "flags": {},
-      "order": 71,
+      "order": 75,
       "mode": 0,
       "inputs": [
         {
@@ -1876,7 +1890,7 @@
         26
       ],
       "flags": {},
-      "order": 62,
+      "order": 65,
       "mode": 0,
       "inputs": [
         {
@@ -2052,7 +2066,7 @@
         26
       ],
       "flags": {},
-      "order": 127,
+      "order": 132,
       "mode": 0,
       "inputs": [
         {
@@ -2087,7 +2101,7 @@
         78
       ],
       "flags": {},
-      "order": 150,
+      "order": 155,
       "mode": 0,
       "inputs": [
         {
@@ -2116,6 +2130,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixSetEditTarget"
       },
       "widgets_values": [
@@ -2134,7 +2150,7 @@
         26
       ],
       "flags": {},
-      "order": 82,
+      "order": 86,
       "mode": 0,
       "inputs": [
         {
@@ -2169,13 +2185,13 @@
         102
       ],
       "flags": {},
-      "order": 39,
+      "order": 44,
       "mode": 0,
       "inputs": [
         {
           "name": "context",
           "type": "RTXRemixContext",
-          "link": 93
+          "link": 275
         }
       ],
       "outputs": [
@@ -2196,6 +2212,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTexturesType"
       },
       "widgets_values": [
@@ -2215,7 +2233,7 @@
         166
       ],
       "flags": {},
-      "order": 64,
+      "order": 67,
       "mode": 0,
       "inputs": [
         {
@@ -2232,6 +2250,11 @@
           "name": "texture_name",
           "type": "STRING",
           "link": 120
+        },
+        {
+          "name": "output_directory",
+          "type": "STRING",
+          "link": 277
         },
         {
           "name": "context",
@@ -2256,83 +2279,13 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixIngestTexture"
       },
       "widgets_values": [
-        true,
-        false,
-        ""
+        true
       ]
-    },
-    {
-      "id": 100,
-      "type": "Reroute",
-      "pos": [
-        13256.990234375,
-        1332.4708251953125
-      ],
-      "size": [
-        75,
-        26
-      ],
-      "flags": {},
-      "order": 44,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "",
-          "type": "*",
-          "link": 153
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "STRING",
-          "links": [
-            155
-          ]
-        }
-      ],
-      "properties": {
-        "showOutputText": false,
-        "horizontal": false
-      }
-    },
-    {
-      "id": 101,
-      "type": "Reroute",
-      "pos": [
-        13259.1953125,
-        1362.95751953125
-      ],
-      "size": [
-        75,
-        26
-      ],
-      "flags": {},
-      "order": 73,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "",
-          "type": "*",
-          "link": 154
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "STRING",
-          "links": [
-            156
-          ]
-        }
-      ],
-      "properties": {
-        "showOutputText": false,
-        "horizontal": false
-      }
     },
     {
       "id": 58,
@@ -2346,7 +2299,7 @@
         102
       ],
       "flags": {},
-      "order": 72,
+      "order": 76,
       "mode": 0,
       "inputs": [
         {
@@ -2373,6 +2326,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTexturesType"
       },
       "widgets_values": [
@@ -2392,7 +2347,7 @@
         166
       ],
       "flags": {},
-      "order": 78,
+      "order": 82,
       "mode": 0,
       "inputs": [
         {
@@ -2409,6 +2364,11 @@
           "name": "texture_name",
           "type": "STRING",
           "link": 121
+        },
+        {
+          "name": "output_directory",
+          "type": "STRING",
+          "link": 279
         },
         {
           "name": "context",
@@ -2433,12 +2393,12 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixIngestTexture"
       },
       "widgets_values": [
-        true,
-        false,
-        ""
+        true
       ]
     },
     {
@@ -2453,7 +2413,7 @@
         26
       ],
       "flags": {},
-      "order": 79,
+      "order": 83,
       "mode": 0,
       "inputs": [
         {
@@ -2488,7 +2448,7 @@
         26
       ],
       "flags": {},
-      "order": 84,
+      "order": 88,
       "mode": 0,
       "inputs": [
         {
@@ -2523,7 +2483,7 @@
         102
       ],
       "flags": {},
-      "order": 83,
+      "order": 87,
       "mode": 0,
       "inputs": [
         {
@@ -2550,6 +2510,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTexturesType"
       },
       "widgets_values": [
@@ -2569,7 +2531,7 @@
         166
       ],
       "flags": {},
-      "order": 89,
+      "order": 93,
       "mode": 0,
       "inputs": [
         {
@@ -2586,6 +2548,11 @@
           "name": "texture_name",
           "type": "STRING",
           "link": 122
+        },
+        {
+          "name": "output_directory",
+          "type": "STRING",
+          "link": 281
         },
         {
           "name": "context",
@@ -2610,12 +2577,12 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixIngestTexture"
       },
       "widgets_values": [
-        true,
-        false,
-        ""
+        true
       ]
     },
     {
@@ -2630,7 +2597,7 @@
         26
       ],
       "flags": {},
-      "order": 90,
+      "order": 94,
       "mode": 0,
       "inputs": [
         {
@@ -2665,7 +2632,7 @@
         26
       ],
       "flags": {},
-      "order": 96,
+      "order": 101,
       "mode": 0,
       "inputs": [
         {
@@ -2700,7 +2667,7 @@
         102
       ],
       "flags": {},
-      "order": 95,
+      "order": 100,
       "mode": 0,
       "inputs": [
         {
@@ -2727,6 +2694,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTexturesType"
       },
       "widgets_values": [
@@ -2746,7 +2715,7 @@
         102
       ],
       "flags": {},
-      "order": 148,
+      "order": 153,
       "mode": 0,
       "inputs": [
         {
@@ -2772,6 +2741,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixLayerType"
       },
       "widgets_values": [
@@ -2791,7 +2762,7 @@
         190
       ],
       "flags": {},
-      "order": 149,
+      "order": 154,
       "mode": 0,
       "inputs": [
         {
@@ -2846,6 +2817,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixGetLayers"
       },
       "widgets_values": [
@@ -2867,7 +2840,7 @@
         26
       ],
       "flags": {},
-      "order": 75,
+      "order": 85,
       "mode": 0,
       "inputs": [
         {
@@ -2902,7 +2875,7 @@
         26
       ],
       "flags": {},
-      "order": 100,
+      "order": 105,
       "mode": 0,
       "inputs": [
         {
@@ -2937,7 +2910,7 @@
         26
       ],
       "flags": {},
-      "order": 107,
+      "order": 112,
       "mode": 0,
       "inputs": [
         {
@@ -2972,7 +2945,7 @@
         26
       ],
       "flags": {},
-      "order": 115,
+      "order": 120,
       "mode": 0,
       "inputs": [
         {
@@ -3007,7 +2980,7 @@
         26
       ],
       "flags": {},
-      "order": 123,
+      "order": 128,
       "mode": 0,
       "inputs": [
         {
@@ -3042,7 +3015,7 @@
         26
       ],
       "flags": {},
-      "order": 130,
+      "order": 135,
       "mode": 0,
       "inputs": [
         {
@@ -3077,7 +3050,7 @@
         26
       ],
       "flags": {},
-      "order": 129,
+      "order": 134,
       "mode": 0,
       "inputs": [
         {
@@ -3112,7 +3085,7 @@
         26
       ],
       "flags": {},
-      "order": 135,
+      "order": 140,
       "mode": 0,
       "inputs": [
         {
@@ -3147,7 +3120,7 @@
         26
       ],
       "flags": {},
-      "order": 142,
+      "order": 147,
       "mode": 0,
       "inputs": [
         {
@@ -3182,7 +3155,7 @@
         26
       ],
       "flags": {},
-      "order": 145,
+      "order": 150,
       "mode": 0,
       "inputs": [
         {
@@ -3217,7 +3190,7 @@
         26
       ],
       "flags": {},
-      "order": 138,
+      "order": 143,
       "mode": 0,
       "inputs": [
         {
@@ -3252,7 +3225,7 @@
         26
       ],
       "flags": {},
-      "order": 143,
+      "order": 148,
       "mode": 0,
       "inputs": [
         {
@@ -3287,7 +3260,7 @@
         98
       ],
       "flags": {},
-      "order": 153,
+      "order": 158,
       "mode": 0,
       "inputs": [
         {
@@ -3323,6 +3296,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTextureTypeToUSDAttribute"
       },
       "widgets_values": [
@@ -3341,7 +3316,7 @@
         26
       ],
       "flags": {},
-      "order": 125,
+      "order": 130,
       "mode": 0,
       "inputs": [
         {
@@ -3376,7 +3351,7 @@
         26
       ],
       "flags": {},
-      "order": 132,
+      "order": 137,
       "mode": 0,
       "inputs": [
         {
@@ -3411,7 +3386,7 @@
         26
       ],
       "flags": {},
-      "order": 109,
+      "order": 114,
       "mode": 0,
       "inputs": [
         {
@@ -3446,7 +3421,7 @@
         26
       ],
       "flags": {},
-      "order": 87,
+      "order": 98,
       "mode": 0,
       "inputs": [
         {
@@ -3481,7 +3456,7 @@
         26
       ],
       "flags": {},
-      "order": 117,
+      "order": 122,
       "mode": 0,
       "inputs": [
         {
@@ -3516,7 +3491,7 @@
         98
       ],
       "flags": {},
-      "order": 155,
+      "order": 160,
       "mode": 0,
       "inputs": [
         {
@@ -3552,6 +3527,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTextureTypeToUSDAttribute"
       },
       "widgets_values": [
@@ -3570,7 +3547,7 @@
         122
       ],
       "flags": {},
-      "order": 158,
+      "order": 163,
       "mode": 0,
       "inputs": [
         {
@@ -3599,6 +3576,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixSetTexture"
       },
       "widgets_values": [
@@ -3618,7 +3597,7 @@
         98
       ],
       "flags": {},
-      "order": 157,
+      "order": 162,
       "mode": 0,
       "inputs": [
         {
@@ -3654,6 +3633,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTextureTypeToUSDAttribute"
       },
       "widgets_values": [
@@ -3672,7 +3653,7 @@
         26
       ],
       "flags": {},
-      "order": 136,
+      "order": 141,
       "mode": 0,
       "inputs": [
         {
@@ -3707,7 +3688,7 @@
         26
       ],
       "flags": {},
-      "order": 141,
+      "order": 146,
       "mode": 0,
       "inputs": [
         {
@@ -3742,7 +3723,7 @@
         26
       ],
       "flags": {},
-      "order": 131,
+      "order": 136,
       "mode": 0,
       "inputs": [
         {
@@ -3777,7 +3758,7 @@
         26
       ],
       "flags": {},
-      "order": 137,
+      "order": 142,
       "mode": 0,
       "inputs": [
         {
@@ -3812,7 +3793,7 @@
         26
       ],
       "flags": {},
-      "order": 116,
+      "order": 121,
       "mode": 0,
       "inputs": [
         {
@@ -3847,7 +3828,7 @@
         26
       ],
       "flags": {},
-      "order": 124,
+      "order": 129,
       "mode": 0,
       "inputs": [
         {
@@ -3882,7 +3863,7 @@
         26
       ],
       "flags": {},
-      "order": 81,
+      "order": 91,
       "mode": 0,
       "inputs": [
         {
@@ -3917,7 +3898,7 @@
         26
       ],
       "flags": {},
-      "order": 108,
+      "order": 113,
       "mode": 0,
       "inputs": [
         {
@@ -3952,7 +3933,7 @@
         26
       ],
       "flags": {},
-      "order": 88,
+      "order": 92,
       "mode": 0,
       "inputs": [
         {
@@ -3988,7 +3969,7 @@
         26
       ],
       "flags": {},
-      "order": 94,
+      "order": 99,
       "mode": 0,
       "inputs": [
         {
@@ -4024,7 +4005,7 @@
         26
       ],
       "flags": {},
-      "order": 101,
+      "order": 106,
       "mode": 0,
       "inputs": [
         {
@@ -4060,7 +4041,7 @@
         98
       ],
       "flags": {},
-      "order": 151,
+      "order": 156,
       "mode": 0,
       "inputs": [
         {
@@ -4096,6 +4077,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTextureTypeToUSDAttribute"
       },
       "widgets_values": [
@@ -4114,7 +4097,7 @@
         88
       ],
       "flags": {},
-      "order": 5,
+      "order": 4,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -4127,6 +4110,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConstant"
       },
       "widgets_values": [
@@ -4145,7 +4130,7 @@
         88
       ],
       "flags": {},
-      "order": 6,
+      "order": 5,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -4158,6 +4143,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConstant"
       },
       "widgets_values": [
@@ -4176,7 +4163,7 @@
         88
       ],
       "flags": {},
-      "order": 7,
+      "order": 6,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -4189,6 +4176,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConstant"
       },
       "widgets_values": [
@@ -4207,7 +4196,7 @@
         88
       ],
       "flags": {},
-      "order": 8,
+      "order": 7,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -4220,6 +4209,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConstant"
       },
       "widgets_values": [
@@ -4238,7 +4229,7 @@
         122
       ],
       "flags": {},
-      "order": 152,
+      "order": 157,
       "mode": 0,
       "inputs": [
         {
@@ -4267,6 +4258,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixSetTexture"
       },
       "widgets_values": [
@@ -4286,7 +4279,7 @@
         122
       ],
       "flags": {},
-      "order": 154,
+      "order": 159,
       "mode": 0,
       "inputs": [
         {
@@ -4315,6 +4308,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixSetTexture"
       },
       "widgets_values": [
@@ -4334,7 +4329,7 @@
         122
       ],
       "flags": {},
-      "order": 156,
+      "order": 161,
       "mode": 0,
       "inputs": [
         {
@@ -4363,6 +4358,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixSetTexture"
       },
       "widgets_values": [
@@ -4445,6 +4442,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixGetTextures"
       },
       "widgets_values": [
@@ -4493,6 +4492,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixTexturesType"
       },
       "widgets_values": [
@@ -4569,6 +4570,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixGetLayers"
       },
       "widgets_values": [
@@ -4620,6 +4623,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixSwitch"
       },
       "widgets_values": []
@@ -4636,7 +4641,7 @@
         88
       ],
       "flags": {},
-      "order": 9,
+      "order": 8,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -4649,6 +4654,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConstant"
       },
       "widgets_values": [
@@ -4728,6 +4735,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixLayerType"
       },
       "widgets_values": [
@@ -4747,7 +4756,7 @@
         26
       ],
       "flags": {},
-      "order": 119,
+      "order": 124,
       "mode": 0,
       "inputs": [
         {
@@ -4782,7 +4791,7 @@
         88
       ],
       "flags": {},
-      "order": 10,
+      "order": 9,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -4795,6 +4804,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixStringConstant"
       },
       "widgets_values": [
@@ -4813,7 +4824,7 @@
         78
       ],
       "flags": {},
-      "order": 144,
+      "order": 149,
       "mode": 0,
       "inputs": [
         {
@@ -4838,6 +4849,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixDefineLayerId"
       },
       "widgets_values": [
@@ -4856,7 +4869,7 @@
         26
       ],
       "flags": {},
-      "order": 134,
+      "order": 139,
       "mode": 0,
       "inputs": [
         {
@@ -4895,7 +4908,7 @@
         26
       ],
       "flags": {},
-      "order": 140,
+      "order": 145,
       "mode": 0,
       "inputs": [
         {
@@ -4934,7 +4947,7 @@
         102
       ],
       "flags": {},
-      "order": 110,
+      "order": 115,
       "mode": 0,
       "inputs": [
         {
@@ -4961,6 +4974,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixLayerType"
       },
       "widgets_values": [
@@ -4980,7 +4995,7 @@
         26
       ],
       "flags": {},
-      "order": 45,
+      "order": 46,
       "mode": 0,
       "inputs": [
         {
@@ -5050,7 +5065,7 @@
         26
       ],
       "flags": {},
-      "order": 92,
+      "order": 96,
       "mode": 0,
       "inputs": [
         {
@@ -5085,7 +5100,7 @@
         26
       ],
       "flags": {},
-      "order": 105,
+      "order": 110,
       "mode": 0,
       "inputs": [
         {
@@ -5120,7 +5135,7 @@
         26
       ],
       "flags": {},
-      "order": 112,
+      "order": 117,
       "mode": 0,
       "inputs": [
         {
@@ -5155,7 +5170,7 @@
         26
       ],
       "flags": {},
-      "order": 60,
+      "order": 71,
       "mode": 0,
       "inputs": [
         {
@@ -5190,7 +5205,7 @@
         26
       ],
       "flags": {},
-      "order": 76,
+      "order": 80,
       "mode": 0,
       "inputs": [
         {
@@ -5225,7 +5240,7 @@
         26
       ],
       "flags": {},
-      "order": 53,
+      "order": 55,
       "mode": 0,
       "inputs": [
         {
@@ -5260,7 +5275,7 @@
         26
       ],
       "flags": {},
-      "order": 61,
+      "order": 64,
       "mode": 0,
       "inputs": [
         {
@@ -5295,7 +5310,7 @@
         26
       ],
       "flags": {},
-      "order": 69,
+      "order": 73,
       "mode": 0,
       "inputs": [
         {
@@ -5330,7 +5345,7 @@
         26
       ],
       "flags": {},
-      "order": 120,
+      "order": 125,
       "mode": 0,
       "inputs": [
         {
@@ -5365,7 +5380,7 @@
         26
       ],
       "flags": {},
-      "order": 113,
+      "order": 118,
       "mode": 0,
       "inputs": [
         {
@@ -5400,7 +5415,7 @@
         26
       ],
       "flags": {},
-      "order": 98,
+      "order": 103,
       "mode": 0,
       "inputs": [
         {
@@ -5435,7 +5450,7 @@
         26
       ],
       "flags": {},
-      "order": 86,
+      "order": 90,
       "mode": 0,
       "inputs": [
         {
@@ -5470,7 +5485,7 @@
         26
       ],
       "flags": {},
-      "order": 68,
+      "order": 79,
       "mode": 0,
       "inputs": [
         {
@@ -5505,7 +5520,7 @@
         26
       ],
       "flags": {},
-      "order": 93,
+      "order": 97,
       "mode": 0,
       "inputs": [
         {
@@ -5540,7 +5555,7 @@
         26
       ],
       "flags": {},
-      "order": 99,
+      "order": 104,
       "mode": 0,
       "inputs": [
         {
@@ -5575,7 +5590,7 @@
         26
       ],
       "flags": {},
-      "order": 106,
+      "order": 111,
       "mode": 0,
       "inputs": [
         {
@@ -5610,7 +5625,7 @@
         26
       ],
       "flags": {},
-      "order": 114,
+      "order": 119,
       "mode": 0,
       "inputs": [
         {
@@ -5645,7 +5660,7 @@
         26
       ],
       "flags": {},
-      "order": 122,
+      "order": 127,
       "mode": 0,
       "inputs": [
         {
@@ -5680,7 +5695,7 @@
         26
       ],
       "flags": {},
-      "order": 121,
+      "order": 126,
       "mode": 0,
       "inputs": [
         {
@@ -5715,7 +5730,7 @@
         26
       ],
       "flags": {},
-      "order": 128,
+      "order": 133,
       "mode": 0,
       "inputs": [
         {
@@ -5750,7 +5765,7 @@
         214
       ],
       "flags": {},
-      "order": 147,
+      "order": 152,
       "mode": 0,
       "inputs": [
         {
@@ -5798,6 +5813,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixCreateLayer"
       },
       "widgets_values": [
@@ -5820,7 +5837,7 @@
         26
       ],
       "flags": {},
-      "order": 159,
+      "order": 164,
       "mode": 0,
       "inputs": [
         {
@@ -5831,6 +5848,8 @@
       ],
       "outputs": [],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixEndContext"
       },
       "widgets_values": []
@@ -5847,7 +5866,7 @@
         166
       ],
       "flags": {},
-      "order": 102,
+      "order": 107,
       "mode": 0,
       "inputs": [
         {
@@ -5864,6 +5883,11 @@
           "name": "texture_name",
           "type": "STRING",
           "link": 123
+        },
+        {
+          "name": "output_directory",
+          "type": "STRING",
+          "link": 283
         },
         {
           "name": "context",
@@ -5888,12 +5912,12 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixIngestTexture"
       },
       "widgets_values": [
-        true,
-        false,
-        ""
+        true
       ]
     },
     {
@@ -5908,7 +5932,7 @@
         26
       ],
       "flags": {},
-      "order": 111,
+      "order": 116,
       "mode": 0,
       "inputs": [
         {
@@ -5943,7 +5967,7 @@
         26
       ],
       "flags": {},
-      "order": 103,
+      "order": 108,
       "mode": 0,
       "inputs": [
         {
@@ -5978,7 +6002,7 @@
         26
       ],
       "flags": {},
-      "order": 104,
+      "order": 109,
       "mode": 0,
       "inputs": [
         {
@@ -6013,7 +6037,7 @@
         26
       ],
       "flags": {},
-      "order": 97,
+      "order": 102,
       "mode": 0,
       "inputs": [
         {
@@ -6048,7 +6072,7 @@
         26
       ],
       "flags": {},
-      "order": 91,
+      "order": 95,
       "mode": 0,
       "inputs": [
         {
@@ -6083,7 +6107,7 @@
         26
       ],
       "flags": {},
-      "order": 85,
+      "order": 89,
       "mode": 0,
       "inputs": [
         {
@@ -6118,7 +6142,7 @@
         26
       ],
       "flags": {},
-      "order": 80,
+      "order": 84,
       "mode": 0,
       "inputs": [
         {
@@ -6153,7 +6177,7 @@
         26
       ],
       "flags": {},
-      "order": 52,
+      "order": 62,
       "mode": 0,
       "inputs": [
         {
@@ -6188,7 +6212,7 @@
         26
       ],
       "flags": {},
-      "order": 126,
+      "order": 131,
       "mode": 0,
       "inputs": [
         {
@@ -6208,6 +6232,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixInvertBool"
       },
       "widgets_values": []
@@ -6224,7 +6250,7 @@
         190
       ],
       "flags": {},
-      "order": 118,
+      "order": 123,
       "mode": 0,
       "inputs": [
         {
@@ -6279,6 +6305,8 @@
         }
       ],
       "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
         "Node name for S&R": "RTXRemixGetLayers"
       },
       "widgets_values": [
@@ -6286,6 +6314,299 @@
         false,
         false,
         true
+      ]
+    },
+    {
+      "id": 100,
+      "type": "Reroute",
+      "pos": [
+        13415.990234375,
+        1331.4708251953125
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 53,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 153
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "STRING",
+          "links": [
+            155
+          ]
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 101,
+      "type": "Reroute",
+      "pos": [
+        13427.1953125,
+        1371.95751953125
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 77,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 154
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "STRING",
+          "links": [
+            156
+          ]
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 172,
+      "type": "RTXRemixGetDefaultDirectory",
+      "pos": [
+        12996.0341796875,
+        1374.7373046875
+      ],
+      "size": [
+        305.8052673339844,
+        78
+      ],
+      "flags": {},
+      "order": 39,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "context",
+          "type": "RTXRemixContext",
+          "link": 274
+        }
+      ],
+      "outputs": [
+        {
+          "name": "context",
+          "type": "RTXRemixContext",
+          "links": [
+            275
+          ]
+        },
+        {
+          "name": "default_directory",
+          "type": "STRING",
+          "links": [
+            276
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "Night1099/ComfyUI-RTX-Remix",
+        "ver": "84e77bd1f6fccb7235b4179e7a3c2c189843d159",
+        "Node name for S&R": "RTXRemixGetDefaultDirectory"
+      },
+      "widgets_values": [
+        true
+      ]
+    },
+    {
+      "id": 173,
+      "type": "Reroute",
+      "pos": [
+        13101.4619140625,
+        1592.482666015625
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 45,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 276
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "STRING",
+          "links": [
+            277,
+            278
+          ]
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 174,
+      "type": "Reroute",
+      "pos": [
+        13500.4619140625,
+        1591.482666015625
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 54,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 278
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "STRING",
+          "links": [
+            279,
+            280
+          ]
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 175,
+      "type": "Reroute",
+      "pos": [
+        13860.4619140625,
+        1591.482666015625
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 63,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 280
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "STRING",
+          "links": [
+            281,
+            282
+          ]
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 176,
+      "type": "Reroute",
+      "pos": [
+        14322.4619140625,
+        1593.482666015625
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 72,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 282
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "STRING",
+          "links": [
+            283
+          ]
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 29,
+      "type": "UpscaleModelLoader",
+      "pos": [
+        11209.5498046875,
+        1402.4051513671875
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "links": [
+            45,
+            49
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "UpscaleModelLoader"
+      },
+      "widgets_values": [
+        "4x-PBRify_UpscalerDAT2_V1.pth"
       ]
     }
   ],
@@ -6675,19 +6996,11 @@
       "*"
     ],
     [
-      93,
-      51,
-      0,
-      57,
-      0,
-      "RTXRemixContext"
-    ],
-    [
       94,
       57,
       0,
       52,
-      3,
+      4,
       "RTXRemixContext"
     ],
     [
@@ -6703,7 +7016,7 @@
       58,
       0,
       53,
-      3,
+      4,
       "RTXRemixContext"
     ],
     [
@@ -6719,7 +7032,7 @@
       59,
       0,
       54,
-      3,
+      4,
       "RTXRemixContext"
     ],
     [
@@ -6735,7 +7048,7 @@
       60,
       0,
       55,
-      3,
+      4,
       "RTXRemixContext"
     ],
     [
@@ -7945,6 +8258,86 @@
       9,
       0,
       "RTXRemixContext"
+    ],
+    [
+      274,
+      51,
+      0,
+      172,
+      0,
+      "RTXRemixContext"
+    ],
+    [
+      275,
+      172,
+      0,
+      57,
+      0,
+      "RTXRemixContext"
+    ],
+    [
+      276,
+      172,
+      1,
+      173,
+      0,
+      "*"
+    ],
+    [
+      277,
+      173,
+      0,
+      52,
+      3,
+      "STRING"
+    ],
+    [
+      278,
+      173,
+      0,
+      174,
+      0,
+      "*"
+    ],
+    [
+      279,
+      174,
+      0,
+      53,
+      3,
+      "STRING"
+    ],
+    [
+      280,
+      174,
+      0,
+      175,
+      0,
+      "*"
+    ],
+    [
+      281,
+      175,
+      0,
+      54,
+      3,
+      "STRING"
+    ],
+    [
+      282,
+      175,
+      0,
+      176,
+      0,
+      "*"
+    ],
+    [
+      283,
+      176,
+      0,
+      55,
+      3,
+      "STRING"
     ]
   ],
   "groups": [
@@ -8069,13 +8462,13 @@
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.6209213230591566,
+      "scale": 0.6209213230591552,
       "offset": [
-        -18158.865876058215,
-        -691.9863994087211
+        -10697.33972237512,
+        -817.3278395219785
       ]
     },
-    "frontendVersion": "1.20.7"
+    "frontendVersion": "1.23.4"
   },
   "version": 0.4
 }

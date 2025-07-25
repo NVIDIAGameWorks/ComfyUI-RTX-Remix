@@ -1,7 +1,7 @@
 [project]
 name = "comfyui-rtx-remix"
 description = "Use ComfyUI with RTX Remix to remaster classic games [a/https://github.com/NVIDIAGameWorks/rtx-remix](https://github.com/NVIDIAGameWorks/rtx-remix)"
-version = "1.0.1"
+version = "1.1.0"
 license = {file = "LICENSE"}
 dependencies = ["numpy", "pillow>=10.0.1", "requests", "torch"]
 

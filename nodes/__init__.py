@@ -26,15 +26,18 @@ from .common import (
     Switch,
 )
 from .file import DeleteFile
-from .ingestion import IngestTexture
+from .ingestion import GetDefaultDirectory, IngestTexture
 from .layers import (
+    CloseProject,
     CreateLayer,
     DefineLayerId,
     GetEditTarget,
     GetLayers,
+    GetLoadedProject,
     LayerType,
     LayerTypes,
     MuteLayer,
+    OpenProject,
     RemoveLayer,
     SaveLayer,
     SetEditTarget,
@@ -50,18 +53,22 @@ from .textures import (
 # A dictionary that contains all nodes you want to export with their names
 # NOTE: names should be globally unique
 NODE_CLASS_MAPPINGS = {
+    "RTXRemixCloseProject": CloseProject,
     "RTXRemixCreateLayer": CreateLayer,
     "RTXRemixDefineLayerId": DefineLayerId,
     "RTXRemixDeleteFile": DeleteFile,
     "RTXRemixEndContext": EndContext,
+    "RTXRemixGetDefaultDirectory": GetDefaultDirectory,
     "RTXRemixGetEditTarget": GetEditTarget,
     "RTXRemixGetLayers": GetLayers,
+    "RTXRemixGetLoadedProject": GetLoadedProject,
     "RTXRemixGetTextures": GetTextures,
     "RTXRemixIngestTexture": IngestTexture,
     "RTXRemixInvertBool": InvertBool,
     "RTXRemixLayerType": LayerType,
     "RTXRemixLayerTypes": LayerTypes,
     "RTXRemixMuteLayer": MuteLayer,
+    "RTXRemixOpenProject": OpenProject,
     "RTXRemixRemoveLayer": RemoveLayer,
     "RTXRemixRestAPIDetails": RestAPIDetails,
     "RTXRemixSaveLayer": SaveLayer,
@@ -79,18 +86,22 @@ NODE_CLASS_MAPPINGS = {
 
 # A dictionary that contains the friendly/humanly readable titles for the nodes
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "RTXRemixCloseProject": "RTX Remix Close Project",
     "RTXRemixCreateLayer": "RTX Remix Create Layer",
     "RTXRemixDefineLayerId": "RTX Remix Define Layer ID",
     "RTXRemixDeleteFile": "RTX Remix Delete File",
     "RTXRemixEndContext": "RTX Remix End Context",
+    "RTXRemixGetDefaultDirectory": "RTX Remix Get Default Directory",
     "RTXRemixGetEditTarget": "RTX Remix Get Edit Target",
     "RTXRemixGetLayers": "RTX Remix Get Layers",
+    "RTXRemixGetLoadedProject": "RTX Remix Get Loaded Project",
     "RTXRemixGetTextures": "RTX Remix Get Textures",
     "RTXRemixIngestTexture": "RTX Remix Ingest Texture",
     "RTXRemixInvertBool": "RTX Remix Invert Boolean Value",
     "RTXRemixLayerType": "RTX Remix Layer Type",
     "RTXRemixLayerTypes": "RTX Remix Layer Types",
     "RTXRemixMuteLayer": "RTX Remix Mute Layer",
+    "RTXRemixOpenProject": "RTX Remix Open Project",
     "RTXRemixRemoveLayer": "RTX Remix Remove Layer",
     "RTXRemixRestAPIDetails": "RTX Remix Rest API Details",
     "RTXRemixSaveLayer": "RTX Remix Save Layer",

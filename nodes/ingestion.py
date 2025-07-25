@@ -27,7 +27,7 @@ from PIL import Image
 
 from .common import add_context_input_enabled_and_output
 from .constant import HEADER_LSS_REMIX_VERSION_1_0, PREFIX_MENU
-from .utils import check_response_status_code
+from .utils import check_response_status_code, posix
 
 _file_name = pathlib.Path(__file__).stem
 
@@ -57,21 +57,12 @@ class IngestTexture:
                         "forceInput": True,
                     },
                 ),
-            },
-            "optional": {
-                "enable_override_output_folder": (
-                    "BOOLEAN",
-                    {
-                        "default": False,
-                        "label_on": "enabled",
-                        "label_off": "disabled",
-                    },
-                ),
-                "override_output_folder": (
+                "output_directory": (
                     "STRING",
                     {
                         # node
                         "default": "",
+                        "forceInput": True,
                     },
                 ),
             },
@@ -91,24 +82,14 @@ class IngestTexture:
         texture: torch.Tensor,
         texture_type: str,
         texture_name: str,
-        enable_override_output_folder: bool,
-        override_output_folder: str,
+        output_directory: str,
     ):
         if not self.enable_this_node:  # noqa
             return ("",)
         address, port = self.context  # noqa
-        if enable_override_output_folder:
-            if not pathlib.Path(override_output_folder).exists():
-                raise FileNotFoundError("Can't overwrite output folder, folder doesn't exist.")
-            output_folder = override_output_folder
-        else:
-            # call RestAPI to get the default output folder
-            r = requests.get(
-                f"http://{address}:{port}/stagecraft/assets/default-directory",
-                headers=HEADER_LSS_REMIX_VERSION_1_0,
-            )
-            check_response_status_code(r)
-            output_folder = json.loads(r.text).get("directory_path", {})
+        if not pathlib.Path(output_directory).exists():
+            raise FileNotFoundError(f"Output directory doesn't exist: {output_directory}")
+        output_folder = output_directory
 
         full_output_folder, filename, _counter, _subfolder, _filename_prefix = folder_paths.get_save_image_path(
             texture_name, folder_paths.get_output_directory(), texture[0].shape[1], texture[0].shape[0]
@@ -161,3 +142,40 @@ class IngestTexture:
             raise FileNotFoundError(f"Can't find the texture {result_path}")
 
         return (str(result_path),)
+
+
+@add_context_input_enabled_and_output
+class GetDefaultDirectory:
+    """Get the default directory from RTX Remix before closing project"""
+
+    @classmethod
+    def INPUT_TYPES(cls):  # noqa N802
+        inputs = {
+            "required": {},
+        }
+        return inputs
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("default_directory",)
+
+    FUNCTION = "get_default_directory"
+
+    OUTPUT_NODE = False
+
+    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+
+    def _get_default_output_directory(self) -> str:
+        """Utility method to get default output directory from RTX Remix API."""
+        address, port = self.context  # noqa
+        r = requests.get(
+            f"http://{address}:{port}/stagecraft/assets/default-directory",
+            headers=HEADER_LSS_REMIX_VERSION_1_0,
+        )
+        check_response_status_code(r)
+        return json.loads(r.text).get("directory_path", "")
+
+    def get_default_directory(self):
+        if not self.enable_this_node:  # noqa
+            return ("",)
+        default_directory = self._get_default_output_directory()
+        return (default_directory,)
