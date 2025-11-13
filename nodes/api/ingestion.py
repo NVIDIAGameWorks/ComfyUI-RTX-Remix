@@ -25,9 +25,9 @@ import requests
 import torch
 from PIL import Image
 
-from .common import add_context_input_enabled_and_output
-from .constant import HEADER_LSS_REMIX_VERSION_1_0, PREFIX_MENU
-from .utils import check_response_status_code, posix
+from ..common import add_context_input_enabled_and_output
+from ..constant import HEADER_LSS_REMIX_VERSION_1_0, PREFIX_MENU_API
+from ..utils import check_response_status_code
 
 _file_name = pathlib.Path(__file__).stem
 
@@ -75,7 +75,7 @@ class IngestTexture:
 
     RETURN_NAMES = ("texture_path",)
 
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def ingest_texture(
         self,
@@ -162,7 +162,7 @@ class GetDefaultDirectory:
 
     OUTPUT_NODE = False
 
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def _get_default_output_directory(self) -> str:
         """Utility method to get default output directory from RTX Remix API."""

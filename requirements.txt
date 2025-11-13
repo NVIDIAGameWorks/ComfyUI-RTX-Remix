@@ -1,4 +1,5 @@
-numpy               # SWIPAT filed under: https://nvbugs/4702469
-pillow>=10.0.1      # SWIPAT filed under: https://nvbugs/4702475
-requests            # SWIPAT filed under: https://nvbugs/4702237
-torch               # SWIPAT filed under: https://nvbugs/4702252
+numpy               # OSRB filed under: https://nvbugs/4702469
+pillow>=10.0.1      # OSRB filed under: https://nvbugs/4702475
+requests            # OSRB filed under: https://nvbugs/4702237
+torch               # OSRB filed under: https://nvbugs/4702252
+OpenEXR             # OSRB filed under: https://nvbugs/5642859

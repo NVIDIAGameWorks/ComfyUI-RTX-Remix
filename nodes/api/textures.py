@@ -23,9 +23,9 @@ import requests
 import torch
 from PIL import Image, ImageOps
 
-from .common import add_context_input_enabled_and_output
-from .constant import HEADER_LSS_REMIX_VERSION_1_0, PREFIX_MENU
-from .utils import check_response_status_code, posix
+from ..common import add_context_input_enabled_and_output
+from ..constant import HEADER_LSS_REMIX_VERSION_1_0, PREFIX_MENU_API
+from ..utils import check_response_status_code, posix
 
 _texture_types = [
     "DIFFUSE",
@@ -130,7 +130,7 @@ class GetTextures:
     )
 
     FUNCTION = "get_texture_prims_assets"
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def get_texture_prims_assets(
         self,
@@ -141,7 +141,6 @@ class GetTextures:
         layer_id: str | None = None,
         exists: bool = True,
     ) -> tuple[list[str], list[str], list[torch.Tensor], list[torch.Tensor]]:
-
         if not self.enable_this_node:  # noqa
             return ([], [], [], [])
 
@@ -162,7 +161,7 @@ class GetTextures:
         textures = json.loads(r.text).get("textures", [])
         if not textures:
             raise ValueError(
-                "No textures found. Please check the parameters of your node.\n" f"URL: {r.url}, PARAMS: {payload}"
+                f"No textures found. Please check the parameters of your node.\nURL: {r.url}, PARAMS: {payload}"
             )
 
         result_attrs = []
@@ -180,10 +179,10 @@ class GetTextures:
                     result_images.append(image)
                     texture_names.append(pathlib.Path(texture_path).stem)
                     result_attrs.append(usd_attr)
-                    
-                    if 'A' in img_1.getbands():
-                        mask = np.array(img_1.getchannel('A')).astype(np.float32) / 255.0
-                        mask = 1. - torch.from_numpy(mask)
+
+                    if "A" in img_1.getbands():
+                        mask = np.array(img_1.getchannel("A")).astype(np.float32) / 255.0
+                        mask = 1.0 - torch.from_numpy(mask)
                     else:
                         mask = torch.zeros((image.shape[2], image.shape[3]), dtype=torch.float32, device="cpu")
                     result_masks.append(mask.unsqueeze(0))
@@ -207,7 +206,6 @@ class TexturesTypes:
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
-
         inputs = {
             "required": {
                 "texture_types": (
@@ -226,7 +224,7 @@ class TexturesTypes:
     RETURN_NAMES = ("texture_types",)
 
     FUNCTION = "get_texture_types"
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def get_texture_types(self, texture_types: str) -> tuple[str]:
         if not self.enable_this_node:  # noqa
@@ -243,7 +241,6 @@ class TexturesType:
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
-
         inputs = {
             "required": {
                 "texture_type": (_texture_types,),
@@ -255,7 +252,7 @@ class TexturesType:
     RETURN_NAMES = ("texture_type",)
 
     FUNCTION = "get_texture_type"
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def get_texture_type(self, texture_type: str) -> tuple[str]:
         if not self.enable_this_node:  # noqa
@@ -289,10 +286,9 @@ class SetTexture:
     RETURN_TYPES = ()
     RETURN_NAMES = ()
 
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def set_texture(self, usd_attribute: str, texture_path: str, force: bool = False):
-
         if not self.enable_this_node:  # noqa
             return ()
 
@@ -336,10 +332,9 @@ class TextureTypeToUSDAttribute:
 
     RETURN_NAMES = ("usd_attribute",)
 
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def get_attr_from_texture_type(self, usd_attribute: str, texture_type: str):
-
         if not self.enable_this_node:  # noqa
             return ("",)
 
