@@ -24,13 +24,13 @@ from urllib.parse import quote, unquote
 
 import requests
 
-from .common import (
+from ..common import (
     RemixContext,
     add_context_input_enabled_and_output,
     get_context_inputs,
 )
-from .constant import HEADER_LSS_REMIX_VERSION_1_0, PREFIX_MENU
-from .utils import check_response_status_code, merge_dict, posix
+from ..constant import HEADER_LSS_REMIX_VERSION_1_0, PREFIX_MENU_API
+from ..utils import check_response_status_code, merge_dict, posix
 
 NONE = "None"
 _layer_types = [
@@ -100,7 +100,7 @@ class DefineLayerId:
     RETURN_NAMES = ("layer_id",)
 
     FUNCTION = "execute"
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def execute(
         self,
@@ -111,7 +111,7 @@ class DefineLayerId:
         # Handle None case for parent_layer_id
         if parent_layer_id is None:
             parent_layer_id = ""
-        
+
         layer_id_dir = pathlib.Path(parent_layer_id).parent
         if directories:
             layer_id_dir = layer_id_dir / directories
@@ -162,7 +162,7 @@ class CreateLayer:
 
     OUTPUT_NODE = False
 
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def create_layer(
         self,
@@ -199,7 +199,6 @@ class LayerType:
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
-
         inputs = {
             "required": {
                 "layer_type": (_layer_types,),
@@ -212,7 +211,7 @@ class LayerType:
 
     FUNCTION = "get_layer_type"
 
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def get_layer_type(self, layer_type: str) -> tuple[str]:
         if not self.enable_this_node:  # noqa
@@ -227,7 +226,6 @@ class LayerTypes:
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
-
         inputs = {
             "required": {
                 "layer_types": (
@@ -246,7 +244,7 @@ class LayerTypes:
 
     FUNCTION = "get_layer_types"
 
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def get_layer_types(self, layer_types: str) -> tuple[str]:
         if not self.enable_this_node:  # noqa
@@ -306,7 +304,7 @@ class GetLayers:
 
     FUNCTION = "execute"
 
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def execute(
         self,
@@ -320,7 +318,7 @@ class GetLayers:
         if not self.enable_this_node:  # noqa
             # Return non-empty lists even when disabled to avoid ComfyUI empty list bug
             return ([""], [""], False)
-        
+
         layer_types_list = [t.strip() for t in layer_types.split(",")]
         params = {
             "layer_types": layer_types_list,
@@ -381,10 +379,8 @@ class GetLayers:
 
 
 class _LayerOp:
-
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
-
         inputs = {
             "required": {
                 "layer_id": (
@@ -400,7 +396,7 @@ class _LayerOp:
 
     FUNCTION = "execute"
 
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     @abc.abstractmethod
     def execute(self, layer_id: str) -> tuple[str]:
@@ -447,7 +443,6 @@ class RemoveLayer(_LayerOp):
 
     @classmethod
     def INPUT_TYPES(cls):  # noqa N802
-
         inputs = {
             "required": {
                 "parent_layer_id": (
@@ -503,7 +498,7 @@ class GetEditTarget:
 
     OUTPUT_NODE = False
 
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def get_edit_target(self, context: RemixContext) -> tuple[str]:
         if not self.enable_this_node:  # noqa
@@ -557,7 +552,7 @@ class CloseProject:
 
     OUTPUT_NODE = False
 
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def close_project(self, force: bool = False) -> tuple[str]:
         if not self.enable_this_node:  # noqa
@@ -605,7 +600,7 @@ class GetLoadedProject:
 
     OUTPUT_NODE = False
 
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def get_loaded_project(self) -> tuple[str]:
         if not self.enable_this_node:  # noqa

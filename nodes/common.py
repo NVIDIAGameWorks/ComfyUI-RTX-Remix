@@ -18,7 +18,7 @@
 import pathlib
 from collections import namedtuple
 
-from .constant import CONTEXT_TYPE, PREFIX_MENU
+from .constant import CONTEXT_TYPE, PREFIX_MENU_API
 from .utils import merge_dict
 
 _file_name = pathlib.Path(__file__).stem
@@ -125,7 +125,7 @@ class RestAPIDetails:
 
     FUNCTION = "get_address"
 
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def get_address(self, address, port):
         return address, port
@@ -144,7 +144,7 @@ class StartContext:
 
     FUNCTION = "execute"
 
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def execute(self, address, port):
         return (RemixContext(address, port),)
@@ -162,7 +162,7 @@ class EndContext:
 
     FUNCTION = "execute"
 
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     OUTPUT_NODE = True
 
@@ -183,7 +183,7 @@ class StringConstant:
 
     RETURN_TYPES = ("STRING",)
     FUNCTION = "get_string"
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def get_string(self, string):
         return (string,)
@@ -206,7 +206,7 @@ class StringConcatenate:
 
     RETURN_TYPES = ("STRING",)
     FUNCTION = "execute"
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def execute(self, string1, string2, separator="_"):
         return (string1 + separator + string2,)
@@ -241,7 +241,7 @@ class Switch:
     INPUT_IS_LIST = True  # need this or it will crash
     OUTPUT_IS_LIST = (True,)
     FUNCTION = "execute"
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def execute(self, if_true: _any, if_false: _any, switcher: list[bool]):
         return (if_true if switcher[0] else if_false,)
@@ -263,7 +263,7 @@ class InvertBool:
 
     RETURN_TYPES = ("BOOLEAN",)
     FUNCTION = "execute"
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def execute(self, value: bool):
         return (not value,)
@@ -286,7 +286,7 @@ class StrToList:
     RETURN_TYPES = ("STRING",)
     OUTPUT_IS_LIST = (True,)
     FUNCTION = "execute"
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def execute(self, value: str):
         return ([value],)

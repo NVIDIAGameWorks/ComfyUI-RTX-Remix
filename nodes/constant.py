@@ -15,6 +15,9 @@
 * limitations under the License.
 """
 
-PREFIX_MENU = "RTXRemix"
+PREFIX_BASE = "RTX Remix"
+PREFIX_MENU_API = f"{PREFIX_BASE}/API"
+
 HEADER_LSS_REMIX_VERSION_1_0 = {"Accept": "application/lightspeed.remix.service+json; version=1.0"}
+
 CONTEXT_TYPE = "RTXRemixContext"

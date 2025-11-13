@@ -15,19 +15,9 @@
 * limitations under the License.
 """
 
-from .common import (
-    EndContext,
-    InvertBool,
-    RestAPIDetails,
-    StartContext,
-    StringConcatenate,
-    StringConstant,
-    StrToList,
-    Switch,
-)
-from .file import DeleteFile
-from .ingestion import GetDefaultDirectory, IngestTexture
-from .layers import (
+from .api.file import DeleteFile
+from .api.ingestion import GetDefaultDirectory, IngestTexture
+from .api.layers import (
     CloseProject,
     CreateLayer,
     DefineLayerId,
@@ -42,13 +32,24 @@ from .layers import (
     SaveLayer,
     SetEditTarget,
 )
-from .textures import (
+from .api.textures import (
     GetTextures,
     SetTexture,
     TexturesType,
     TexturesTypes,
     TextureTypeToUSDAttribute,
 )
+from .common import (
+    EndContext,
+    InvertBool,
+    RestAPIDetails,
+    StartContext,
+    StringConcatenate,
+    StringConstant,
+    StrToList,
+    Switch,
+)
+from .save import RemixSaveTexture
 
 # A dictionary that contains all nodes you want to export with their names
 # NOTE: names should be globally unique
@@ -71,6 +72,7 @@ NODE_CLASS_MAPPINGS = {
     "RTXRemixOpenProject": OpenProject,
     "RTXRemixRemoveLayer": RemoveLayer,
     "RTXRemixRestAPIDetails": RestAPIDetails,
+    "RTXRemixSaveTexture": RemixSaveTexture,
     "RTXRemixSaveLayer": SaveLayer,
     "RTXRemixSetEditTarget": SetEditTarget,
     "RTXRemixSetTexture": SetTexture,
@@ -104,6 +106,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "RTXRemixOpenProject": "RTX Remix Open Project",
     "RTXRemixRemoveLayer": "RTX Remix Remove Layer",
     "RTXRemixRestAPIDetails": "RTX Remix Rest API Details",
+    "RTXRemixSaveTexture": "RTX Remix Save Texture",
     "RTXRemixSaveLayer": "RTX Remix Save Layer",
     "RTXRemixSetEditTarget": "RTX Remix Set Edit Target",
     "RTXRemixSetTexture": "RTX Remix Set Texture",

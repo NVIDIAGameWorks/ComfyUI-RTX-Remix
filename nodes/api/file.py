@@ -17,8 +17,8 @@
 
 import pathlib
 
-from .common import add_context_input_enabled_and_output
-from .constant import PREFIX_MENU
+from ..common import add_context_input_enabled_and_output
+from ..constant import PREFIX_MENU_API
 
 _file_name = pathlib.Path(__file__).stem
 
@@ -41,7 +41,7 @@ class DeleteFile:
     RETURN_TYPES = ("BOOL",)
     RETURN_NAMES = ("File deleted",)
     FUNCTION = "execute"
-    CATEGORY = f"{PREFIX_MENU}/{_file_name}"
+    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
 
     def execute(self, path: str):
         if not self.enable_this_node:  # noqa
