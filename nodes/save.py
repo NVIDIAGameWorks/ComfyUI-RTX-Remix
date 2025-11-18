@@ -183,6 +183,15 @@ class RemixSaveTexture:
                 finally:
                     exr_file.close()
 
+                # Add actual file to outputs
+                results.append(
+                    {
+                        "filename": file_path.name,
+                        "subfolder": sub_directory,
+                        "type": "output",
+                    }
+                )
+
                 # Create a preview PNG for the UI (browsers can't display EXR)
                 preview_filename = f"_temp_{uuid.uuid4().hex[:8]}_{file_name}_{counter:05}.png"
                 preview_path = Path(folder_paths.get_temp_directory()) / preview_filename
