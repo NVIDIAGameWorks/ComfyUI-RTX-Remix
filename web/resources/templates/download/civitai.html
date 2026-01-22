@@ -1,0 +1,47 @@
+<!--
+  SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+  SPDX-License-Identifier: Apache-2.0
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CivitAI Download Info -->
+<template id="rtx-remix-download-civitai-apikey-info-template">
+  <div>
+    <p><strong>How to download from CivitAI:</strong></p>
+    <ol>
+      <li>Go to the model page on CivitAI</li>
+      <li>Select the version you want to download</li>
+      <li>Copy the URL from your browser's address bar</li>
+      <li>Paste it in the <code>civitai_url</code> field - the version ID will be auto-filled!</li>
+    </ol>
+    <p><strong>Supported URL formats:</strong></p>
+    <ul>
+      <li><code>https://civitai.com/models/{id}?modelVersionId={version}</code></li>
+      <li><code>https://civitai.com/api/download/models/{version}</code></li>
+    </ul>
+    <p><em>Note: Make sure the URL includes <code>modelVersionId</code> in the query string.</em></p>
+    <hr style="margin: 12px 0; border: none; border-top: 1px solid #444;" />
+    <p><strong>API Key (required):</strong></p>
+    <ol>
+      <li>Go to <a href="https://civitai.com/user/account" target="_blank">civitai.com/user/account</a></li>
+      <li>Scroll down to the <code>API Keys</code> section</li>
+      <li>Click <code>Add API Key</code> and create the key</li>
+      <li>Copy and paste it in the <code>civitai_api_key</code> field</li>
+    </ol>
+    <p>
+      For more information, visit the
+      <a href="https://github.com/civitai/civitai/wiki/REST-API-Reference" target="_blank">CivitAI API Documentation</a>
+    </p>
+  </div>
+</template>

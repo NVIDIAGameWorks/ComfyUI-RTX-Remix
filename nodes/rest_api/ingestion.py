@@ -15,6 +15,8 @@
 * limitations under the License.
 """
 
+from __future__ import annotations
+
 import json
 import os
 import pathlib
@@ -25,68 +27,53 @@ import requests
 import torch
 from PIL import Image
 
-from ..common import add_context_input_enabled_and_output
+from comfy_api.latest import io
+
+from .common import RemixContext, context_input, context_output, enable_input
 from ..constant import HEADER_LSS_REMIX_VERSION_1_0, PREFIX_MENU_API
 from ..utils import check_response_status_code
 
 _file_name = pathlib.Path(__file__).stem
 
+__all__ = ["RestAPIIngestTextureNode", "RestAPIGetDefaultDirectoryNode"]
 
-@add_context_input_enabled_and_output
-class IngestTexture:
+
+class RestAPIIngestTextureNode(io.ComfyNode):
     """Ingest an image as a texture and save it to disk"""
 
     @classmethod
-    def INPUT_TYPES(cls):  # noqa N802
-        inputs = {
-            "required": {
-                "texture": ("IMAGE", {}),
-                "texture_type": (
-                    "STRING",
-                    {
-                        # node
-                        "default": "",
-                        "forceInput": True,
-                    },
-                ),
-                "texture_name": (
-                    "STRING",
-                    {
-                        # node
-                        "default": "",
-                        "forceInput": True,
-                    },
-                ),
-                "output_directory": (
-                    "STRING",
-                    {
-                        # node
-                        "default": "",
-                        "forceInput": True,
-                    },
-                ),
-            },
-        }
-        return inputs
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="RTXRemixIngestTexture",
+            display_name="🌐 RTX Remix Ingest Texture",
+            category=f"{PREFIX_MENU_API}/{_file_name}",
+            inputs=[
+                context_input(),
+                enable_input(),
+                io.Image.Input("texture"),
+                io.String.Input("texture_type", default=""),
+                io.String.Input("texture_name", default=""),
+                io.String.Input("output_directory", default=""),
+            ],
+            outputs=[
+                context_output(),
+                io.String.Output("texture_path", display_name="texture_path"),
+            ],
+        )
 
-    FUNCTION = "ingest_texture"
-
-    RETURN_TYPES = ("STRING",)
-
-    RETURN_NAMES = ("texture_path",)
-
-    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
-
-    def ingest_texture(
-        self,
+    @classmethod
+    def execute(
+        cls,
+        context: RemixContext,
+        enable_this_node: bool,
         texture: torch.Tensor,
         texture_type: str,
         texture_name: str,
         output_directory: str,
-    ):
-        if not self.enable_this_node:  # noqa
-            return ("",)
-        address, port = self.context  # noqa
+    ) -> io.NodeOutput:
+        if not enable_this_node:
+            return io.NodeOutput(context, "")
+        address, port = context
         if not pathlib.Path(output_directory).exists():
             raise FileNotFoundError(f"Output directory doesn't exist: {output_directory}")
         output_folder = output_directory
@@ -141,32 +128,32 @@ class IngestTexture:
         if not result_path.exists():
             raise FileNotFoundError(f"Can't find the texture {result_path}")
 
-        return (str(result_path),)
+        return io.NodeOutput(context, str(result_path))
 
 
-@add_context_input_enabled_and_output
-class GetDefaultDirectory:
+class RestAPIGetDefaultDirectoryNode(io.ComfyNode):
     """Get the default ingestion directory of the currently opened project"""
 
     @classmethod
-    def INPUT_TYPES(cls):  # noqa N802
-        inputs = {
-            "required": {},
-        }
-        return inputs
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="RTXRemixGetDefaultDirectory",
+            display_name="🌐 RTX Remix Get Default Directory",
+            category=f"{PREFIX_MENU_API}/{_file_name}",
+            inputs=[
+                context_input(),
+                enable_input(),
+            ],
+            outputs=[
+                context_output(),
+                io.String.Output("default_directory", display_name="default_directory"),
+            ],
+        )
 
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("default_directory",)
-
-    FUNCTION = "get_default_directory"
-
-    OUTPUT_NODE = False
-
-    CATEGORY = f"{PREFIX_MENU_API}/{_file_name}"
-
-    def _get_default_output_directory(self) -> str:
+    @classmethod
+    def _get_default_output_directory(cls, context: RemixContext) -> str:
         """Utility method to get default output directory from RTX Remix API."""
-        address, port = self.context  # noqa
+        address, port = context
         r = requests.get(
             f"http://{address}:{port}/stagecraft/assets/default-directory",
             headers=HEADER_LSS_REMIX_VERSION_1_0,
@@ -174,8 +161,9 @@ class GetDefaultDirectory:
         check_response_status_code(r)
         return json.loads(r.text).get("directory_path", "")
 
-    def get_default_directory(self):
-        if not self.enable_this_node:  # noqa
-            return ("",)
-        default_directory = self._get_default_output_directory()
-        return (default_directory,)
+    @classmethod
+    def execute(cls, context: RemixContext, enable_this_node: bool) -> io.NodeOutput:
+        if not enable_this_node:
+            return io.NodeOutput(context, "")
+        default_directory = cls._get_default_output_directory(context)
+        return io.NodeOutput(context, default_directory)

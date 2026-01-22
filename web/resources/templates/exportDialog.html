@@ -1,0 +1,100 @@
+<!--
+  SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+  SPDX-License-Identifier: Apache-2.0
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<template id="rtx-remix-export-dialog-template">
+  <div class="rtx-remix-overlay">
+    <div class="rtx-remix-dialog">
+      <!-- Header -->
+      <div class="rtx-remix-dialog-header">
+        <img class="rtx-remix-dialog-icon" src="" alt="RTX Remix" data-asset="remix-icon" />
+        <h2 class="rtx-remix-dialog-title">Export Workflow for RTX Remix</h2>
+      </div>
+
+      <!-- Body -->
+      <div class="rtx-remix-dialog-body">
+        <h3 class="rtx-remix-section-title">Workflow Filename</h3>
+        <div class="rtx-remix-input-container">
+          <input type="text" class="rtx-remix-input" placeholder="workflow.json" data-input="filename" />
+        </div>
+        <div class="rtx-remix-validation-msg" data-element="validation"></div>
+        <div class="rtx-remix-info-msg" data-element="info">
+          The .json extension will be added automatically at the end of the workflow name.
+        </div>
+
+        <!-- Remix Slots Section -->
+        <div class="rtx-remix-slots-section" data-element="slots-section">
+          <h3 class="rtx-remix-section-title">Tagged for RTX Remix</h3>
+          <div class="rtx-remix-slots-info">
+            Configure names and types for your tagged inputs and output nodes.
+            <br />
+            Drag rows to reorder - order will be preserved in the exported metadata.
+          </div>
+
+          <!-- Inputs Table -->
+          <div class="rtx-remix-table-wrapper" data-element="inputs-wrapper">
+            <h4 class="rtx-remix-table-heading">Inputs</h4>
+            <div class="rtx-remix-table-container">
+              <table class="rtx-remix-slots-table">
+                <thead>
+                  <tr>
+                    <th class="rtx-remix-drag-header"></th>
+                    <th>Node</th>
+                    <th>Input Name</th>
+                    <th>Type</th>
+                    <th>Remix Type</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody data-element="inputs-tbody">
+                  <!-- Rows populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Outputs Table -->
+          <div class="rtx-remix-table-wrapper" data-element="outputs-wrapper">
+            <h4 class="rtx-remix-table-heading">Outputs</h4>
+            <div class="rtx-remix-table-container">
+              <table class="rtx-remix-slots-table">
+                <thead>
+                  <tr>
+                    <th class="rtx-remix-drag-header"></th>
+                    <th>Node</th>
+                    <th>Output Name</th>
+                    <th>Type</th>
+                    <th>Remix Type</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody data-element="outputs-tbody">
+                  <!-- Rows populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="rtx-remix-dialog-footer">
+        <button class="rtx-remix-btn rtx-remix-btn-cancel" data-action="cancel">Cancel</button>
+        <button class="rtx-remix-btn rtx-remix-btn-primary" data-action="export">Export</button>
+      </div>
+    </div>
+  </div>
+</template>

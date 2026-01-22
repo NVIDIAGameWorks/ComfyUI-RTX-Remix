@@ -1,0 +1,2450 @@
+{
+  "id": "a10ffcc8-e192-40fd-8248-34af532b4f20",
+  "revision": 0,
+  "last_node_id": 192,
+  "last_link_id": 436,
+  "nodes": [
+    {
+      "id": 32,
+      "type": "Reroute",
+      "pos": [
+        11399.253173828127,
+        1469.2932434082024
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 407
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "IMAGE",
+          "links": [
+            47
+          ]
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 28,
+      "type": "MaskToImage",
+      "pos": [
+        11306.276611328127,
+        1547.8511047363274
+      ],
+      "size": [
+        184.6236328125,
+        26
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "mask",
+          "name": "mask",
+          "type": "MASK",
+          "link": 408
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            50
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "MaskToImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 33,
+      "type": "ImageUpscaleWithModel",
+      "pos": [
+        11569.919189453127,
+        1511.0725402832024
+      ],
+      "size": [
+        221.98203125,
+        46
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "upscale_model",
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": 49
+        },
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 50
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            51
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "ImageUpscaleWithModel"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 34,
+      "type": "ImageToMask",
+      "pos": [
+        11820.578369140627,
+        1510.1826477050774
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 21,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 51
+        },
+        {
+          "localized_name": "channel",
+          "name": "channel",
+          "type": "COMBO",
+          "widget": {
+            "name": "channel"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "MASK",
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            55
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "ImageToMask"
+      },
+      "widgets_values": [
+        "red"
+      ]
+    },
+    {
+      "id": 35,
+      "type": "JoinImageWithAlpha",
+      "pos": [
+        11309.465087890627,
+        1645.2929992675774
+      ],
+      "size": [
+        176.86484375,
+        46
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 406
+        },
+        {
+          "localized_name": "alpha",
+          "name": "alpha",
+          "type": "MASK",
+          "link": 409
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            58
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "JoinImageWithAlpha"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 37,
+      "type": "PreviewImage",
+      "pos": [
+        11568.135986328127,
+        1643.5156555175774
+      ],
+      "size": [
+        235.111083984375,
+        258
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 58
+        }
+      ],
+      "outputs": [],
+      "title": "Before Preview",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 38,
+      "type": "PreviewImage",
+      "pos": [
+        11865.921142578127,
+        1644.4050598144524
+      ],
+      "size": [
+        221.77777099609375,
+        258
+      ],
+      "flags": {},
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 59
+        }
+      ],
+      "outputs": [],
+      "title": "After Preview",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 42,
+      "type": "UpscaleModelLoader",
+      "pos": [
+        12400.944677734375,
+        1614.987957763671
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model_name",
+          "name": "model_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_name"
+          },
+          "link": 434
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "UPSCALE_MODEL",
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "links": [
+            63
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "UpscaleModelLoader"
+      },
+      "widgets_values": [
+        "1x-PBRify_NormalV3.pth"
+      ]
+    },
+    {
+      "id": 43,
+      "type": "UpscaleModelLoader",
+      "pos": [
+        12404.173193359375,
+        1747.2815368652334
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model_name",
+          "name": "model_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_name"
+          },
+          "link": 433
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "UPSCALE_MODEL",
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "links": [
+            64
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "UpscaleModelLoader"
+      },
+      "widgets_values": [
+        "1x-PBRify_RoughnessV2.pth"
+      ]
+    },
+    {
+      "id": 41,
+      "type": "UpscaleModelLoader",
+      "pos": [
+        12399.868505859375,
+        1479.468182373046
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model_name",
+          "name": "model_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_name"
+          },
+          "link": 435
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "UPSCALE_MODEL",
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "links": [
+            62
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "UpscaleModelLoader"
+      },
+      "widgets_values": [
+        "1x-PBRify_Height.pth"
+      ]
+    },
+    {
+      "id": 29,
+      "type": "UpscaleModelLoader",
+      "pos": [
+        11205.475830078127,
+        1390.1828918457024
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model_name",
+          "name": "model_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_name"
+          },
+          "link": 436
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "UPSCALE_MODEL",
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "links": [
+            45,
+            49
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "UpscaleModelLoader"
+      },
+      "widgets_values": [
+        "4x-PBRify_UpscalerDAT2_V1.pth"
+      ]
+    },
+    {
+      "id": 177,
+      "type": "LoadImage",
+      "pos": [
+        10847.58785895781,
+        1489.632572951091
+      ],
+      "size": [
+        274.080078125,
+        314
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "COMBO",
+          "widget": {
+            "name": "image"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "choose file to upload",
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "widget": {
+            "name": "upload"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            406,
+            407
+          ]
+        },
+        {
+          "localized_name": "MASK",
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            408,
+            409
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.77",
+        "Node name for S&R": "LoadImage",
+        "rtx-remix": {
+          "inputs": {
+            "image": {
+              "name": "texture",
+              "type": "str",
+              "remix_type": "texture_file_path",
+              "order": 0,
+              "additional_data": {
+                "tooltip": "Input texture file to be processed by the workflow",
+                "group": ""
+              }
+            }
+          }
+        }
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ]
+    },
+    {
+      "id": 44,
+      "type": "ImageUpscaleWithModel",
+      "pos": [
+        12712.856787109375,
+        1481.6194274902334
+      ],
+      "size": [
+        221.98203125,
+        46
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "upscale_model",
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": 62
+        },
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 427
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            410
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "ImageUpscaleWithModel"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 46,
+      "type": "ImageUpscaleWithModel",
+      "pos": [
+        12714.583349609375,
+        1749.941571044921
+      ],
+      "size": [
+        221.98203125,
+        46
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "upscale_model",
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": 64
+        },
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 429
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            412
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "ImageUpscaleWithModel"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 45,
+      "type": "ImageUpscaleWithModel",
+      "pos": [
+        12713.663427734375,
+        1616.292889404296
+      ],
+      "size": [
+        221.98203125,
+        46
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "upscale_model",
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": 63
+        },
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 428
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            413
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "ImageUpscaleWithModel"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 178,
+      "type": "RTXRemixSaveTexture",
+      "pos": [
+        13027.386865284105,
+        1044.2981823927378
+      ],
+      "size": [
+        270,
+        318
+      ],
+      "flags": {},
+      "order": 22,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "textures",
+          "name": "textures",
+          "type": "IMAGE",
+          "link": 410
+        },
+        {
+          "localized_name": "texture_type",
+          "name": "texture_type",
+          "type": "COMBO",
+          "widget": {
+            "name": "texture_type"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "file_extension",
+          "name": "file_extension",
+          "type": "COMBO",
+          "widget": {
+            "name": "file_extension"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "colorspace",
+          "name": "colorspace",
+          "type": "COMBO",
+          "widget": {
+            "name": "colorspace"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "file_path",
+          "name": "file_path",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
+        "ver": "28f395ad041bf8fca9e24b093b0bd792be541d05",
+        "Node name for S&R": "RTXRemixSaveTexture",
+        "rtx-remix": {
+          "output": {
+            "name": "height",
+            "type": "str",
+            "remix_type": "texture_file_path",
+            "order": 0,
+            "additional_data": {
+              "texture_type": "height",
+              "tooltip": "Generated height map texture output for RTX Remix",
+              "group": ""
+            }
+          }
+        }
+      },
+      "widgets_values": [
+        "height",
+        ".png",
+        "linear"
+      ]
+    },
+    {
+      "id": 179,
+      "type": "RTXRemixSaveTexture",
+      "pos": [
+        13033.090698291926,
+        1424.8167096144175
+      ],
+      "size": [
+        270,
+        318
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "textures",
+          "name": "textures",
+          "type": "IMAGE",
+          "link": 413
+        },
+        {
+          "localized_name": "texture_type",
+          "name": "texture_type",
+          "type": "COMBO",
+          "widget": {
+            "name": "texture_type"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "file_extension",
+          "name": "file_extension",
+          "type": "COMBO",
+          "widget": {
+            "name": "file_extension"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "colorspace",
+          "name": "colorspace",
+          "type": "COMBO",
+          "widget": {
+            "name": "colorspace"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "file_path",
+          "name": "file_path",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
+        "ver": "28f395ad041bf8fca9e24b093b0bd792be541d05",
+        "Node name for S&R": "RTXRemixSaveTexture",
+        "rtx-remix": {
+          "output": {
+            "name": "normal_ogl",
+            "type": "str",
+            "remix_type": "texture_file_path",
+            "order": 1,
+            "additional_data": {
+              "texture_type": "normal_ogl",
+              "tooltip": "Generated normal map texture output for RTX Remix",
+              "group": ""
+            }
+          }
+        }
+      },
+      "widgets_values": [
+        "normal_ogl",
+        ".png",
+        "linear"
+      ]
+    },
+    {
+      "id": 180,
+      "type": "RTXRemixSaveTexture",
+      "pos": [
+        13034.720288135673,
+        1808.5944165235965
+      ],
+      "size": [
+        270,
+        318.0000000000002
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "textures",
+          "name": "textures",
+          "type": "IMAGE",
+          "link": 412
+        },
+        {
+          "localized_name": "texture_type",
+          "name": "texture_type",
+          "type": "COMBO",
+          "widget": {
+            "name": "texture_type"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "file_extension",
+          "name": "file_extension",
+          "type": "COMBO",
+          "widget": {
+            "name": "file_extension"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "colorspace",
+          "name": "colorspace",
+          "type": "COMBO",
+          "widget": {
+            "name": "colorspace"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "file_path",
+          "name": "file_path",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
+        "ver": "28f395ad041bf8fca9e24b093b0bd792be541d05",
+        "Node name for S&R": "RTXRemixSaveTexture",
+        "rtx-remix": {
+          "output": {
+            "name": "roughness",
+            "type": "str",
+            "remix_type": "texture_file_path",
+            "order": 2,
+            "additional_data": {
+              "texture_type": "roughness",
+              "tooltip": "Generated roughness texture output for RTX Remix",
+              "group": ""
+            }
+          }
+        }
+      },
+      "widgets_values": [
+        "roughness",
+        ".png",
+        "linear"
+      ]
+    },
+    {
+      "id": 181,
+      "type": "RTXRemixSaveTexture",
+      "pos": [
+        13034.720153858332,
+        2185.853931904452
+      ],
+      "size": [
+        270,
+        318
+      ],
+      "flags": {},
+      "order": 27,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "textures",
+          "name": "textures",
+          "type": "IMAGE",
+          "link": 432
+        },
+        {
+          "localized_name": "texture_type",
+          "name": "texture_type",
+          "type": "COMBO",
+          "widget": {
+            "name": "texture_type"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "file_extension",
+          "name": "file_extension",
+          "type": "COMBO",
+          "widget": {
+            "name": "file_extension"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "colorspace",
+          "name": "colorspace",
+          "type": "COMBO",
+          "widget": {
+            "name": "colorspace"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "file_path",
+          "name": "file_path",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
+        "ver": "28f395ad041bf8fca9e24b093b0bd792be541d05",
+        "Node name for S&R": "RTXRemixSaveTexture",
+        "rtx-remix": {
+          "output": {
+            "name": "albedo",
+            "type": "str",
+            "remix_type": "texture_file_path",
+            "order": 3,
+            "additional_data": {
+              "texture_type": "albedo",
+              "tooltip": "Upscaled albedo texture output for RTX Remix",
+              "group": ""
+            }
+          }
+        }
+      },
+      "widgets_values": [
+        "albedo",
+        ".png",
+        "linear"
+      ]
+    },
+    {
+      "id": 27,
+      "type": "JoinImageWithAlpha",
+      "pos": [
+        12129.380126953127,
+        1513.3520812988274
+      ],
+      "size": [
+        176.86484375,
+        46
+      ],
+      "flags": {},
+      "order": 25,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 425
+        },
+        {
+          "localized_name": "alpha",
+          "name": "alpha",
+          "type": "MASK",
+          "link": 55
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            59,
+            432
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "JoinImageWithAlpha"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 31,
+      "type": "ImageUpscaleWithModel",
+      "pos": [
+        11563.696533203127,
+        1395.5158996582024
+      ],
+      "size": [
+        221.98203125,
+        46
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "upscale_model",
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": 45
+        },
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 47
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            425,
+            427,
+            428,
+            429
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.44",
+        "Node name for S&R": "ImageUpscaleWithModel"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 182,
+      "type": "Note",
+      "pos": [
+        10604.884349196263,
+        1490.7884469511184
+      ],
+      "size": [
+        210,
+        88
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "The \"image\" input of the Load Image node was tagged as an RTX Remix Input slot using the context menu"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 183,
+      "type": "Note",
+      "pos": [
+        13350.41417639158,
+        1046.624492998544
+      ],
+      "size": [
+        210,
+        88
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "The various save nodes were tagged as RTX Remix Output nodes using the context menu"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 190,
+      "type": "RTXRemixDownloadModel",
+      "pos": [
+        11506.624978729158,
+        959.2089235173944
+      ],
+      "size": [
+        242.48984375,
+        250
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "url",
+          "name": "url",
+          "type": "STRING",
+          "widget": {
+            "name": "url"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model_type",
+          "name": "model_type",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_type"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "subdirectory",
+          "name": "subdirectory",
+          "type": "STRING",
+          "widget": {
+            "name": "subdirectory"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "force_download",
+          "name": "force_download",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "force_download"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "extract_archive",
+          "name": "extract_archive",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "extract_archive"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model_source",
+          "name": "model_source",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_source"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "archive_model_filename",
+          "name": "archive_model_filename",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "archive_model_filename"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "extracted_model_hash",
+          "name": "extracted_model_hash",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "extracted_model_hash"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "hf_repo_id",
+          "name": "hf_repo_id",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "hf_repo_id"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "hf_filename",
+          "name": "hf_filename",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "hf_filename"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "hf_token",
+          "name": "hf_token",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "hf_token"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "civitai_model_id",
+          "name": "civitai_model_id",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "civitai_model_id"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "civitai_api_key",
+          "name": "civitai_api_key",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "civitai_api_key"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "custom_filename",
+          "name": "custom_filename",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "custom_filename"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "custom_hash",
+          "name": "custom_hash",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "custom_hash"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "model_name",
+          "name": "model_name",
+          "type": "*",
+          "links": [
+            435
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
+        "ver": "632b5688578f5630e4099403cd576749f54924b7",
+        "Node name for S&R": "RTXRemixDownloadModel"
+      },
+      "widgets_values": [
+        "https://github.com/Kim2091/PBRify_Remix/raw/main/Models/1x-PBRify_Height.pth",
+        "upscale_models",
+        "PBRify",
+        false,
+        false,
+        "custom",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "1x-PBRify_Height.pth",
+        "5b973ecb8bae9d96d14d77b8a8f1d88fb6a8580bcc1bb55d2872811acdc4277d",
+        null
+      ]
+    },
+    {
+      "id": 191,
+      "type": "RTXRemixDownloadModel",
+      "pos": [
+        11781.651827361096,
+        958.6018027619497
+      ],
+      "size": [
+        242.48984375,
+        250
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "url",
+          "name": "url",
+          "type": "STRING",
+          "widget": {
+            "name": "url"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model_type",
+          "name": "model_type",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_type"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "subdirectory",
+          "name": "subdirectory",
+          "type": "STRING",
+          "widget": {
+            "name": "subdirectory"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "force_download",
+          "name": "force_download",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "force_download"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "extract_archive",
+          "name": "extract_archive",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "extract_archive"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model_source",
+          "name": "model_source",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_source"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "archive_model_filename",
+          "name": "archive_model_filename",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "archive_model_filename"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "extracted_model_hash",
+          "name": "extracted_model_hash",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "extracted_model_hash"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "hf_repo_id",
+          "name": "hf_repo_id",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "hf_repo_id"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "hf_filename",
+          "name": "hf_filename",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "hf_filename"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "hf_token",
+          "name": "hf_token",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "hf_token"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "civitai_model_id",
+          "name": "civitai_model_id",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "civitai_model_id"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "civitai_api_key",
+          "name": "civitai_api_key",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "civitai_api_key"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "custom_filename",
+          "name": "custom_filename",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "custom_filename"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "custom_hash",
+          "name": "custom_hash",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "custom_hash"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "model_name",
+          "name": "model_name",
+          "type": "*",
+          "links": [
+            434
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
+        "ver": "632b5688578f5630e4099403cd576749f54924b7",
+        "Node name for S&R": "RTXRemixDownloadModel"
+      },
+      "widgets_values": [
+        "https://github.com/Kim2091/PBRify_Remix/raw/main/Models/1x-PBRify_NormalV3.pth",
+        "upscale_models",
+        "PBRify",
+        false,
+        false,
+        "custom",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "1x-PBRify_NormalV3.pth",
+        "b0a18270da765f02eaae3c228203bee0677fc28b2854a562515e4aae9c61223b",
+        null
+      ]
+    },
+    {
+      "id": 192,
+      "type": "RTXRemixDownloadModel",
+      "pos": [
+        12049.392935112879,
+        959.2089339393526
+      ],
+      "size": [
+        242.48984375,
+        250
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "url",
+          "name": "url",
+          "type": "STRING",
+          "widget": {
+            "name": "url"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model_type",
+          "name": "model_type",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_type"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "subdirectory",
+          "name": "subdirectory",
+          "type": "STRING",
+          "widget": {
+            "name": "subdirectory"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "force_download",
+          "name": "force_download",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "force_download"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "extract_archive",
+          "name": "extract_archive",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "extract_archive"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model_source",
+          "name": "model_source",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_source"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "archive_model_filename",
+          "name": "archive_model_filename",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "archive_model_filename"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "extracted_model_hash",
+          "name": "extracted_model_hash",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "extracted_model_hash"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "hf_repo_id",
+          "name": "hf_repo_id",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "hf_repo_id"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "hf_filename",
+          "name": "hf_filename",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "hf_filename"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "hf_token",
+          "name": "hf_token",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "hf_token"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "civitai_model_id",
+          "name": "civitai_model_id",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "civitai_model_id"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "civitai_api_key",
+          "name": "civitai_api_key",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "civitai_api_key"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "custom_filename",
+          "name": "custom_filename",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "custom_filename"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "custom_hash",
+          "name": "custom_hash",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "custom_hash"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "model_name",
+          "name": "model_name",
+          "type": "*",
+          "links": [
+            433
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
+        "ver": "632b5688578f5630e4099403cd576749f54924b7",
+        "Node name for S&R": "RTXRemixDownloadModel"
+      },
+      "widgets_values": [
+        "https://github.com/Kim2091/PBRify_Remix/raw/main/Models/1x-PBRify_RoughnessV2.pth",
+        "upscale_models",
+        "PBRify",
+        false,
+        false,
+        "custom",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "1x-PBRify_RoughnessV2.pth",
+        "7003c39041af64cdb77d5120bd560a2878538fbb14a07657d8fd12aac5773679",
+        null
+      ]
+    },
+    {
+      "id": 188,
+      "type": "Note",
+      "pos": [
+        10979.235564372055,
+        966.8317009690795
+      ],
+      "size": [
+        211.46918178590022,
+        112.24243264947052
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "THe models will be downloaded to the \"model/upscale_models/PBRify\" directory if they don't already exist with the correct hash, otherwise the existing files will be uses "
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 189,
+      "type": "RTXRemixDownloadModel",
+      "pos": [
+        11224.312722719704,
+        963.4587909521697
+      ],
+      "size": [
+        242.48984375,
+        250
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "url",
+          "name": "url",
+          "type": "STRING",
+          "widget": {
+            "name": "url"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model_type",
+          "name": "model_type",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_type"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "subdirectory",
+          "name": "subdirectory",
+          "type": "STRING",
+          "widget": {
+            "name": "subdirectory"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "force_download",
+          "name": "force_download",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "force_download"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "extract_archive",
+          "name": "extract_archive",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "extract_archive"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model_source",
+          "name": "model_source",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_source"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "archive_model_filename",
+          "name": "archive_model_filename",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "archive_model_filename"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "extracted_model_hash",
+          "name": "extracted_model_hash",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "extracted_model_hash"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "hf_repo_id",
+          "name": "hf_repo_id",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "hf_repo_id"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "hf_filename",
+          "name": "hf_filename",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "hf_filename"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "hf_token",
+          "name": "hf_token",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "hf_token"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "civitai_model_id",
+          "name": "civitai_model_id",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "civitai_model_id"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "civitai_api_key",
+          "name": "civitai_api_key",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "civitai_api_key"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "custom_filename",
+          "name": "custom_filename",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "custom_filename"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "custom_hash",
+          "name": "custom_hash",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "custom_hash"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "model_name",
+          "name": "model_name",
+          "type": "*",
+          "links": [
+            436
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
+        "ver": "632b5688578f5630e4099403cd576749f54924b7",
+        "Node name for S&R": "RTXRemixDownloadModel"
+      },
+      "widgets_values": [
+        "https://github.com/Kim2091/Kim2091-Models/releases/download/4x-PBRify_UpscalerDAT2_V1/4x-PBRify_UpscalerDAT2_V1.pth",
+        "upscale_models",
+        "PBRify",
+        false,
+        false,
+        "custom",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "4x-PBRify_UpscalerDAT2_V1.pth",
+        "ff133c35707986e253a9e84aae16ef0295847de41239f1eda53fbbeb0e2243b7",
+        null
+      ]
+    }
+  ],
+  "links": [
+    [
+      45,
+      29,
+      0,
+      31,
+      0,
+      "UPSCALE_MODEL"
+    ],
+    [
+      47,
+      32,
+      0,
+      31,
+      1,
+      "IMAGE"
+    ],
+    [
+      49,
+      29,
+      0,
+      33,
+      0,
+      "UPSCALE_MODEL"
+    ],
+    [
+      50,
+      28,
+      0,
+      33,
+      1,
+      "IMAGE"
+    ],
+    [
+      51,
+      33,
+      0,
+      34,
+      0,
+      "IMAGE"
+    ],
+    [
+      55,
+      34,
+      0,
+      27,
+      1,
+      "MASK"
+    ],
+    [
+      58,
+      35,
+      0,
+      37,
+      0,
+      "IMAGE"
+    ],
+    [
+      59,
+      27,
+      0,
+      38,
+      0,
+      "IMAGE"
+    ],
+    [
+      62,
+      41,
+      0,
+      44,
+      0,
+      "UPSCALE_MODEL"
+    ],
+    [
+      63,
+      42,
+      0,
+      45,
+      0,
+      "UPSCALE_MODEL"
+    ],
+    [
+      64,
+      43,
+      0,
+      46,
+      0,
+      "UPSCALE_MODEL"
+    ],
+    [
+      406,
+      177,
+      0,
+      35,
+      0,
+      "IMAGE"
+    ],
+    [
+      407,
+      177,
+      0,
+      32,
+      0,
+      "*"
+    ],
+    [
+      408,
+      177,
+      1,
+      28,
+      0,
+      "MASK"
+    ],
+    [
+      409,
+      177,
+      1,
+      35,
+      1,
+      "MASK"
+    ],
+    [
+      410,
+      44,
+      0,
+      178,
+      0,
+      "IMAGE"
+    ],
+    [
+      412,
+      46,
+      0,
+      180,
+      0,
+      "IMAGE"
+    ],
+    [
+      413,
+      45,
+      0,
+      179,
+      0,
+      "IMAGE"
+    ],
+    [
+      425,
+      31,
+      0,
+      27,
+      0,
+      "IMAGE"
+    ],
+    [
+      427,
+      31,
+      0,
+      44,
+      1,
+      "IMAGE"
+    ],
+    [
+      428,
+      31,
+      0,
+      45,
+      1,
+      "IMAGE"
+    ],
+    [
+      429,
+      31,
+      0,
+      46,
+      1,
+      "IMAGE"
+    ],
+    [
+      432,
+      27,
+      0,
+      181,
+      0,
+      "IMAGE"
+    ],
+    [
+      433,
+      192,
+      0,
+      43,
+      0,
+      "COMBO"
+    ],
+    [
+      434,
+      191,
+      0,
+      42,
+      0,
+      "COMBO"
+    ],
+    [
+      435,
+      190,
+      0,
+      41,
+      0,
+      "COMBO"
+    ],
+    [
+      436,
+      189,
+      0,
+      29,
+      0,
+      "COMBO"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 4,
+      "title": "Load the captured texture",
+      "bounding": [
+        10830.689291293325,
+        1407.5177780772729,
+        309.7683013916012,
+        418.739245605469
+      ],
+      "color": "#8A8",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 5,
+      "title": "Upscale the captured texture",
+      "bounding": [
+        11185.33134765625,
+        1301.6193786621093,
+        1146.4563842773441,
+        619.9741088867186
+      ],
+      "color": "#88A",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 6,
+      "title": "Generate the height, normal & roughness maps",
+      "bounding": [
+        12380.793713378906,
+        1342.0685119628909,
+        578.596325683593,
+        560.1523803710936
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 10,
+      "title": "Save the generated textures",
+      "bounding": [
+        13005.142480518476,
+        954.1389019972319,
+        324.9630126953125,
+        1576.0005035400386
+      ],
+      "color": "#b06634",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 11,
+      "title": "Download Model Weights",
+      "bounding": [
+        11206.908529956429,
+        874.0238031257585,
+        1098.9908748835405,
+        356.0521899506607
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.1000000000000005,
+      "offset": [
+        -10897.42782411051,
+        -645.6742336187588
+      ]
+    },
+    "frontendVersion": "1.23.4",
+    "workflowRendererVersion": "LG",
+    "reroutes": [
+      {
+        "id": 2,
+        "pos": [
+          11743.770472995358,
+          1252.640941184259
+        ],
+        "linkIds": [
+          435
+        ]
+      },
+      {
+        "id": 3,
+        "pos": [
+          12020.839256112778,
+          1266.99110602917
+        ],
+        "linkIds": [
+          434
+        ]
+      },
+      {
+        "id": 5,
+        "pos": [
+          11472.772726891251,
+          1254.296744011762
+        ],
+        "linkIds": [
+          436
+        ]
+      },
+      {
+        "id": 6,
+        "parentId": 5,
+        "pos": [
+          11161.484182896944,
+          1261.4718643322453
+        ],
+        "linkIds": [
+          436
+        ]
+      },
+      {
+        "id": 7,
+        "parentId": 6,
+        "pos": [
+          11159.8284558655,
+          1425.395055721832
+        ],
+        "linkIds": [
+          436
+        ]
+      },
+      {
+        "id": 8,
+        "pos": [
+          12305.083424836896,
+          1284.10100541663
+        ],
+        "linkIds": [
+          433
+        ]
+      },
+      {
+        "id": 9,
+        "parentId": 2,
+        "pos": [
+          12370.762908863891,
+          1258.1602965752736
+        ],
+        "linkIds": [
+          435
+        ]
+      },
+      {
+        "id": 10,
+        "parentId": 3,
+        "pos": [
+          12355.309001794072,
+          1269.7508405717206
+        ],
+        "linkIds": [
+          434
+        ]
+      },
+      {
+        "id": 11,
+        "parentId": 8,
+        "pos": [
+          12340.406814244594,
+          1284.1009296205696
+        ],
+        "linkIds": [
+          433
+        ]
+      },
+      {
+        "id": 12,
+        "parentId": 11,
+        "pos": [
+          12350.341631209601,
+          1779.182147342363
+        ],
+        "linkIds": [
+          433
+        ]
+      },
+      {
+        "id": 13,
+        "parentId": 10,
+        "pos": [
+          12361.38019039951,
+          1650.5826106466882
+        ],
+        "linkIds": [
+          434
+        ]
+      },
+      {
+        "id": 14,
+        "parentId": 9,
+        "pos": [
+          12372.418749589418,
+          1515.9115821613416
+        ],
+        "linkIds": [
+          435
+        ]
+      },
+      {
+        "id": 15,
+        "pos": [
+          12310.955161567897,
+          1862.847066769119
+        ],
+        "linkIds": [
+          432
+        ]
+      },
+      {
+        "id": 16,
+        "pos": [
+          12094.389859677287,
+          1408.4901829463063
+        ],
+        "linkIds": [
+          425,
+          427,
+          428,
+          429
+        ]
+      },
+      {
+        "id": 17,
+        "parentId": 16,
+        "pos": [
+          12691.5618234557,
+          1411.7225493348003
+        ],
+        "linkIds": [
+          427,
+          428,
+          429
+        ]
+      },
+      {
+        "id": 18,
+        "parentId": 15,
+        "pos": [
+          12935.602017880421,
+          1869.9043675166176
+        ],
+        "linkIds": [
+          432
+        ]
+      }
+    ],
+    "linkExtensions": [
+      {
+        "id": 425,
+        "parentId": 16
+      },
+      {
+        "id": 427,
+        "parentId": 17
+      },
+      {
+        "id": 428,
+        "parentId": 17
+      },
+      {
+        "id": 429,
+        "parentId": 17
+      },
+      {
+        "id": 432,
+        "parentId": 18
+      },
+      {
+        "id": 433,
+        "parentId": 12
+      },
+      {
+        "id": 434,
+        "parentId": 13
+      },
+      {
+        "id": 435,
+        "parentId": 14
+      },
+      {
+        "id": 436,
+        "parentId": 7
+      }
+    ]
+  },
+  "version": 0.4
+}

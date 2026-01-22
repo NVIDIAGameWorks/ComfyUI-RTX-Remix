@@ -17,16 +17,17 @@
 
 from __future__ import annotations
 
-__all__ = ["TextureType", "FileExtension", "Colorspace", "RemixSaveTexture"]
+__all__ = ["TextureType", "FileExtension", "Colorspace", "SaveTextureNode"]
 
 import uuid
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import folder_paths
 import numpy as np
+from comfy_api.latest import io
 from comfy_execution.utils import get_executing_context
 from Imath import Channel, PixelType
 from OpenEXR import Header, OutputFile
@@ -68,59 +69,54 @@ class Colorspace(Enum):
     SRGB = "sRGB"
 
 
-class RemixSaveTexture:
+class SaveTextureNode(io.ComfyNode):
     """Save a texture to the file system"""
 
     @classmethod
-    def INPUT_TYPES(cls):  # noqa N802
-        inputs = {
-            "required": {
-                "textures": ("IMAGE", {}),
-                "texture_type": (
-                    [e.value for e in TextureType],
-                    {"default": TextureType.DIFFUSE.value},
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="RTXRemixSaveTexture",
+            display_name="💾 RTX Remix Save Texture",
+            category=PREFIX_BASE,
+            description="Save a texture to the file system to be used in RTX Remix",
+            inputs=[
+                io.Image.Input("textures", tooltip="Input images to save"),
+                io.Combo.Input(
+                    "texture_type",
+                    options=[e.value for e in TextureType],
+                    default=TextureType.DIFFUSE.value,
+                    tooltip="Type of texture being saved",
                 ),
-                "file_extension": (
-                    [e.value for e in FileExtension],
-                    {"default": FileExtension.PNG.value},
+                io.Combo.Input(
+                    "file_extension",
+                    options=[e.value for e in FileExtension],
+                    default=FileExtension.PNG.value,
+                    tooltip="File format to save as",
                 ),
-                "colorspace": (
-                    [e.value for e in Colorspace],
-                    {"default": Colorspace.LINEAR.value},
+                io.Combo.Input(
+                    "colorspace",
+                    options=[e.value for e in Colorspace],
+                    default=Colorspace.LINEAR.value,
+                    tooltip="Color space for the output",
                 ),
-            },
-            "hidden": {
-                "extra_pnginfo": "EXTRA_PNGINFO",
-            },
-        }
-        return inputs
+            ],
+            hidden=[io.Hidden.extra_pnginfo],
+            outputs=[
+                io.String.Output("file_path", display_name="file_path"),
+            ],
+            is_output_node=True,
+        )
 
-    DESCRIPTION = "Save a texture to the file system to be used in RTX Remix"
-
-    FUNCTION = "save_image"
-
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("file_path",)
-
-    CATEGORY = PREFIX_BASE
-
-    OUTPUT_NODE = True
-
-    def save_image(
-        self,
-        textures: torch.Tensor,
+    @classmethod
+    def execute(
+        cls,
+        textures: "torch.Tensor",
         texture_type: str,
         file_extension: str,
         colorspace: str,
-        extra_pnginfo=None,
-    ):
+        hidden: io.HiddenHolder | None = None,
+    ) -> io.NodeOutput:
         global _prompt_id, _prompt_timestamp
-
-        remix_job_id = None
-
-        # Check if metadata is stored in extra_pnginfo
-        if extra_pnginfo is not None:
-            remix_job_id = extra_pnginfo.get("rtx-remix", {}).get("job_id")
 
         # Get the execution context to access the unique prompt_id for this run
         context = get_executing_context()
@@ -133,9 +129,15 @@ class RemixSaveTexture:
             _prompt_id = prompt_id
             _prompt_timestamp = timestamp
 
-        # Use remix_job_id or current execution timestamp as subdirectory
-        sub_directory = remix_job_id or _prompt_timestamp
-        output_directory = Path(folder_paths.get_output_directory()) / sub_directory
+        # Check if metadata is stored in extra_pnginfo
+        extra_pnginfo = hidden.extra_pnginfo if hidden else None
+        metadata_subfolder = None
+        if extra_pnginfo is not None:
+            metadata_subfolder = extra_pnginfo.get("rtx-remix", {}).get("subfolder")
+
+        # Use subfolder in the metadata or current execution timestamp as subdirectory
+        subfolder = metadata_subfolder or _prompt_timestamp
+        output_directory = Path(folder_paths.get_output_directory()) / subfolder
 
         # Create output directory if it doesn't exist
         output_directory.mkdir(parents=True, exist_ok=True)
@@ -160,7 +162,7 @@ class RemixSaveTexture:
             # Note: ComfyUI internal format is linear [0,1]
             if colorspace == Colorspace.SRGB.value:
                 # Convert from linear to sRGB
-                np_img = self._linear_to_srgb(np_img)
+                np_img = cls._linear_to_srgb(np_img)
 
             if file_extension == FileExtension.EXR.value:
                 # Save the image using OpenEXR
@@ -187,7 +189,7 @@ class RemixSaveTexture:
                 results.append(
                     {
                         "filename": file_path.name,
-                        "subfolder": sub_directory,
+                        "subfolder": subfolder,
                         "type": "output",
                     }
                 )
@@ -215,16 +217,17 @@ class RemixSaveTexture:
                 results.append(
                     {
                         "filename": file_path.name,
-                        "subfolder": sub_directory,
+                        "subfolder": subfolder,
                         "type": "output",
                     }
                 )
 
             output_paths.append(str(file_path))
 
-        return {"ui": {"images": results}, "result": (output_paths,)}
+        return io.NodeOutput(output_paths, ui={"images": results})
 
-    def _linear_to_srgb(self, linear: np.ndarray) -> np.ndarray:
+    @staticmethod
+    def _linear_to_srgb(linear: np.ndarray) -> np.ndarray:
         """
         Convert linear RGB to sRGB (apply gamma encoding).
 
@@ -236,7 +239,7 @@ class RemixSaveTexture:
         return np.where(linear <= 0.0031308, linear * 12.92, 1.055 * np.power(linear, 1.0 / 2.4) - 0.055)
 
     @classmethod
-    def IS_CHANGED(cls, **kwargs):  # noqa N802
+    def fingerprint_inputs(cls, **kwargs) -> Any:
         """
         Always process the node
         """
