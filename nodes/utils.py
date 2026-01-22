@@ -15,12 +15,15 @@
 * limitations under the License.
 """
 
-import logging
 import pathlib
 
 import requests
 
-_logger = logging.getLogger(__name__)
+from ..utils import get_logger
+
+__all__ = ["merge_dict", "check_response_status_code", "posix"]
+
+_logger = get_logger(__name__)
 
 
 def merge_dict(source: dict, destination: dict) -> dict:
@@ -56,10 +59,10 @@ def check_response_status_code(response: requests.Response) -> None:
         # Only try to parse JSON when there's an error
         try:
             r = response.json()
-            _logger.error(f"Requested URL: {response.url}\n" f"Raw Response: \n\n{pprint.pformat(r)}\n")  # noqa
+            _logger.error(f"Requested URL: {response.url}\nRaw Response: \n\n{pprint.pformat(r)}\n")  # noqa
         except (ValueError, requests.exceptions.JSONDecodeError):
             # If response is not JSON, just log the text
-            _logger.error(f"Requested URL: {response.url}\n" f"Raw Response: \n\n{response.text}\n")  # noqa
+            _logger.error(f"Requested URL: {response.url}\nRaw Response: \n\n{response.text}\n")  # noqa
         raise err
 
 

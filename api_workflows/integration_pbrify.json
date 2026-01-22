@@ -1,0 +1,438 @@
+{
+  "27": {
+    "inputs": {
+      "image": [
+        "31",
+        0
+      ],
+      "alpha": [
+        "34",
+        0
+      ]
+    },
+    "class_type": "JoinImageWithAlpha",
+    "_meta": {
+      "title": "Join Image with Alpha"
+    }
+  },
+  "28": {
+    "inputs": {
+      "mask": [
+        "177",
+        1
+      ]
+    },
+    "class_type": "MaskToImage",
+    "_meta": {
+      "title": "Convert Mask to Image"
+    }
+  },
+  "29": {
+    "inputs": {
+      "model_name": [
+        "189",
+        0
+      ]
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Load Upscale Model"
+    }
+  },
+  "31": {
+    "inputs": {
+      "upscale_model": [
+        "29",
+        0
+      ],
+      "image": [
+        "177",
+        0
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel",
+    "_meta": {
+      "title": "Upscale Image (using Model)"
+    }
+  },
+  "33": {
+    "inputs": {
+      "upscale_model": [
+        "29",
+        0
+      ],
+      "image": [
+        "28",
+        0
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel",
+    "_meta": {
+      "title": "Upscale Image (using Model)"
+    }
+  },
+  "34": {
+    "inputs": {
+      "channel": "red",
+      "image": [
+        "33",
+        0
+      ]
+    },
+    "class_type": "ImageToMask",
+    "_meta": {
+      "title": "Convert Image to Mask"
+    }
+  },
+  "35": {
+    "inputs": {
+      "image": [
+        "177",
+        0
+      ],
+      "alpha": [
+        "177",
+        1
+      ]
+    },
+    "class_type": "JoinImageWithAlpha",
+    "_meta": {
+      "title": "Join Image with Alpha"
+    }
+  },
+  "37": {
+    "inputs": {
+      "images": [
+        "35",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Before Preview"
+    }
+  },
+  "38": {
+    "inputs": {
+      "images": [
+        "27",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "After Preview"
+    }
+  },
+  "41": {
+    "inputs": {
+      "model_name": [
+        "190",
+        0
+      ]
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Load Upscale Model"
+    }
+  },
+  "42": {
+    "inputs": {
+      "model_name": [
+        "191",
+        0
+      ]
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Load Upscale Model"
+    }
+  },
+  "43": {
+    "inputs": {
+      "model_name": [
+        "192",
+        0
+      ]
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Load Upscale Model"
+    }
+  },
+  "44": {
+    "inputs": {
+      "upscale_model": [
+        "41",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel",
+    "_meta": {
+      "title": "Upscale Image (using Model)"
+    }
+  },
+  "45": {
+    "inputs": {
+      "upscale_model": [
+        "42",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel",
+    "_meta": {
+      "title": "Upscale Image (using Model)"
+    }
+  },
+  "46": {
+    "inputs": {
+      "upscale_model": [
+        "43",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel",
+    "_meta": {
+      "title": "Upscale Image (using Model)"
+    }
+  },
+  "177": {
+    "inputs": {
+      "image": "example.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image",
+      "rtx-remix": {
+        "inputs": {
+          "image": {
+            "name": "texture",
+            "type": "str",
+            "remix_type": "texture_file_path",
+            "order": 0,
+            "additional_data": {
+              "tooltip": "Input texture file to be processed by the workflow",
+              "group": ""
+            }
+          }
+        }
+      }
+    }
+  },
+  "178": {
+    "inputs": {
+      "texture_type": "height",
+      "file_extension": ".png",
+      "colorspace": "linear",
+      "textures": [
+        "44",
+        0
+      ]
+    },
+    "class_type": "RTXRemixSaveTexture",
+    "_meta": {
+      "title": "\ud83d\udcbe RTX Remix Save Texture",
+      "rtx-remix": {
+        "output": {
+          "name": "height",
+          "type": "str",
+          "remix_type": "texture_file_path",
+          "order": 0,
+          "additional_data": {
+            "texture_type": "height",
+            "tooltip": "Generated height map texture output for RTX Remix",
+            "group": ""
+          }
+        }
+      }
+    }
+  },
+  "179": {
+    "inputs": {
+      "texture_type": "normal_ogl",
+      "file_extension": ".png",
+      "colorspace": "linear",
+      "textures": [
+        "45",
+        0
+      ]
+    },
+    "class_type": "RTXRemixSaveTexture",
+    "_meta": {
+      "title": "\ud83d\udcbe RTX Remix Save Texture",
+      "rtx-remix": {
+        "output": {
+          "name": "normal_ogl",
+          "type": "str",
+          "remix_type": "texture_file_path",
+          "order": 1,
+          "additional_data": {
+            "texture_type": "normal_ogl",
+            "tooltip": "Generated normal map texture output for RTX Remix",
+            "group": ""
+          }
+        }
+      }
+    }
+  },
+  "180": {
+    "inputs": {
+      "texture_type": "roughness",
+      "file_extension": ".png",
+      "colorspace": "linear",
+      "textures": [
+        "46",
+        0
+      ]
+    },
+    "class_type": "RTXRemixSaveTexture",
+    "_meta": {
+      "title": "\ud83d\udcbe RTX Remix Save Texture",
+      "rtx-remix": {
+        "output": {
+          "name": "roughness",
+          "type": "str",
+          "remix_type": "texture_file_path",
+          "order": 2,
+          "additional_data": {
+            "texture_type": "roughness",
+            "tooltip": "Generated roughness texture output for RTX Remix",
+            "group": ""
+          }
+        }
+      }
+    }
+  },
+  "181": {
+    "inputs": {
+      "texture_type": "albedo",
+      "file_extension": ".png",
+      "colorspace": "linear",
+      "textures": [
+        "27",
+        0
+      ]
+    },
+    "class_type": "RTXRemixSaveTexture",
+    "_meta": {
+      "title": "\ud83d\udcbe RTX Remix Save Texture",
+      "rtx-remix": {
+        "output": {
+          "name": "albedo",
+          "type": "str",
+          "remix_type": "texture_file_path",
+          "order": 3,
+          "additional_data": {
+            "texture_type": "albedo",
+            "tooltip": "Upscaled albedo texture output for RTX Remix",
+            "group": ""
+          }
+        }
+      }
+    }
+  },
+  "189": {
+    "inputs": {
+      "url": "https://github.com/Kim2091/Kim2091-Models/releases/download/4x-PBRify_UpscalerDAT2_V1/4x-PBRify_UpscalerDAT2_V1.pth",
+      "model_type": "upscale_models",
+      "subdirectory": "PBRify",
+      "force_download": false,
+      "extract_archive": false,
+      "model_source": "custom",
+      "archive_model_filename": "",
+      "extracted_model_hash": "",
+      "hf_repo_id": "",
+      "hf_filename": "",
+      "hf_token": "",
+      "civitai_model_id": "",
+      "civitai_api_key": "",
+      "custom_filename": "4x-PBRify_UpscalerDAT2_V1.pth",
+      "custom_hash": "ff133c35707986e253a9e84aae16ef0295847de41239f1eda53fbbeb0e2243b7"
+    },
+    "class_type": "RTXRemixDownloadModel",
+    "_meta": {
+      "title": "\ud83e\uddf2 RTX Remix Download Model"
+    }
+  },
+  "190": {
+    "inputs": {
+      "url": "https://github.com/Kim2091/PBRify_Remix/raw/main/Models/1x-PBRify_Height.pth",
+      "model_type": "upscale_models",
+      "subdirectory": "PBRify",
+      "force_download": false,
+      "extract_archive": false,
+      "model_source": "custom",
+      "archive_model_filename": "",
+      "extracted_model_hash": "",
+      "hf_repo_id": "",
+      "hf_filename": "",
+      "hf_token": "",
+      "civitai_model_id": "",
+      "civitai_api_key": "",
+      "custom_filename": "1x-PBRify_Height.pth",
+      "custom_hash": "5b973ecb8bae9d96d14d77b8a8f1d88fb6a8580bcc1bb55d2872811acdc4277d"
+    },
+    "class_type": "RTXRemixDownloadModel",
+    "_meta": {
+      "title": "\ud83e\uddf2 RTX Remix Download Model"
+    }
+  },
+  "191": {
+    "inputs": {
+      "url": "https://github.com/Kim2091/PBRify_Remix/raw/main/Models/1x-PBRify_NormalV3.pth",
+      "model_type": "upscale_models",
+      "subdirectory": "PBRify",
+      "force_download": false,
+      "extract_archive": false,
+      "model_source": "custom",
+      "archive_model_filename": "",
+      "extracted_model_hash": "",
+      "hf_repo_id": "",
+      "hf_filename": "",
+      "hf_token": "",
+      "civitai_model_id": "",
+      "civitai_api_key": "",
+      "custom_filename": "1x-PBRify_NormalV3.pth",
+      "custom_hash": "b0a18270da765f02eaae3c228203bee0677fc28b2854a562515e4aae9c61223b"
+    },
+    "class_type": "RTXRemixDownloadModel",
+    "_meta": {
+      "title": "\ud83e\uddf2 RTX Remix Download Model"
+    }
+  },
+  "192": {
+    "inputs": {
+      "url": "https://github.com/Kim2091/PBRify_Remix/raw/main/Models/1x-PBRify_RoughnessV2.pth",
+      "model_type": "upscale_models",
+      "subdirectory": "PBRify",
+      "force_download": false,
+      "extract_archive": false,
+      "model_source": "custom",
+      "archive_model_filename": "",
+      "extracted_model_hash": "",
+      "hf_repo_id": "",
+      "hf_filename": "",
+      "hf_token": "",
+      "civitai_model_id": "",
+      "civitai_api_key": "",
+      "custom_filename": "1x-PBRify_RoughnessV2.pth",
+      "custom_hash": "7003c39041af64cdb77d5120bd560a2878538fbb14a07657d8fd12aac5773679"
+    },
+    "class_type": "RTXRemixDownloadModel",
+    "_meta": {
+      "title": "\ud83e\uddf2 RTX Remix Download Model"
+    }
+  }
+}

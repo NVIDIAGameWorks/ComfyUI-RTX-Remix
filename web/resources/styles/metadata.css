@@ -1,0 +1,80 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* RTX Remix Metadata Accordion */
+
+.rtx-remix-metadata-accordion {
+  background: var(--bg-darker);
+}
+
+.rtx-remix-metadata-accordion td {
+  padding: 0 !important;
+  border-top: none !important;
+}
+
+.rtx-remix-metadata-form {
+  padding: 16px;
+  border-top: 1px solid var(--border-base);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rtx-remix-metadata-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rtx-remix-metadata-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rtx-remix-metadata-input,
+.rtx-remix-metadata-input[type="text"],
+.rtx-remix-metadata-input[type="number"] {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--bg-darkest);
+  border: 1px solid var(--border-base);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+textarea.rtx-remix-metadata-input {
+  resize: vertical;
+  font-family: inherit;
+  min-height: 60px;
+}
+
+.rtx-remix-metadata-input:focus {
+  border-color: var(--remix-color);
+  box-shadow: 0 0 0 2px var(--remix-color-shadow);
+}
+
+.rtx-remix-metadata-input::placeholder {
+  color: var(--text-placeholder);
+  font-style: italic;
+}

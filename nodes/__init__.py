@@ -15,109 +15,84 @@
 * limitations under the License.
 """
 
-from .api.file import DeleteFile
-from .api.ingestion import GetDefaultDirectory, IngestTexture
-from .api.layers import (
-    CloseProject,
-    CreateLayer,
-    DefineLayerId,
-    GetEditTarget,
-    GetLayers,
-    GetLoadedProject,
-    LayerType,
-    LayerTypes,
-    MuteLayer,
-    OpenProject,
-    RemoveLayer,
-    SaveLayer,
-    SetEditTarget,
-)
-from .api.textures import (
-    GetTextures,
-    SetTexture,
-    TexturesType,
-    TexturesTypes,
-    TextureTypeToUSDAttribute,
-)
-from .common import (
-    EndContext,
-    InvertBool,
-    RestAPIDetails,
-    StartContext,
-    StringConcatenate,
-    StringConstant,
-    StrToList,
-    Switch,
-)
-from .save import RemixSaveTexture
+from __future__ import annotations
 
-# A dictionary that contains all nodes you want to export with their names
-# NOTE: names should be globally unique
-NODE_CLASS_MAPPINGS = {
-    "RTXRemixCloseProject": CloseProject,
-    "RTXRemixCreateLayer": CreateLayer,
-    "RTXRemixDefineLayerId": DefineLayerId,
-    "RTXRemixDeleteFile": DeleteFile,
-    "RTXRemixEndContext": EndContext,
-    "RTXRemixGetDefaultDirectory": GetDefaultDirectory,
-    "RTXRemixGetEditTarget": GetEditTarget,
-    "RTXRemixGetLayers": GetLayers,
-    "RTXRemixGetLoadedProject": GetLoadedProject,
-    "RTXRemixGetTextures": GetTextures,
-    "RTXRemixIngestTexture": IngestTexture,
-    "RTXRemixInvertBool": InvertBool,
-    "RTXRemixLayerType": LayerType,
-    "RTXRemixLayerTypes": LayerTypes,
-    "RTXRemixMuteLayer": MuteLayer,
-    "RTXRemixOpenProject": OpenProject,
-    "RTXRemixRemoveLayer": RemoveLayer,
-    "RTXRemixRestAPIDetails": RestAPIDetails,
-    "RTXRemixSaveTexture": RemixSaveTexture,
-    "RTXRemixSaveLayer": SaveLayer,
-    "RTXRemixSetEditTarget": SetEditTarget,
-    "RTXRemixSetTexture": SetTexture,
-    "RTXRemixStartContext": StartContext,
-    "RTXRemixStringConcatenate": StringConcatenate,
-    "RTXRemixStringConstant": StringConstant,
-    "RTXRemixStrToList": StrToList,
-    "RTXRemixSwitch": Switch,
-    "RTXRemixTexturesType": TexturesType,
-    "RTXRemixTexturesTypes": TexturesTypes,
-    "RTXRemixTextureTypeToUSDAttribute": TextureTypeToUSDAttribute,
-}
+# REST API Nodes
+from .rest_api.common import (
+    RestAPIDetailsNode,
+    RestAPIEndContextNode,
+    RestAPIInvertBoolNode,
+    RestAPIStartContextNode,
+    RestAPIStringConcatenateNode,
+    RestAPIStringConstantNode,
+    RestAPIStrToListNode,
+    RestAPISwitchNode,
+)
+from .rest_api.file import RestAPIDeleteFileNode
+from .rest_api.ingestion import (
+    RestAPIGetDefaultDirectoryNode,
+    RestAPIIngestTextureNode,
+)
+from .rest_api.layers import (
+    RestAPICloseProjectNode,
+    RestAPICreateLayerNode,
+    RestAPIDefineLayerIdNode,
+    RestAPIGetEditTargetNode,
+    RestAPIGetLayersNode,
+    RestAPIGetLoadedProjectNode,
+    RestAPILayerTypeNode,
+    RestAPILayerTypesNode,
+    RestAPIMuteLayerNode,
+    RestAPIOpenProjectNode,
+    RestAPIRemoveLayerNode,
+    RestAPISaveLayerNode,
+    RestAPISetEditTargetNode,
+)
+from .rest_api.textures import (
+    RestAPIGetTexturesNode,
+    RestAPISetTextureNode,
+    RestAPITexturesTypeNode,
+    RestAPITexturesTypesNode,
+    RestAPITextureTypeToUSDAttributeNode,
+)
 
-# A dictionary that contains the friendly/humanly readable titles for the nodes
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "RTXRemixCloseProject": "RTX Remix Close Project",
-    "RTXRemixCreateLayer": "RTX Remix Create Layer",
-    "RTXRemixDefineLayerId": "RTX Remix Define Layer ID",
-    "RTXRemixDeleteFile": "RTX Remix Delete File",
-    "RTXRemixEndContext": "RTX Remix End Context",
-    "RTXRemixGetDefaultDirectory": "RTX Remix Get Default Directory",
-    "RTXRemixGetEditTarget": "RTX Remix Get Edit Target",
-    "RTXRemixGetLayers": "RTX Remix Get Layers",
-    "RTXRemixGetLoadedProject": "RTX Remix Get Loaded Project",
-    "RTXRemixGetTextures": "RTX Remix Get Textures",
-    "RTXRemixIngestTexture": "RTX Remix Ingest Texture",
-    "RTXRemixInvertBool": "RTX Remix Invert Boolean Value",
-    "RTXRemixLayerType": "RTX Remix Layer Type",
-    "RTXRemixLayerTypes": "RTX Remix Layer Types",
-    "RTXRemixMuteLayer": "RTX Remix Mute Layer",
-    "RTXRemixOpenProject": "RTX Remix Open Project",
-    "RTXRemixRemoveLayer": "RTX Remix Remove Layer",
-    "RTXRemixRestAPIDetails": "RTX Remix Rest API Details",
-    "RTXRemixSaveTexture": "RTX Remix Save Texture",
-    "RTXRemixSaveLayer": "RTX Remix Save Layer",
-    "RTXRemixSetEditTarget": "RTX Remix Set Edit Target",
-    "RTXRemixSetTexture": "RTX Remix Set Texture",
-    "RTXRemixStartContext": "RTX Remix Start Context",
-    "RTXRemixStringConcatenate": "RTX Remix String Concatenate",
-    "RTXRemixStringConstant": "RTX Remix String Constant",
-    "RTXRemixStrToList": "RTX Remix String to List",
-    "RTXRemixSwitch": "RTX Remix Switch",
-    "RTXRemixTexturesType": "RTX Remix Texture Type",
-    "RTXRemixTexturesTypes": "RTX Remix Texture Types",
-    "RTXRemixTextureTypeToUSDAttribute": "RTX Remix Texture Type To USD Attribute",
-}
+# Top-Level Nodes
+from .download import DownloadModelNode
+from .save import SaveTextureNode
 
-__all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
+# Nodes for extension entry point
+RTX_REMIX_NODES = [
+    DownloadModelNode,
+    SaveTextureNode,
+    RestAPIDetailsNode,
+    RestAPIStartContextNode,
+    RestAPIEndContextNode,
+    RestAPIStringConstantNode,
+    RestAPIStringConcatenateNode,
+    RestAPISwitchNode,
+    RestAPIInvertBoolNode,
+    RestAPIStrToListNode,
+    RestAPIDefineLayerIdNode,
+    RestAPICreateLayerNode,
+    RestAPILayerTypeNode,
+    RestAPILayerTypesNode,
+    RestAPIGetLayersNode,
+    RestAPIMuteLayerNode,
+    RestAPIRemoveLayerNode,
+    RestAPISaveLayerNode,
+    RestAPIGetEditTargetNode,
+    RestAPISetEditTargetNode,
+    RestAPICloseProjectNode,
+    RestAPIOpenProjectNode,
+    RestAPIGetLoadedProjectNode,
+    RestAPIDeleteFileNode,
+    RestAPIIngestTextureNode,
+    RestAPIGetDefaultDirectoryNode,
+    RestAPIGetTexturesNode,
+    RestAPITexturesTypesNode,
+    RestAPITexturesTypeNode,
+    RestAPISetTextureNode,
+    RestAPITextureTypeToUSDAttributeNode,
+]
+
+__all__ = ["RTX_REMIX_NODES"]

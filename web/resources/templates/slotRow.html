@@ -1,0 +1,48 @@
+<!--
+  SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+  SPDX-License-Identifier: Apache-2.0
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<template id="rtx-remix-slot-row-template">
+  <tr draggable="true" class="rtx-remix-draggable-row">
+    <td class="rtx-remix-drag-handle">
+      <span class="rtx-remix-drag-icon">⋮⋮</span>
+    </td>
+    <td>
+      <span class="rtx-remix-slot-node" data-bind="nodeTitle"></span>
+    </td>
+    <td>
+      <input
+        type="text"
+        class="rtx-remix-slot-name-input"
+        data-bind="exportName"
+        data-fields="nodeId,slotName,isInput"
+        placeholder=""
+        data-bind-placeholder="slotName"
+      />
+    </td>
+    <td>
+      <span class="rtx-remix-slot-type" data-bind="comfyuiType"></span>
+    </td>
+    <td>
+      <select class="rtx-remix-slot-type-select" data-fields="nodeId,slotName,isInput">
+        <!-- Options populated dynamically -->
+      </select>
+    </td>
+    <td class="rtx-remix-details-cell">
+      <button class="rtx-remix-details-btn" type="button">▼</button>
+    </td>
+  </tr>
+</template>

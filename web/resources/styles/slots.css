@@ -1,0 +1,249 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* RTX Remix Slots Section */
+
+.rtx-remix-slots-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-base);
+}
+
+.rtx-remix-slots-info {
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--text-subtle);
+}
+
+.rtx-remix-table-wrapper {
+  margin-bottom: 20px;
+}
+
+.rtx-remix-table-wrapper:last-of-type {
+  margin-bottom: 0;
+}
+
+.rtx-remix-table-heading {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--remix-color);
+}
+
+.rtx-remix-table-container {
+  min-height: 150px;
+  max-height: 20vh;
+  overflow-x: auto;
+  overflow-y: auto;
+  border: 1px solid var(--border-base);
+  border-radius: 6px;
+  background: var(--bg-darker);
+}
+
+/* Custom scrollbar for table containers */
+.rtx-remix-table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.rtx-remix-table-container::-webkit-scrollbar-track {
+  background: var(--bg-darker);
+  border-radius: 4px;
+}
+
+.rtx-remix-table-container::-webkit-scrollbar-thumb {
+  background: var(--bg-hover);
+  border-radius: 4px;
+}
+
+.rtx-remix-table-container::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}
+
+.rtx-remix-slots-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.rtx-remix-slots-table thead {
+  background: var(--bg-medium);
+  border-bottom: 1px solid var(--border-base);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.rtx-remix-slots-table th {
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  background: var(--bg-medium);
+}
+
+.rtx-remix-slots-table td {
+  padding: 10px 12px;
+  border-top: 1px solid var(--bg-base);
+  color: var(--text-secondary);
+}
+
+.rtx-remix-slots-table tbody tr:hover {
+  background: var(--bg-dark);
+}
+
+.rtx-remix-slot-node {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.rtx-remix-slot-type {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--bg-base);
+  border: 1px solid var(--border-base);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--accent-blue);
+}
+
+/* Shared input/select base styles */
+.rtx-remix-slot-name-input,
+.rtx-remix-slot-type-select {
+  width: 100%;
+  padding: 6px 8px;
+  background: var(--bg-darker);
+  border: 1px solid var(--border-base);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.rtx-remix-slot-name-input {
+  min-width: 150px;
+}
+
+.rtx-remix-slot-type-select {
+  cursor: pointer;
+}
+
+.rtx-remix-slot-name-input:focus,
+.rtx-remix-slot-type-select:focus {
+  border-color: var(--remix-color);
+  box-shadow: 0 0 0 2px var(--remix-color-shadow);
+}
+
+.rtx-remix-slot-type-select:hover {
+  border-color: var(--border-light);
+}
+
+.rtx-remix-slot-name-input::placeholder {
+  color: var(--text-placeholder);
+  font-style: italic;
+}
+
+.rtx-remix-slots-empty {
+  display: none;
+  padding: 32px;
+  text-align: center;
+  color: var(--text-subtle);
+  font-style: italic;
+  background: var(--bg-darker);
+  border: 1px dashed var(--border-dashed);
+  border-radius: 6px;
+}
+
+.rtx-remix-slots-empty.show {
+  display: block;
+}
+
+/* Warning rows */
+.rtx-remix-warning-row {
+  background: var(--status-warning-bg);
+  height: 120px;
+}
+
+.rtx-remix-warning-row:hover {
+  background: var(--status-warning-bg) !important;
+}
+
+.rtx-remix-warning-cell {
+  padding: 40px 12px !important;
+  text-align: center;
+  color: var(--status-warning);
+  vertical-align: middle;
+}
+
+.rtx-remix-warning-icon {
+  font-size: 20px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.rtx-remix-warning-text {
+  font-size: 13px;
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+/* Drag and Drop */
+.rtx-remix-drag-header {
+  width: 30px;
+  padding: 10px 4px !important;
+}
+
+.rtx-remix-drag-handle {
+  width: 30px;
+  padding: 10px 4px !important;
+  cursor: grab;
+  text-align: center;
+  user-select: none;
+}
+
+.rtx-remix-drag-icon {
+  color: var(--text-placeholder);
+  font-size: 16px;
+  display: inline-block;
+  transition: color 0.2s ease;
+}
+
+.rtx-remix-drag-handle:hover .rtx-remix-drag-icon {
+  color: var(--remix-color);
+}
+
+.rtx-remix-draggable-row.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+.rtx-remix-draggable-row.drag-over {
+  border-top: 3px solid var(--remix-color);
+}
+
+.rtx-remix-draggable-row.drag-over-bottom {
+  border-bottom: 3px solid var(--remix-color);
+}
+
+/* Details Cell */
+.rtx-remix-details-cell {
+  width: 50px;
+  text-align: center;
+  padding: 4px !important;
+}

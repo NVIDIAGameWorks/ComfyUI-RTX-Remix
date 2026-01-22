@@ -1,0 +1,62 @@
+<!--
+  SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+  SPDX-License-Identifier: Apache-2.0
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- Custom URL Hash Warning -->
+<template id="rtx-remix-download-custom-hash-warning-template">
+  <div>⚠️ Warning: Without a file hash, the file will always be re-downloaded</div>
+</template>
+
+<!-- Custom URL How To Info -->
+<template id="rtx-remix-download-custom-howto-info-template">
+  <div>
+    <p><strong>How to download a model from a custom URL:</strong></p>
+    <ol>
+      <li>
+        <strong>Custom URL:</strong> The direct download link to the model file.
+        <br />
+        <em>Example: <code>https://example.com/models/my_model.safetensors</code></em>
+        <br />
+        <br />
+        <strong>How to get the URL:</strong>
+        <ul>
+          <li>Right-click the download button and select "Copy link address"</li>
+          <li>
+            If that doesn't work: Start the download in your browser, then cancel it. Check your browser's download
+            manager for the URL (most browsers show it there).
+          </li>
+        </ul>
+      </li>
+      <li>
+        <strong>Custom Filename:</strong> The name to save the file as (including extension).
+        <br />
+        <em>This field is auto-populated from the URL. You can override it if needed.</em>
+      </li>
+      <li>
+        <strong>Custom Hash (optional):</strong> The SHA256 hash of the file. <br />
+        <em>If provided, the node will skip downloading if a file with matching hash exists.</em>
+        <br />
+        <em>If left empty, the hash will be computed after download and auto-filled.</em>
+      </li>
+    </ol>
+    <p><strong>Tips:</strong></p>
+    <ul>
+      <li>The file will be saved to the folder matching your selected <code>model_type</code></li>
+      <li>Use <code>Force Download</code> to re-download even if the file exists</li>
+      <li>For large files, the download may take several minutes</li>
+    </ul>
+  </div>
+</template>
