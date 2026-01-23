@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [2.0.2] - 2026-01-22
+
+### Fixed
+- Fixed the project name to match existing node pack name
+- Increased the minimum required Python version to 3.10
+
 ## [2.0.1] - 2026-01-22
 
 ### Changed
