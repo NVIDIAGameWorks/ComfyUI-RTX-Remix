@@ -1,7 +1,7 @@
 [project]
 name = "ComfyUI-RTX-Remix"
 description = "Use ComfyUI with the RTX Remix Toolkit to remaster classic games."
-version = "2.0.2"
+version = "2.0.3"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
 dependencies = [
@@ -26,8 +26,8 @@ Documentation = "https://docs.omniverse.nvidia.com/kit/docs/rtx_remix/latest/ind
 #  Used by Comfy Registry https://comfyregistry.org
 [tool.comfy]
 PublisherId = "svc-remix-github"
-DisplayName = "RTX Remix Nodes"
-Icon = "web/resources/images/remix_icon.png"
+DisplayName = "NVIDIA RTX Remix Nodes"
+Icon = "https://media.githubusercontent.com/media/NVIDIAGameWorks/ComfyUI-RTX-Remix/refs/tags/2.0.2/web/resources/images/remix_icon.png"
 requires-comfyui = ">=0.3.48"
 
 [tool.ruff]
