@@ -1,4 +1,6 @@
-# ComfyUI-RTX_Remix
+![RTX Remix Icon](https://media.githubusercontent.com/media/NVIDIAGameWorks/ComfyUI-RTX-Remix/refs/tags/2.0.2/web/resources/images/remix_icon.png) 
+ 
+# **NVIDIA RTX Remix Nodes** (*ComfyUI-RTX_Remix*)
 
 ComfyUI custom nodes for creating AI texture processing workflows that integrate seamlessly with the NVIDIA RTX Remix Toolkit.
 
