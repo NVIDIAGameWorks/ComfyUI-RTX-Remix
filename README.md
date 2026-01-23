@@ -3,7 +3,7 @@
 ComfyUI custom nodes for creating AI texture processing workflows that integrate seamlessly with the NVIDIA RTX Remix Toolkit.
 
 > [!NOTE]  
-> The RTX Remix Toolkit is currently a work in progress and is not yet ready for production use.
+> The RTX Remix Toolkit Integration is currently a work in progress and is not yet ready for production use.
 > Beta releases may be available for testing and feedback on the [RTX Remix Toolkit GitHub repository](https://github.com/NVIDIAGameWorks/toolkit-remix).
 > If not, please check back later or contact the NVIDIA RTX Remix team on the [RTX Remix Showcase Discord server](https://discord.gg/c7J6gUhXMk).
 

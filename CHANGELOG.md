@@ -15,6 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [2.0.1] - 2026-01-22
+
+### Changed
+- Added minimum requirements to the project description
+
+### Fixed
+- Updated Publisher ID for the node registry
+- Fixed typo in README.md
+
 ## [2.0.0] - 2025-11-21
 
 ### Added

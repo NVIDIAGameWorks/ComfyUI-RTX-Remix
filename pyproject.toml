@@ -1,9 +1,11 @@
 [project]
 name = "comfyui-rtx-remix"
-description = "Use ComfyUI with RTX Remix to remaster classic games [a/https://github.com/NVIDIAGameWorks/rtx-remix](https://github.com/NVIDIAGameWorks/rtx-remix)"
-version = "2.0.0"
+description = "Use ComfyUI with the RTX Remix Toolkit to remaster classic games."
+version = "2.0.1"
 license = { file = "LICENSE" }
+requires-python = ">=3.9"
 dependencies = [
+    "comfyui-frontend-package>=1.24.4",
     "huggingface-hub",
     "numpy",
     "pillow>=10.0.1",
@@ -11,15 +13,22 @@ dependencies = [
     "requests",
     "torch",
 ]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Environment :: GPU :: NVIDIA CUDA",
+]
 
 [project.urls]
 Repository = "https://github.com/NVIDIAGameWorks/ComfyUI-RTX-Remix"
-#  Used by Comfy Registry https://comfyregistry.org
+Documentation = "https://docs.omniverse.nvidia.com/kit/docs/rtx_remix/latest/index.html"
+"Bug Tracker" = "https://github.com/NVIDIAGameWorks/rtx-remix/issues"
 
+#  Used by Comfy Registry https://comfyregistry.org
 [tool.comfy]
-PublisherId = "nvidia-gameworks"
-DisplayName = "ComfyUI-RTX-Remix"
+PublisherId = "svc-remix-github"
+DisplayName = "RTX Remix Nodes"
 Icon = "web/resources/images/remix_icon.png"
+requires-comfyui = ">=0.3.48"
 
 [tool.ruff]
 line-length = 120
