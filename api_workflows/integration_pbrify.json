@@ -30,7 +30,7 @@
   "29": {
     "inputs": {
       "model_name": [
-        "189",
+        "193",
         0
       ]
     },
@@ -127,7 +127,7 @@
   "41": {
     "inputs": {
       "model_name": [
-        "190",
+        "194",
         0
       ]
     },
@@ -139,7 +139,7 @@
   "42": {
     "inputs": {
       "model_name": [
-        "191",
+        "195",
         0
       ]
     },
@@ -151,7 +151,7 @@
   "43": {
     "inputs": {
       "model_name": [
-        "192",
+        "196",
         0
       ]
     },
@@ -343,7 +343,7 @@
       }
     }
   },
-  "189": {
+  "193": {
     "inputs": {
       "url": "https://github.com/Kim2091/Kim2091-Models/releases/download/4x-PBRify_UpscalerDAT2_V1/4x-PBRify_UpscalerDAT2_V1.pth",
       "model_type": "upscale_models",
@@ -351,6 +351,7 @@
       "force_download": false,
       "extract_archive": false,
       "model_source": "custom",
+      "file_hash": "ff133c35707986e253a9e84aae16ef0295847de41239f1eda53fbbeb0e2243b7",
       "archive_model_filename": "",
       "extracted_model_hash": "",
       "hf_repo_id": "",
@@ -358,15 +359,14 @@
       "hf_token": "",
       "civitai_model_id": "",
       "civitai_api_key": "",
-      "custom_filename": "4x-PBRify_UpscalerDAT2_V1.pth",
-      "custom_hash": "ff133c35707986e253a9e84aae16ef0295847de41239f1eda53fbbeb0e2243b7"
+      "custom_filename": "4x-PBRify_UpscalerDAT2_V1.pth"
     },
     "class_type": "RTXRemixDownloadModel",
     "_meta": {
       "title": "\ud83e\uddf2 RTX Remix Download Model"
     }
   },
-  "190": {
+  "194": {
     "inputs": {
       "url": "https://github.com/Kim2091/PBRify_Remix/raw/main/Models/1x-PBRify_Height.pth",
       "model_type": "upscale_models",
@@ -374,6 +374,7 @@
       "force_download": false,
       "extract_archive": false,
       "model_source": "custom",
+      "file_hash": "5b973ecb8bae9d96d14d77b8a8f1d88fb6a8580bcc1bb55d2872811acdc4277d",
       "archive_model_filename": "",
       "extracted_model_hash": "",
       "hf_repo_id": "",
@@ -381,15 +382,14 @@
       "hf_token": "",
       "civitai_model_id": "",
       "civitai_api_key": "",
-      "custom_filename": "1x-PBRify_Height.pth",
-      "custom_hash": "5b973ecb8bae9d96d14d77b8a8f1d88fb6a8580bcc1bb55d2872811acdc4277d"
+      "custom_filename": "1x-PBRify_Height.pth"
     },
     "class_type": "RTXRemixDownloadModel",
     "_meta": {
       "title": "\ud83e\uddf2 RTX Remix Download Model"
     }
   },
-  "191": {
+  "195": {
     "inputs": {
       "url": "https://github.com/Kim2091/PBRify_Remix/raw/main/Models/1x-PBRify_NormalV3.pth",
       "model_type": "upscale_models",
@@ -397,6 +397,7 @@
       "force_download": false,
       "extract_archive": false,
       "model_source": "custom",
+      "file_hash": "b0a18270da765f02eaae3c228203bee0677fc28b2854a562515e4aae9c61223b",
       "archive_model_filename": "",
       "extracted_model_hash": "",
       "hf_repo_id": "",
@@ -404,15 +405,14 @@
       "hf_token": "",
       "civitai_model_id": "",
       "civitai_api_key": "",
-      "custom_filename": "1x-PBRify_NormalV3.pth",
-      "custom_hash": "b0a18270da765f02eaae3c228203bee0677fc28b2854a562515e4aae9c61223b"
+      "custom_filename": "1x-PBRify_NormalV3.pth"
     },
     "class_type": "RTXRemixDownloadModel",
     "_meta": {
       "title": "\ud83e\uddf2 RTX Remix Download Model"
     }
   },
-  "192": {
+  "196": {
     "inputs": {
       "url": "https://github.com/Kim2091/PBRify_Remix/raw/main/Models/1x-PBRify_RoughnessV2.pth",
       "model_type": "upscale_models",
@@ -420,6 +420,7 @@
       "force_download": false,
       "extract_archive": false,
       "model_source": "custom",
+      "file_hash": "7003c39041af64cdb77d5120bd560a2878538fbb14a07657d8fd12aac5773679",
       "archive_model_filename": "",
       "extracted_model_hash": "",
       "hf_repo_id": "",
@@ -427,8 +428,7 @@
       "hf_token": "",
       "civitai_model_id": "",
       "civitai_api_key": "",
-      "custom_filename": "1x-PBRify_RoughnessV2.pth",
-      "custom_hash": "7003c39041af64cdb77d5120bd560a2878538fbb14a07657d8fd12aac5773679"
+      "custom_filename": "1x-PBRify_RoughnessV2.pth"
     },
     "class_type": "RTXRemixDownloadModel",
     "_meta": {

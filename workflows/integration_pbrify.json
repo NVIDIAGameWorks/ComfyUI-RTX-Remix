@@ -1,8 +1,8 @@
 {
   "id": "a10ffcc8-e192-40fd-8248-34af532b4f20",
   "revision": 0,
-  "last_node_id": 192,
-  "last_link_id": 436,
+  "last_node_id": 196,
+  "last_link_id": 440,
   "nodes": [
     {
       "id": 32,
@@ -47,7 +47,7 @@
         1547.8511047363274
       ],
       "size": [
-        184.6236328125,
+        193.2779296875,
         26
       ],
       "flags": {},
@@ -86,7 +86,7 @@
         1511.0725402832024
       ],
       "size": [
-        221.98203125,
+        233.5689453125,
         46
       ],
       "flags": {},
@@ -181,7 +181,7 @@
         1645.2929992675774
       ],
       "size": [
-        176.86484375,
+        185.8609375,
         46
       ],
       "flags": {},
@@ -302,7 +302,7 @@
           "widget": {
             "name": "model_name"
           },
-          "link": 434
+          "link": 439
         }
       ],
       "outputs": [
@@ -336,7 +336,7 @@
         58
       ],
       "flags": {},
-      "order": 13,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
@@ -346,7 +346,7 @@
           "widget": {
             "name": "model_name"
           },
-          "link": 433
+          "link": 440
         }
       ],
       "outputs": [
@@ -390,7 +390,7 @@
           "widget": {
             "name": "model_name"
           },
-          "link": 435
+          "link": 438
         }
       ],
       "outputs": [
@@ -424,7 +424,7 @@
         58
       ],
       "flags": {},
-      "order": 14,
+      "order": 13,
       "mode": 0,
       "inputs": [
         {
@@ -434,7 +434,7 @@
           "widget": {
             "name": "model_name"
           },
-          "link": 436
+          "link": 437
         }
       ],
       "outputs": [
@@ -543,7 +543,7 @@
         1481.6194274902334
       ],
       "size": [
-        221.98203125,
+        233.5689453125,
         46
       ],
       "flags": {},
@@ -588,7 +588,7 @@
         1749.941571044921
       ],
       "size": [
-        221.98203125,
+        233.5689453125,
         46
       ],
       "flags": {},
@@ -633,7 +633,7 @@
         1616.292889404296
       ],
       "size": [
-        221.98203125,
+        233.5689453125,
         46
       ],
       "flags": {},
@@ -728,9 +728,10 @@
         }
       ],
       "properties": {
-        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
+        "aux_id": "comfyui-rtx_remix.git",
         "ver": "28f395ad041bf8fca9e24b093b0bd792be541d05",
         "Node name for S&R": "RTXRemixSaveTexture",
+        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
         "rtx-remix": {
           "output": {
             "name": "height",
@@ -809,9 +810,10 @@
         }
       ],
       "properties": {
-        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
+        "aux_id": "comfyui-rtx_remix.git",
         "ver": "28f395ad041bf8fca9e24b093b0bd792be541d05",
         "Node name for S&R": "RTXRemixSaveTexture",
+        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
         "rtx-remix": {
           "output": {
             "name": "normal_ogl",
@@ -890,9 +892,10 @@
         }
       ],
       "properties": {
-        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
+        "aux_id": "comfyui-rtx_remix.git",
         "ver": "28f395ad041bf8fca9e24b093b0bd792be541d05",
         "Node name for S&R": "RTXRemixSaveTexture",
+        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
         "rtx-remix": {
           "output": {
             "name": "roughness",
@@ -971,9 +974,10 @@
         }
       ],
       "properties": {
-        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
+        "aux_id": "comfyui-rtx_remix.git",
         "ver": "28f395ad041bf8fca9e24b093b0bd792be541d05",
         "Node name for S&R": "RTXRemixSaveTexture",
+        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
         "rtx-remix": {
           "output": {
             "name": "albedo",
@@ -1002,7 +1006,7 @@
         1513.3520812988274
       ],
       "size": [
-        176.86484375,
+        185.8609375,
         46
       ],
       "flags": {},
@@ -1048,7 +1052,7 @@
         1395.5158996582024
       ],
       "size": [
-        221.98203125,
+        233.5689453125,
         46
       ],
       "flags": {},
@@ -1135,14 +1139,14 @@
       "bgcolor": "#653"
     },
     {
-      "id": 190,
+      "id": 194,
       "type": "RTXRemixDownloadModel",
       "pos": [
-        11506.624978729158,
-        959.2089235173944
+        11527.12016486229,
+        910.5442906968946
       ],
       "size": [
-        242.48984375,
+        250.228125,
         250
       ],
       "flags": {},
@@ -1204,6 +1208,16 @@
           "link": null
         },
         {
+          "localized_name": "file_hash",
+          "name": "file_hash",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "file_hash"
+          },
+          "link": null
+        },
+        {
           "localized_name": "archive_model_filename",
           "name": "archive_model_filename",
           "shape": 7,
@@ -1282,16 +1296,6 @@
             "name": "custom_filename"
           },
           "link": null
-        },
-        {
-          "localized_name": "custom_hash",
-          "name": "custom_hash",
-          "shape": 7,
-          "type": "STRING",
-          "widget": {
-            "name": "custom_hash"
-          },
-          "link": null
         }
       ],
       "outputs": [
@@ -1300,13 +1304,13 @@
           "name": "model_name",
           "type": "*",
           "links": [
-            435
+            438
           ]
         }
       ],
       "properties": {
-        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
-        "ver": "632b5688578f5630e4099403cd576749f54924b7",
+        "aux_id": "comfyui-rtx_remix.git",
+        "ver": "235ed67a7c5ad73a7911baa9853e00391d56a278",
         "Node name for S&R": "RTXRemixDownloadModel"
       },
       "widgets_values": [
@@ -1316,6 +1320,7 @@
         false,
         false,
         "custom",
+        "5b973ecb8bae9d96d14d77b8a8f1d88fb6a8580bcc1bb55d2872811acdc4277d",
         "",
         "",
         "",
@@ -1324,19 +1329,18 @@
         "",
         "",
         "1x-PBRify_Height.pth",
-        "5b973ecb8bae9d96d14d77b8a8f1d88fb6a8580bcc1bb55d2872811acdc4277d",
         null
       ]
     },
     {
-      "id": 191,
+      "id": 195,
       "type": "RTXRemixDownloadModel",
       "pos": [
-        11781.651827361096,
-        958.6018027619497
+        11815.507869937082,
+        914.6423714290848
       ],
       "size": [
-        242.48984375,
+        250.228125,
         250
       ],
       "flags": {},
@@ -1398,6 +1402,16 @@
           "link": null
         },
         {
+          "localized_name": "file_hash",
+          "name": "file_hash",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "file_hash"
+          },
+          "link": null
+        },
+        {
           "localized_name": "archive_model_filename",
           "name": "archive_model_filename",
           "shape": 7,
@@ -1476,16 +1490,6 @@
             "name": "custom_filename"
           },
           "link": null
-        },
-        {
-          "localized_name": "custom_hash",
-          "name": "custom_hash",
-          "shape": 7,
-          "type": "STRING",
-          "widget": {
-            "name": "custom_hash"
-          },
-          "link": null
         }
       ],
       "outputs": [
@@ -1494,13 +1498,13 @@
           "name": "model_name",
           "type": "*",
           "links": [
-            434
+            439
           ]
         }
       ],
       "properties": {
-        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
-        "ver": "632b5688578f5630e4099403cd576749f54924b7",
+        "aux_id": "comfyui-rtx_remix.git",
+        "ver": "235ed67a7c5ad73a7911baa9853e00391d56a278",
         "Node name for S&R": "RTXRemixDownloadModel"
       },
       "widgets_values": [
@@ -1510,6 +1514,7 @@
         false,
         false,
         "custom",
+        "b0a18270da765f02eaae3c228203bee0677fc28b2854a562515e4aae9c61223b",
         "",
         "",
         "",
@@ -1518,23 +1523,45 @@
         "",
         "",
         "1x-PBRify_NormalV3.pth",
-        "b0a18270da765f02eaae3c228203bee0677fc28b2854a562515e4aae9c61223b",
         null
       ]
     },
     {
-      "id": 192,
-      "type": "RTXRemixDownloadModel",
+      "id": 188,
+      "type": "Note",
       "pos": [
-        12049.392935112879,
-        959.2089339393526
+        10950.195564372058,
+        889.3917009690796
       ],
       "size": [
-        242.48984375,
-        250
+        211.46918178590022,
+        112.24243264947052
       ],
       "flags": {},
       "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "THe models will be downloaded to the \"model/upscale_models/PBRify\" directory if they don't already exist with the correct hash, otherwise the existing files will be uses "
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 193,
+      "type": "RTXRemixDownloadModel",
+      "pos": [
+        11236.5334952359,
+        907.6295635607706
+      ],
+      "size": [
+        250.228125,
+        250
+      ],
+      "flags": {},
+      "order": 6,
       "mode": 0,
       "inputs": [
         {
@@ -1592,6 +1619,16 @@
           "link": null
         },
         {
+          "localized_name": "file_hash",
+          "name": "file_hash",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "file_hash"
+          },
+          "link": null
+        },
+        {
           "localized_name": "archive_model_filename",
           "name": "archive_model_filename",
           "shape": 7,
@@ -1670,16 +1707,6 @@
             "name": "custom_filename"
           },
           "link": null
-        },
-        {
-          "localized_name": "custom_hash",
-          "name": "custom_hash",
-          "shape": 7,
-          "type": "STRING",
-          "widget": {
-            "name": "custom_hash"
-          },
-          "link": null
         }
       ],
       "outputs": [
@@ -1688,22 +1715,23 @@
           "name": "model_name",
           "type": "*",
           "links": [
-            433
+            437
           ]
         }
       ],
       "properties": {
-        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
-        "ver": "632b5688578f5630e4099403cd576749f54924b7",
+        "aux_id": "comfyui-rtx_remix.git",
+        "ver": "235ed67a7c5ad73a7911baa9853e00391d56a278",
         "Node name for S&R": "RTXRemixDownloadModel"
       },
       "widgets_values": [
-        "https://github.com/Kim2091/PBRify_Remix/raw/main/Models/1x-PBRify_RoughnessV2.pth",
+        "https://github.com/Kim2091/Kim2091-Models/releases/download/4x-PBRify_UpscalerDAT2_V1/4x-PBRify_UpscalerDAT2_V1.pth",
         "upscale_models",
         "PBRify",
         false,
         false,
         "custom",
+        "ff133c35707986e253a9e84aae16ef0295847de41239f1eda53fbbeb0e2243b7",
         "",
         "",
         "",
@@ -1711,43 +1739,19 @@
         "",
         "",
         "",
-        "1x-PBRify_RoughnessV2.pth",
-        "7003c39041af64cdb77d5120bd560a2878538fbb14a07657d8fd12aac5773679",
+        "4x-PBRify_UpscalerDAT2_V1.pth",
         null
       ]
     },
     {
-      "id": 188,
-      "type": "Note",
-      "pos": [
-        10979.235564372055,
-        966.8317009690795
-      ],
-      "size": [
-        211.46918178590022,
-        112.24243264947052
-      ],
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [],
-      "properties": {},
-      "widgets_values": [
-        "THe models will be downloaded to the \"model/upscale_models/PBRify\" directory if they don't already exist with the correct hash, otherwise the existing files will be uses "
-      ],
-      "color": "#2a363b",
-      "bgcolor": "#3f5159"
-    },
-    {
-      "id": 189,
+      "id": 196,
       "type": "RTXRemixDownloadModel",
       "pos": [
-        11224.312722719704,
-        963.4587909521697
+        12094.645440458224,
+        913.3393149438725
       ],
       "size": [
-        242.48984375,
+        250.228125,
         250
       ],
       "flags": {},
@@ -1809,6 +1813,16 @@
           "link": null
         },
         {
+          "localized_name": "file_hash",
+          "name": "file_hash",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "file_hash"
+          },
+          "link": null
+        },
+        {
           "localized_name": "archive_model_filename",
           "name": "archive_model_filename",
           "shape": 7,
@@ -1887,16 +1901,6 @@
             "name": "custom_filename"
           },
           "link": null
-        },
-        {
-          "localized_name": "custom_hash",
-          "name": "custom_hash",
-          "shape": 7,
-          "type": "STRING",
-          "widget": {
-            "name": "custom_hash"
-          },
-          "link": null
         }
       ],
       "outputs": [
@@ -1905,22 +1909,23 @@
           "name": "model_name",
           "type": "*",
           "links": [
-            436
+            440
           ]
         }
       ],
       "properties": {
-        "cnr_id": "\u00ff\u00fec\u0000o\u0000m\u0000f\u0000y\u0000u\u0000i\u0000-\u0000r\u0000t\u0000x\u0000-\u0000r\u0000e\u0000m\u0000i\u0000x\u0000",
-        "ver": "632b5688578f5630e4099403cd576749f54924b7",
+        "aux_id": "comfyui-rtx_remix.git",
+        "ver": "235ed67a7c5ad73a7911baa9853e00391d56a278",
         "Node name for S&R": "RTXRemixDownloadModel"
       },
       "widgets_values": [
-        "https://github.com/Kim2091/Kim2091-Models/releases/download/4x-PBRify_UpscalerDAT2_V1/4x-PBRify_UpscalerDAT2_V1.pth",
+        "https://github.com/Kim2091/PBRify_Remix/raw/main/Models/1x-PBRify_RoughnessV2.pth",
         "upscale_models",
         "PBRify",
         false,
         false,
         "custom",
+        "7003c39041af64cdb77d5120bd560a2878538fbb14a07657d8fd12aac5773679",
         "",
         "",
         "",
@@ -1928,8 +1933,7 @@
         "",
         "",
         "",
-        "4x-PBRify_UpscalerDAT2_V1.pth",
-        "ff133c35707986e253a9e84aae16ef0295847de41239f1eda53fbbeb0e2243b7",
+        "1x-PBRify_RoughnessV2.pth",
         null
       ]
     }
@@ -2120,34 +2124,34 @@
       "IMAGE"
     ],
     [
-      433,
-      192,
+      437,
+      193,
       0,
-      43,
-      0,
-      "COMBO"
-    ],
-    [
-      434,
-      191,
-      0,
-      42,
+      29,
       0,
       "COMBO"
     ],
     [
-      435,
-      190,
+      438,
+      194,
       0,
       41,
       0,
       "COMBO"
     ],
     [
-      436,
-      189,
+      439,
+      195,
       0,
-      29,
+      42,
+      0,
+      "COMBO"
+    ],
+    [
+      440,
+      196,
+      0,
+      43,
       0,
       "COMBO"
     ]
@@ -2209,10 +2213,10 @@
       "id": 11,
       "title": "Download Model Weights",
       "bounding": [
-        11206.908529956429,
-        874.0238031257585,
-        1098.9908748835405,
-        356.0521899506607
+        11199.64852995643,
+        819.5738031257586,
+        1186.1108748835413,
+        389.9321899506608
       ],
       "color": "#3f789e",
       "font_size": 24,
@@ -2222,10 +2226,10 @@
   "config": {},
   "extra": {
     "ds": {
-      "scale": 1.1000000000000005,
+      "scale": 0.8264462809917354,
       "offset": [
-        -10897.42782411051,
-        -645.6742336187588
+        -10264.962193412266,
+        -363.50347654485637
       ]
     },
     "frontendVersion": "1.23.4",
@@ -2238,7 +2242,7 @@
           1252.640941184259
         ],
         "linkIds": [
-          435
+          438
         ]
       },
       {
@@ -2248,7 +2252,7 @@
           1266.99110602917
         ],
         "linkIds": [
-          434
+          439
         ]
       },
       {
@@ -2258,7 +2262,7 @@
           1254.296744011762
         ],
         "linkIds": [
-          436
+          437
         ]
       },
       {
@@ -2269,7 +2273,7 @@
           1261.4718643322453
         ],
         "linkIds": [
-          436
+          437
         ]
       },
       {
@@ -2280,7 +2284,7 @@
           1425.395055721832
         ],
         "linkIds": [
-          436
+          437
         ]
       },
       {
@@ -2290,7 +2294,7 @@
           1284.10100541663
         ],
         "linkIds": [
-          433
+          440
         ]
       },
       {
@@ -2301,7 +2305,7 @@
           1258.1602965752736
         ],
         "linkIds": [
-          435
+          438
         ]
       },
       {
@@ -2312,7 +2316,7 @@
           1269.7508405717206
         ],
         "linkIds": [
-          434
+          439
         ]
       },
       {
@@ -2323,7 +2327,7 @@
           1284.1009296205696
         ],
         "linkIds": [
-          433
+          440
         ]
       },
       {
@@ -2334,7 +2338,7 @@
           1779.182147342363
         ],
         "linkIds": [
-          433
+          440
         ]
       },
       {
@@ -2345,7 +2349,7 @@
           1650.5826106466882
         ],
         "linkIds": [
-          434
+          439
         ]
       },
       {
@@ -2356,7 +2360,7 @@
           1515.9115821613416
         ],
         "linkIds": [
-          435
+          438
         ]
       },
       {
@@ -2429,20 +2433,20 @@
         "parentId": 18
       },
       {
-        "id": 433,
-        "parentId": 12
+        "id": 437,
+        "parentId": 7
       },
       {
-        "id": 434,
-        "parentId": 13
-      },
-      {
-        "id": 435,
+        "id": 438,
         "parentId": 14
       },
       {
-        "id": 436,
-        "parentId": 7
+        "id": 439,
+        "parentId": 13
+      },
+      {
+        "id": 440,
+        "parentId": 12
       }
     ]
   },

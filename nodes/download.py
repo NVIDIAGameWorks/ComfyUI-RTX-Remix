@@ -22,6 +22,7 @@ __all__ = ["DownloadModelNode"]
 import hashlib
 import tarfile
 import zipfile
+from dataclasses import dataclass
 from pathlib import Path
 import re
 from typing import Any
@@ -46,6 +47,22 @@ from ..api.configs.dynamic_ui import NODE_UI_CONFIGS, NodeUIConfig
 from ..utils import get_logger
 
 logger = get_logger(__name__)
+
+# Sample size for sparse hashing (64KB from each section)
+_SPARSE_HASH_SAMPLE_SIZE = 64 * 1024
+
+# In-memory cache: maps (filepath, sparse_hash) -> full_hash
+# This avoids recomputing full hashes within a session
+_hash_cache: dict[tuple[str, str], str] = {}
+
+
+@dataclass
+class DownloadInfo:
+    """Information needed to download a file from any source."""
+    url: str
+    filename: str
+    headers: dict[str, str] | None = None
+    remote_hash: str | None = None  # SHA256 hash from the source (if available)
 
 
 class DownloadModelNode(io.ComfyNode):
@@ -98,6 +115,13 @@ class DownloadModelNode(io.ComfyNode):
                     label_on="Yes",
                     label_off="No",
                     tooltip="Enable if download is a zip/tar archive containing the model",
+                ),
+                # === Hash verification (common to all sources) ===
+                io.String.Input(
+                    "file_hash",
+                    default="",
+                    optional=True,
+                    tooltip="SHA256 hash of the file (auto-filled after download, used to verify integrity)",
                 ),
                 # === Archive fields (visible when extract_archive is enabled) ===
                 io.String.Input(
@@ -158,12 +182,6 @@ class DownloadModelNode(io.ComfyNode):
                     optional=True,
                     tooltip="Auto-filled from URL",
                 ),
-                io.String.Input(
-                    "custom_hash",
-                    default="",
-                    optional=True,
-                    tooltip="SHA256 hash (auto-filled after download)",
-                ),
             ],
             outputs=[
                 io.AnyType.Output("model_name", display_name="model_name"),
@@ -179,6 +197,7 @@ class DownloadModelNode(io.ComfyNode):
         subdirectory: str = "",
         force_download: bool = False,
         extract_archive: bool = False,
+        file_hash: str = "",
         model_source: str = "",
         hf_repo_id: str = "",
         hf_filename: str = "",
@@ -186,7 +205,6 @@ class DownloadModelNode(io.ComfyNode):
         civitai_model_id: str = "",
         civitai_api_key: str = "",
         custom_filename: str = "",
-        custom_hash: str = "",
         archive_model_filename: str = "",
         extracted_model_hash: str = "",
     ) -> io.NodeOutput:
@@ -199,6 +217,7 @@ class DownloadModelNode(io.ComfyNode):
             subdirectory: Optional subdirectory within the model type folder
             force_download: Force download and re-extraction even if files exist
             extract_archive: If True, extract the downloaded archive
+            file_hash: SHA256 hash of the file (auto-filled after download, used to verify integrity)
             model_source: Auto-detected source (huggingface, civitai, custom)
             hf_repo_id: HuggingFace repository ID (auto-filled from URL)
             hf_filename: HuggingFace filename (auto-filled from URL)
@@ -206,7 +225,6 @@ class DownloadModelNode(io.ComfyNode):
             civitai_model_id: CivitAI model version ID (auto-filled from URL)
             civitai_api_key: CivitAI API key
             custom_filename: Custom filename for the downloaded file (auto-filled from URL)
-            custom_hash: Custom file hash (optional, auto-filled after download)
             archive_model_filename: The model filename inside the archive
             extracted_model_hash: SHA256 hash of the extracted model (auto-populated)
 
@@ -220,171 +238,102 @@ class DownloadModelNode(io.ComfyNode):
         if not url:
             raise ValueError("URL is required. Please paste a model URL.")
 
+        if extract_archive and not archive_model_filename:
+            raise ValueError("archive_model_filename is required when extract_archive is enabled")
+
         # Auto-detect source from URL if not already set
         if not model_source:
             model_source = cls._detect_source_from_url(url)
 
-        # Parse URL based on detected source
-        if model_source == ModelSource.HUGGINGFACE:
-            parsed = cls._parse_huggingface_url(url)
-            if parsed:
-                if not hf_repo_id:
-                    hf_repo_id = parsed.get("repo_id", "")
-                if not hf_filename:
-                    hf_filename = parsed.get("filename", "")
-        elif model_source == ModelSource.CIVITAI:
-            parsed = cls._parse_civitai_url(url)
-            if parsed and not civitai_model_id:
-                civitai_model_id = parsed.get("version_id", "")
-        elif model_source == ModelSource.CUSTOM:
-            if not custom_filename:
-                custom_filename = cls._get_filename_from_url(url)
+        # Get download info from the appropriate source
+        download_info = cls._get_download_info(
+            model_source=model_source,
+            url=url,
+            hf_repo_id=hf_repo_id,
+            hf_filename=hf_filename,
+            hf_token=hf_token,
+            civitai_model_id=civitai_model_id,
+            civitai_api_key=civitai_api_key,
+            custom_filename=custom_filename,
+            timeout=timeout,
+        )
 
         # Normalize subdirectory
         subdir = subdirectory.strip() if subdirectory else ""
 
-        match model_source:
-            case ModelSource.HUGGINGFACE:
-                return cls._download_from_huggingface(
-                    model_type,
-                    hf_repo_id,
-                    hf_filename,
-                    hf_token,
-                    subdir,
-                    force_download,
-                    extract_archive,
-                    archive_model_filename,
-                    extracted_model_hash,
-                    unique_id,
-                    timeout,
-                )
-            case ModelSource.CIVITAI:
-                return cls._download_from_civitai(
-                    model_type,
-                    civitai_model_id,
-                    civitai_api_key,
-                    subdir,
-                    force_download,
-                    extract_archive,
-                    archive_model_filename,
-                    extracted_model_hash,
-                    unique_id,
-                    timeout,
-                )
-            case ModelSource.CUSTOM:
-                return cls._download_from_custom(
-                    model_type,
-                    url,
-                    custom_filename,
-                    custom_hash,
-                    subdir,
-                    force_download,
-                    extract_archive,
-                    archive_model_filename,
-                    extracted_model_hash,
-                    unique_id,
-                    timeout,
-                )
-            case _:
-                raise ValueError(f"Unknown model source: {model_source}")
-
-    @classmethod
-    def _download_from_huggingface(
-        cls,
-        model_type: str,
-        repo_id: str,
-        filename: str,
-        token: str,
-        subdirectory: str,
-        force_download: bool,
-        extract_archive: bool,
-        archive_model_filename: str,
-        extracted_model_hash: str,
-        unique_id: str | None,
-        timeout: int,
-    ) -> io.NodeOutput:
-        """
-        Download a model from HuggingFace.
-
-        Downloads directly to ComfyUI's model directory (no HF cache).
-        Uses SHA256 hash comparison to skip download if file already exists.
-
-        Args:
-            model_type: The type of model (determines target directory)
-            repo_id: HuggingFace repository ID (e.g., "stabilityai/sd-vae-ft-mse")
-            filename: The filename in the repository
-            token: HuggingFace auth token (optional, for private repos)
-            subdirectory: Optional subdirectory within the model type folder
-            force_download: If True, re-download and re-extract even if files exist
-            extract_archive: If True, extract the downloaded archive
-            archive_model_filename: The model filename inside the archive
-            extracted_model_hash: SHA256 hash of the extracted model (for verification)
-            unique_id: Node ID for updating input values
-            timeout: Download timeout in seconds
-
-        Returns:
-            io.NodeOutput containing the model filename (extracted file if extract_archive,
-            otherwise the downloaded file)
-        """
-        if not repo_id:
-            raise ValueError("HuggingFace repo_id is required")
-        if not filename:
-            raise ValueError("HuggingFace filename is required")
-        if extract_archive and not archive_model_filename:
-            raise ValueError("archive_model_filename is required when extract_archive is enabled")
-
-        # Extract just the filename (HF paths may include subdirectories)
-        output_filename = Path(filename).name
-
         # Get all paths
         target_dir, target_path, final_model_path, model_name = cls._get_download_paths(
-            model_type, output_filename, subdirectory, archive_model_filename if extract_archive else None
+            model_type, download_info.filename, subdir, archive_model_filename if extract_archive else None
         )
 
-        # Get remote file metadata to get the hash (ETag)
-        file_url = hf_hub_url(repo_id=repo_id, filename=filename)
-        metadata = get_hf_file_metadata(file_url, token=token if token else None)
-        remote_hash = metadata.etag.strip('"') if metadata.etag else None
-
-        # Check if archive file already exists and hash matches
-        if target_path.exists() and not force_download:
-            hash_matches = False
-            if remote_hash:
-                if len(remote_hash) == 64:
-                    local_hash = cls._compute_file_hash(target_path)
-                elif len(remote_hash) == 40:
-                    prefix = f"blob {target_path.stat().st_size}\0".encode()
-                    local_hash = cls._compute_file_hash(target_path, hash_func=hashlib.sha1, prefix=prefix)
-                else:
-                    local_hash = None
-
-                hash_matches = local_hash and local_hash == remote_hash
-                if hash_matches:
-                    logger.info(f"File exists with matching hash: {output_filename}")
-                else:
-                    logger.info(f"Hash mismatch for {output_filename}, re-downloading")
+        # === PHASE 1: Check if we already have the file with matching hash ===
+        if file_hash and target_path.exists() and not force_download:
+            local_hash = cls._compute_file_hash(target_path)
+            if local_hash == file_hash:
+                logger.info(f"File exists with matching hash: {download_info.filename}")
+                if extract_archive:
+                    return cls._handle_extraction(
+                        target_path, target_dir, final_model_path, model_name, extracted_model_hash, unique_id
+                    )
+                return io.NodeOutput(model_name)
             else:
-                hash_matches = True
-                logger.info(f"File already exists (no remote hash to verify): {output_filename}")
+                logger.info(f"Hash mismatch for {download_info.filename}, re-downloading")
 
-            if hash_matches:
+        # === PHASE 2: Check against remote hash (if no local hash provided) ===
+        if not file_hash and target_path.exists() and not force_download:
+            if download_info.remote_hash:
+                local_hash = cls._compute_file_hash(target_path)
+                if local_hash == download_info.remote_hash:
+                    logger.info(f"File exists with matching remote hash: {download_info.filename}")
+                    # Store hash for future runs
+                    if unique_id:
+                        cls._update_node_input(unique_id, "file_hash", local_hash)
+                    if extract_archive:
+                        return cls._handle_extraction(
+                            target_path, target_dir, final_model_path, model_name, extracted_model_hash, unique_id
+                        )
+                    return io.NodeOutput(model_name)
+                else:
+                    logger.info(f"Hash mismatch for {download_info.filename}, re-downloading")
+            else:
+                # No hash to verify against - accept existing file
+                logger.info(f"File already exists (no hash to verify): {download_info.filename}")
+                # Compute and store hash for future runs
+                if unique_id:
+                    local_hash = cls._compute_file_hash(target_path)
+                    cls._update_node_input(unique_id, "file_hash", local_hash)
                 if extract_archive:
                     return cls._handle_extraction(
                         target_path, target_dir, final_model_path, model_name, extracted_model_hash, unique_id
                     )
                 return io.NodeOutput(model_name)
 
-        # Build download URL and download directly to target
-        download_url = hf_hub_url(repo_id=repo_id, filename=filename)
-        headers = {}
-        if token:
-            headers["Authorization"] = f"Bearer {token}"
-
-        logger.info(f"Downloading {repo_id}/{filename} from HuggingFace")
-        cls._download_file(download_url, target_path, timeout, headers=headers)
+        # === PHASE 3: Download the file ===
+        logger.info(f"Downloading {download_info.filename} from {model_source}")
+        cls._download_file(download_info.url, target_path, timeout, headers=download_info.headers)
         logger.info(f"Downloaded to {target_path}")
 
-        # Extract if requested
+        # === PHASE 4: Verify hash (if provided) ===
+        computed_hash = cls._compute_file_hash(target_path)
+
+        if file_hash:
+            if computed_hash != file_hash:
+                # Delete the file since it doesn't match
+                try:
+                    target_path.unlink()
+                except Exception as e:
+                    logger.warning(f"Failed to delete file with hash mismatch: {target_path}: {e}")
+                raise ValueError(
+                    f"Downloaded file hash does not match expected hash for {download_info.filename}. "
+                    f"Expected: {file_hash}, Got: {computed_hash}. "
+                    f"The file may have been modified on the server or the hash is incorrect."
+                )
+        else:
+            # Store computed hash for future runs
+            if unique_id:
+                cls._update_node_input(unique_id, "file_hash", computed_hash)
+
+        # === PHASE 5: Handle extraction if needed ===
         if extract_archive:
             return cls._handle_extraction(
                 target_path,
@@ -399,47 +348,96 @@ class DownloadModelNode(io.ComfyNode):
         return io.NodeOutput(model_name)
 
     @classmethod
-    def _download_from_civitai(
+    def _get_download_info(
         cls,
-        model_type: str,
-        model_id: str,
-        api_key: str,
-        subdirectory: str,
-        force_download: bool,
-        extract_archive: bool,
-        archive_model_filename: str,
-        extracted_model_hash: str,
-        unique_id: str | None,
+        model_source: str,
+        url: str,
+        hf_repo_id: str,
+        hf_filename: str,
+        hf_token: str,
+        civitai_model_id: str,
+        civitai_api_key: str,
+        custom_filename: str,
         timeout: int,
-    ) -> io.NodeOutput:
+    ) -> DownloadInfo:
         """
-        Download a model from CivitAI.
+        Get download information from the appropriate source.
 
-        Uses the CivitAI REST API to get model version info and download the file.
-        See: https://github.com/civitai/civitai/wiki/REST-API-Reference
-
-        Args:
-            model_type: The type of model (determines target directory)
-            model_id: The CivitAI model version ID
-            api_key: CivitAI API key (required for downloads)
-            subdirectory: Optional subdirectory within the model type folder
-            force_download: If True, re-download and re-extract even if files exist
-            extract_archive: If True, extract the downloaded archive
-            archive_model_filename: The model filename inside the archive
-            extracted_model_hash: SHA256 hash of the extracted model (for verification)
-            unique_id: Node ID for updating input values
-            timeout: Download timeout in seconds
+        This method handles source-specific logic to obtain the download URL,
+        filename, headers, and remote hash. The actual download is handled
+        by the common _download_file method.
 
         Returns:
-            io.NodeOutput containing the model filename (extracted file if extract_archive,
-            otherwise the downloaded file)
+            DownloadInfo containing url, filename, headers, and optional remote_hash
         """
+        match model_source:
+            case ModelSource.HUGGINGFACE:
+                return cls._get_huggingface_download_info(url, hf_repo_id, hf_filename, hf_token)
+            case ModelSource.CIVITAI:
+                return cls._get_civitai_download_info(civitai_model_id, civitai_api_key, timeout)
+            case ModelSource.CUSTOM:
+                return cls._get_custom_download_info(url, custom_filename)
+            case _:
+                raise ValueError(f"Unknown model source: {model_source}")
+
+    @classmethod
+    def _get_huggingface_download_info(
+        cls, url: str, repo_id: str, filename: str, token: str
+    ) -> DownloadInfo:
+        """Get download info for a HuggingFace model."""
+        # Parse URL if repo_id/filename not provided
+        if not repo_id or not filename:
+            parsed = cls._parse_huggingface_url(url)
+            if not parsed:
+                raise ValueError("Unable to parse the HuggingFace URL")
+            repo_id = repo_id or parsed.get("repo_id", "")
+            filename = filename or parsed.get("filename", "")
+
+        if not repo_id:
+            raise ValueError("HuggingFace repo_id is required")
+        if not filename:
+            raise ValueError("HuggingFace filename is required")
+
+        # Build download URL
+        download_url = hf_hub_url(repo_id=repo_id, filename=filename)
+
+        # Get remote hash from metadata
+        remote_hash = None
+        try:
+            file_url = hf_hub_url(repo_id=repo_id, filename=filename)
+            metadata = get_hf_file_metadata(file_url, token=token if token else None)
+            if metadata.etag:
+                etag = metadata.etag.strip('"')
+                # Only use SHA256 hashes (64 chars), not git blob hashes (40 chars)
+                if len(etag) == 64:
+                    remote_hash = etag
+        except Exception as e:
+            logger.debug(f"Could not get HuggingFace metadata: {e}")
+
+        # Build headers
+        headers = {}
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+
+        # Extract just the filename (HF paths may include subdirectories)
+        output_filename = Path(filename).name
+
+        return DownloadInfo(
+            url=download_url,
+            filename=output_filename,
+            headers=headers if headers else None,
+            remote_hash=remote_hash,
+        )
+
+    @classmethod
+    def _get_civitai_download_info(
+        cls, model_id: str, api_key: str, timeout: int
+    ) -> DownloadInfo:
+        """Get download info for a CivitAI model."""
         if not model_id:
             raise ValueError("CivitAI model version ID is required")
         if not api_key:
             raise ValueError("CivitAI API key is required")
-        if extract_archive and not archive_model_filename:
-            raise ValueError("archive_model_filename is required when extract_archive is enabled")
 
         # Get model version info from CivitAI API
         api_url = f"{CIVITAI_API_BASE_URL}/model-versions/{model_id}"
@@ -450,7 +448,6 @@ class DownloadModelNode(io.ComfyNode):
 
         response = requests.get(api_url, headers=headers, timeout=timeout)
         response.raise_for_status()
-
         version_info = response.json()
 
         # Get the primary file info from the response
@@ -459,114 +456,35 @@ class DownloadModelNode(io.ComfyNode):
             raise ValueError(f"No files found for CivitAI model version {model_id}")
 
         # Find the primary file, or fall back to first valid file
-        primary_file = None
-        fallback_file = None
-
+        selected_file = None
         for file_info in files:
-            name = file_info.get("name")
-            url = file_info.get("downloadUrl")
-            if name and url:
+            if file_info.get("name") and file_info.get("downloadUrl"):
                 if file_info.get("primary"):
-                    primary_file = file_info
+                    selected_file = file_info
                     break
-                elif fallback_file is None:
-                    fallback_file = file_info
+                elif selected_file is None:
+                    selected_file = file_info
 
-        selected_file = primary_file or fallback_file
         if not selected_file:
             raise ValueError(f"No valid file found for CivitAI model version {model_id}")
 
         filename = selected_file.get("name")
         download_url = selected_file.get("downloadUrl")
         file_hashes = selected_file.get("hashes", {})
-        remote_hash = file_hashes.get("SHA256", "").lower()
+        remote_hash = file_hashes.get("SHA256", "").lower() or None
 
-        # Get all paths
-        target_dir, filepath, final_model_path, model_name = cls._get_download_paths(
-            model_type, filename, subdirectory, archive_model_filename if extract_archive else None
+        return DownloadInfo(
+            url=download_url,
+            filename=filename,
+            headers={"Authorization": f"Bearer {api_key}"},
+            remote_hash=remote_hash,
         )
 
-        # Check if archive file exists with matching hash
-        if filepath.exists() and not force_download:
-            hash_matches = False
-            if remote_hash:
-                local_hash = cls._compute_file_hash(filepath)
-                hash_matches = local_hash == remote_hash
-                if hash_matches:
-                    logger.info(f"File exists with matching SHA256 hash: {filename}")
-                else:
-                    logger.info(f"Hash mismatch for {filename}, re-downloading")
-            else:
-                hash_matches = True
-                logger.info(f"File already exists (no remote hash to verify): {filename}")
-
-            if hash_matches:
-                if extract_archive:
-                    return cls._handle_extraction(
-                        filepath, target_dir, final_model_path, model_name, extracted_model_hash, unique_id
-                    )
-                return io.NodeOutput(model_name)
-
-        # Download the file
-        download_headers = {"Authorization": f"Bearer {api_key}"}
-
-        logger.info(f"Downloading {filename} from CivitAI (version {model_id})")
-        cls._download_file(download_url, filepath, timeout, headers=download_headers)
-        logger.info(f"Downloaded to {filepath}")
-
-        # Extract if requested
-        if extract_archive:
-            return cls._handle_extraction(
-                filepath,
-                target_dir,
-                final_model_path,
-                model_name,
-                extracted_model_hash,
-                unique_id,
-                force_extract=True,
-            )
-
-        return io.NodeOutput(model_name)
-
     @classmethod
-    def _download_from_custom(
-        cls,
-        model_type: str,
-        url: str,
-        filename: str,
-        file_hash: str,
-        subdirectory: str,
-        force_download: bool,
-        extract_archive: bool,
-        archive_model_filename: str,
-        extracted_model_hash: str,
-        unique_id: str | None,
-        timeout: int,
-    ) -> io.NodeOutput:
-        """
-        Download a model from a custom URL.
-
-        Args:
-            model_type: The type of model (determines target directory)
-            url: The URL to download from
-            filename: The filename to save the downloaded file as
-            file_hash: Optional SHA256 hash to check for existing files
-            subdirectory: Optional subdirectory within the model type folder
-            force_download: If True, re-download and re-extract even if files exist
-            extract_archive: If True, extract the downloaded archive
-            archive_model_filename: The model filename inside the archive
-            extracted_model_hash: SHA256 hash of the extracted model (for verification)
-            unique_id: Node ID for updating input values
-            timeout: Download timeout in seconds
-
-        Returns:
-            io.NodeOutput containing the model filename (extracted file if extract_archive,
-            otherwise the downloaded file)
-        """
+    def _get_custom_download_info(cls, url: str, filename: str) -> DownloadInfo:
+        """Get download info for a custom URL."""
         if not url:
             raise ValueError("Custom URL is required")
-        if extract_archive and not archive_model_filename:
-            raise ValueError("archive_model_filename is required when extract_archive is enabled")
 
         # Extract filename from URL if not provided
         if not filename:
@@ -585,62 +503,12 @@ class DownloadModelNode(io.ComfyNode):
                 f"or use a direct download URL."
             )
 
-        # Validate extension based on whether this is an archive or direct model download
-        if not extract_archive and file_ext not in folder_paths.supported_pt_extensions:
-            raise ValueError(
-                f"The filename '{filename}' has extension '{file_ext}' which is not a recognized model extension. "
-                f"Supported model extensions: {', '.join(sorted(folder_paths.supported_pt_extensions))}. "
-                f"If this is an archive file, enable 'extract_archive' and specify 'archive_model_filename'. "
-                f"Otherwise, please verify you're using a direct download URL for a model file."
-            )
-
-        # Get all paths
-        target_dir, filepath, final_model_path, model_name = cls._get_download_paths(
-            model_type, filename, subdirectory, archive_model_filename if extract_archive else None
+        return DownloadInfo(
+            url=url,
+            filename=filename,
+            headers=None,
+            remote_hash=None,
         )
-
-        # Check if archive file already exists and hash was provided
-        if filepath.exists() and not force_download and file_hash:
-            existing_hash = cls._compute_file_hash(filepath)
-            if existing_hash != file_hash.lower():
-                raise ValueError(
-                    f"Existing file hash does not match provided hash for {filename}. "
-                    f"Expected {file_hash.lower()}, got {existing_hash}"
-                )
-            logger.info(f"File exists with matching hash: {filename}")
-            if extract_archive:
-                return cls._handle_extraction(
-                    filepath, target_dir, final_model_path, model_name, extracted_model_hash, unique_id
-                )
-            return io.NodeOutput(model_name)
-        if not file_hash:
-            logger.info(f"No hash provided, downloading {filename}")
-
-        logger.info(f"Downloading {url} to {filepath}")
-        cls._download_file(url, filepath, timeout)
-        logger.info(f"Downloaded to {filepath}")
-
-        # Compute hash of downloaded file
-        computed_hash = cls._compute_file_hash(filepath)
-        logger.info(f"Downloaded file hash: {computed_hash}")
-
-        # Update the node's hash input if we have a unique_id
-        if unique_id and (not file_hash or file_hash != computed_hash):
-            cls._update_node_input(unique_id, "custom_hash", computed_hash)
-
-        # Extract if requested
-        if extract_archive:
-            return cls._handle_extraction(
-                filepath,
-                target_dir,
-                final_model_path,
-                model_name,
-                extracted_model_hash,
-                unique_id,
-                force_extract=True,
-            )
-
-        return io.NodeOutput(model_name)
 
     @staticmethod
     def _get_model_directory(model_type: str) -> str:
@@ -683,9 +551,56 @@ class DownloadModelNode(io.ComfyNode):
         return target_dir, filepath, final_model_path, model_name
 
     @staticmethod
+    def _compute_sparse_hash(filepath: Path) -> str:
+        """
+        Compute a fast sparse hash by sampling portions of a file.
+
+        Samples the first 64KB, middle 64KB, last 64KB, and combines with file size.
+        This is much faster than hashing the entire file while still being reliable
+        for detecting different files or modifications.
+
+        Args:
+            filepath: Path to the file
+
+        Returns:
+            Hex digest of the sparse hash
+        """
+        stat = filepath.stat()
+        file_size = stat.st_size
+        sample_size = _SPARSE_HASH_SAMPLE_SIZE
+
+        hasher = hashlib.sha256()
+        # Include file size in hash
+        hasher.update(file_size.to_bytes(8, byteorder="big"))
+
+        with filepath.open("rb") as f:
+            # Sample from beginning
+            hasher.update(f.read(sample_size))
+
+            # Sample from middle (if file is large enough)
+            if file_size > sample_size * 3:
+                middle_pos = (file_size - sample_size) // 2
+                f.seek(middle_pos)
+                hasher.update(f.read(sample_size))
+
+            # Sample from end (if file is large enough)
+            if file_size > sample_size * 2:
+                f.seek(-sample_size, 2)  # Seek from end
+                hasher.update(f.read(sample_size))
+
+        return hasher.hexdigest()
+
+    @staticmethod
     def _compute_file_hash(filepath: Path, hash_func=hashlib.sha256, prefix: bytes | None = None) -> str:
         """
-        Compute hash of a file.
+        Compute hash of a file with in-memory caching using sparse hash validation.
+
+        Uses a sparse hash (sampling beginning, middle, end) to quickly validate
+        if a cached full hash is still valid. The full hash is only recomputed
+        if the sparse hash changes or no cache exists.
+
+        Note: Persistent storage of the hash is handled by the node's file_hash field.
+        This cache just avoids recomputing within a session.
 
         Args:
             filepath: Path to the file
@@ -695,6 +610,34 @@ class DownloadModelNode(io.ComfyNode):
         Returns:
             Hex digest of the hash
         """
+        file_size = filepath.stat().st_size
+
+        # For standard sha256 without prefix, use the in-memory cache
+        if hash_func == hashlib.sha256 and prefix is None:
+            # Compute sparse hash for quick validation
+            sparse_hash = DownloadModelNode._compute_sparse_hash(filepath)
+            cache_key = (str(filepath), sparse_hash)
+
+            # Check in-memory cache
+            cached_hash = _hash_cache.get(cache_key)
+            if cached_hash is not None:
+                logger.debug(f"Using cached hash for {filepath.name}")
+                return cached_hash
+
+            # Compute full hash
+            logger.info(f"Computing hash for {filepath.name} ({file_size / (1024*1024):.1f} MB)...")
+            file_hash = hash_func()
+            with filepath.open("rb") as f:
+                for chunk in iter(lambda: f.read(CHUNK_SIZE_BYTES), b""):
+                    file_hash.update(chunk)
+            computed_hash = file_hash.hexdigest()
+
+            # Save to in-memory cache
+            _hash_cache[cache_key] = computed_hash
+
+            return computed_hash
+
+        # Non-standard hash (e.g., with prefix for HF git blob format) - no caching
         file_hash = hash_func()
         if prefix:
             file_hash.update(prefix)
@@ -706,7 +649,7 @@ class DownloadModelNode(io.ComfyNode):
     @staticmethod
     def _download_file(url: str, filepath: Path, timeout: int, headers: dict | None = None) -> None:
         """
-        Download a file from URL to filepath.
+        Download a file from URL to filepath with progress logging.
 
         Args:
             url: The URL to download from
@@ -733,6 +676,11 @@ class DownloadModelNode(io.ComfyNode):
         # Ensure directory exists
         filepath.parent.mkdir(parents=True, exist_ok=True)
 
+        # Get total file size if available
+        total_size = int(response.headers.get("Content-Length", 0))
+        downloaded_size = 0
+        last_logged_percent = -1
+
         # Download and validate content
         first_chunk = None
         with filepath.open("wb") as f:
@@ -740,6 +688,24 @@ class DownloadModelNode(io.ComfyNode):
                 if first_chunk is None:
                     first_chunk = chunk
                 f.write(chunk)
+                downloaded_size += len(chunk)
+
+                # Log progress every 10%
+                if total_size > 0:
+                    percent = int((downloaded_size / total_size) * 100)
+                    if percent >= last_logged_percent + 10:
+                        last_logged_percent = (percent // 10) * 10
+                        downloaded_mb = downloaded_size / (1024 * 1024)
+                        total_mb = total_size / (1024 * 1024)
+                        logger.info(f"Downloading: {downloaded_mb:.1f} MB / {total_mb:.1f} MB ({last_logged_percent}%)")
+
+        # Log completion
+        if total_size > 0:
+            total_mb = total_size / (1024 * 1024)
+            logger.info(f"Download complete: {total_mb:.1f} MB (100%)")
+        else:
+            downloaded_mb = downloaded_size / (1024 * 1024)
+            logger.info(f"Download complete: {downloaded_mb:.1f} MB")
 
         # Validate the downloaded content doesn't look like HTML
         if first_chunk:
@@ -817,8 +783,8 @@ class DownloadModelNode(io.ComfyNode):
             if chunk_start.startswith(sig):
                 try:
                     filepath.unlink()
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.warning(f"Failed to delete invalid HTML file: {filepath}: {e}")
                 raise ValueError(
                     f"Downloaded content appears to be an HTML page, not a model file. "
                     f"The URL '{url}' is likely a web page URL, not a direct download link. "
@@ -835,8 +801,8 @@ class DownloadModelNode(io.ComfyNode):
                 if sig in content:
                     try:
                         filepath.unlink()
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        logger.warning(f"Failed to delete invalid HTML file: {filepath}: {e}")
                     raise ValueError(
                         f"Downloaded file is too small ({file_size} bytes) and contains HTML. "
                         f"The URL '{url}' likely returned an error page or redirect."
@@ -1049,9 +1015,33 @@ class DownloadModelNode(io.ComfyNode):
     @classmethod
     def fingerprint_inputs(cls, **kwargs) -> Any:
         """
-        Always return NaN to force re-execution.
+        Return a stable fingerprint based on inputs to enable caching.
 
-        The execute method handles file existence checks and early returns,
-        so this node needs to run each time to perform those checks.
+        When all the inputs that affect the output are the same, ComfyUI can
+        skip re-execution entirely. This avoids expensive network calls and
+        hash computations on every run.
+
+        The fingerprint includes all inputs that determine the final model file.
+        If force_download is True, we return NaN to force re-execution.
         """
-        return float("nan")
+        # If force_download is enabled, always re-execute
+        if kwargs.get("force_download", False):
+            return float("nan")
+
+        # Return a tuple of all inputs that affect the output
+        return (
+            kwargs.get("url", ""),
+            kwargs.get("model_type", ""),
+            kwargs.get("subdirectory", ""),
+            kwargs.get("model_source", ""),
+            kwargs.get("extract_archive", False),
+            kwargs.get("archive_model_filename", ""),
+            # Include hashes - these are the "lock" for safe distribution
+            kwargs.get("file_hash", ""),
+            kwargs.get("extracted_model_hash", ""),
+            # Source-specific fields
+            kwargs.get("hf_repo_id", ""),
+            kwargs.get("hf_filename", ""),
+            kwargs.get("civitai_model_id", ""),
+            kwargs.get("custom_filename", ""),
+        )
