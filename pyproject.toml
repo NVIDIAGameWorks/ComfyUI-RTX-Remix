@@ -1,11 +1,10 @@
 [project]
 name = "ComfyUI-RTX-Remix"
 description = "Use ComfyUI with the RTX Remix Toolkit to remaster classic games."
-version = "2.1.0"
+version = "2.1.1"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
 dependencies = [
-    "comfyui-frontend-package>=1.24.4",
     "huggingface-hub",
     "numpy",
     "pillow>=10.0.1",
@@ -13,22 +12,19 @@ dependencies = [
     "requests",
     "torch",
 ]
-classifiers = [
-    "Operating System :: OS Independent",
-    "Environment :: GPU :: NVIDIA CUDA",
-]
 
 [project.urls]
 Repository = "https://github.com/NVIDIAGameWorks/ComfyUI-RTX-Remix"
 Documentation = "https://docs.omniverse.nvidia.com/kit/docs/rtx_remix/latest/index.html"
 "Bug Tracker" = "https://github.com/NVIDIAGameWorks/rtx-remix/issues"
 
-#  Used by Comfy Registry https://comfyregistry.org
+#  Used by Comfy Registry https://registry.comfy.org/
 [tool.comfy]
 PublisherId = "svc-remix-github"
 DisplayName = "NVIDIA RTX Remix Nodes"
 Icon = "https://media.githubusercontent.com/media/NVIDIAGameWorks/ComfyUI-RTX-Remix/refs/tags/2.0.2/web/resources/images/remix_icon.png"
-requires-comfyui = ">=0.3.48"
+# >=0.3.72 required: first version bundling frontend 1.30.0+ for getCanvasMenuItems/getNodeMenuItems context menu hooks (PR #5977, Oct 2025)
+requires-comfyui = ">=0.3.72"
 
 [tool.ruff]
 line-length = 120
