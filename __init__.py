@@ -17,7 +17,7 @@
 
 from __future__ import annotations
 
-__all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY", "comfy_entrypoint"]
+__all__ = ["WEB_DIRECTORY", "comfy_entrypoint"]
 
 from comfy_api.latest import io, ComfyExtension
 
@@ -29,29 +29,6 @@ from .api import *
 
 # Define the UI components
 WEB_DIRECTORY = "./web"
-
-
-# Generate NODE_CLASS_MAPPINGS and NODE_DISPLAY_NAME_MAPPINGS from V3 nodes
-# This is required for the ComfyUI Registry to discover nodes via static analysis
-def _generate_node_mappings(
-    nodes: list[type[io.ComfyNode]],
-) -> tuple[dict[str, type[io.ComfyNode]], dict[str, str]]:
-    """Generate legacy NODE_CLASS_MAPPINGS from V3 node classes."""
-    class_mappings = {}
-    display_name_mappings = {}
-
-    for node_class in nodes:
-        schema = node_class.define_schema()
-        node_id = schema.node_id
-        display_name = schema.display_name or node_id
-
-        class_mappings[node_id] = node_class
-        display_name_mappings[node_id] = display_name
-
-    return class_mappings, display_name_mappings
-
-
-NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS = _generate_node_mappings(RTX_REMIX_NODES)
 
 
 class RTXRemixExtension(ComfyExtension):
