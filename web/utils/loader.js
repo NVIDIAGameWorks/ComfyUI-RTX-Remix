@@ -16,33 +16,34 @@
  */
 
 import { loadCSS, loadHTMLTemplate } from "./html.js";
+import { EXTENSION_BASE } from "./constants.js";
 
 /**
  * Load all required resources (CSS and HTML templates) for the extension
  */
 export function loadResources() {
   // Load CSS files
-  loadCSS("extensions/comfyui-rtx_remix/resources/styles/variables.css");
-  loadCSS("extensions/comfyui-rtx_remix/resources/styles/animations.css");
-  loadCSS("extensions/comfyui-rtx_remix/resources/styles/buttons.css");
-  loadCSS("extensions/comfyui-rtx_remix/resources/styles/dialogs.css");
-  loadCSS("extensions/comfyui-rtx_remix/resources/styles/slots.css");
-  loadCSS("extensions/comfyui-rtx_remix/resources/styles/metadata.css");
+  loadCSS(`${EXTENSION_BASE}/resources/styles/variables.css`);
+  loadCSS(`${EXTENSION_BASE}/resources/styles/animations.css`);
+  loadCSS(`${EXTENSION_BASE}/resources/styles/buttons.css`);
+  loadCSS(`${EXTENSION_BASE}/resources/styles/dialogs.css`);
+  loadCSS(`${EXTENSION_BASE}/resources/styles/slots.css`);
+  loadCSS(`${EXTENSION_BASE}/resources/styles/metadata.css`);
 
   // Load common HTML templates
-  loadHTMLTemplate("extensions/comfyui-rtx_remix/resources/templates/exportDialog.html");
-  loadHTMLTemplate("extensions/comfyui-rtx_remix/resources/templates/slotRow.html");
-  loadHTMLTemplate("extensions/comfyui-rtx_remix/resources/templates/confirmDialog.html");
-  loadHTMLTemplate("extensions/comfyui-rtx_remix/resources/templates/infoDialog.html");
-  loadHTMLTemplate("extensions/comfyui-rtx_remix/resources/templates/slotMetadataField.html");
-  loadHTMLTemplate("extensions/comfyui-rtx_remix/resources/templates/spinner.html");
-  loadHTMLTemplate("extensions/comfyui-rtx_remix/resources/templates/metadataAccordion.html");
-  loadHTMLTemplate("extensions/comfyui-rtx_remix/resources/templates/warningRow.html");
-  loadHTMLTemplate("extensions/comfyui-rtx_remix/resources/templates/menuItem.html");
+  loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/exportDialog.html`);
+  loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/slotRow.html`);
+  loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/confirmDialog.html`);
+  loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/infoDialog.html`);
+  loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/slotMetadataField.html`);
+  loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/spinner.html`);
+  loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/metadataAccordion.html`);
+  loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/warningRow.html`);
+  loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/menuItem.html`);
 
   // Load download node templates (organized by source)
-  loadHTMLTemplate("extensions/comfyui-rtx_remix/resources/templates/download/generic.html");
-  loadHTMLTemplate("extensions/comfyui-rtx_remix/resources/templates/download/huggingface.html");
-  loadHTMLTemplate("extensions/comfyui-rtx_remix/resources/templates/download/civitai.html");
-  loadHTMLTemplate("extensions/comfyui-rtx_remix/resources/templates/download/custom.html");
+  loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/download/generic.html`);
+  loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/download/huggingface.html`);
+  loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/download/civitai.html`);
+  loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/download/custom.html`);
 }

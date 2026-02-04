@@ -16,7 +16,7 @@
  */
 
 import { api } from "../../../scripts/api.js";
-import { API_ENDPOINTS, COMFYUI_INPUT_TYPE_MAP, COMFYUI_OUTPUT_TYPE_MAP } from "../utils/constants.js";
+import { API_ENDPOINTS, COMFYUI_INPUT_TYPE_MAP, COMFYUI_OUTPUT_TYPE_MAP, REMIX_TYPE } from "../utils/constants.js";
 import { cloneTemplate, bindTemplateData } from "../utils/html.js";
 import {
   addRemixMetadataToPrompt,
@@ -250,26 +250,11 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
         const responseData = await response.json();
 
         if (responseData.success) {
-          // Update active workflow to point to the newly saved file (Save As behavior)
-          const workflowManager = app.extensionManager?.workflow;
-          if (workflowManager?.activeWorkflow && responseData.workflows?.full?.user?.path) {
-            const workflow = workflowManager.activeWorkflow;
-            const newName = responseData.name;
-            const newPath = responseData.workflows.full.user.path;
-
-            // Update workflow properties
-            workflow.filename = newName;
-            workflow.fullFilename = newName + ".json";
-            workflow.path = newPath;
-
-            // Mark workflow as saved by replicating what workflow.save() does internally
-            // (without making another API call since we already saved via our custom API)
-            const serialized = app.graph.serialize();
-            const content = JSON.stringify(serialized);
-            workflow.content = content;
-            workflow.originalContent = content;
-            workflow.changeTracker.reset();
-            workflow.isModified = false;
+          // Clear the dirty state using official workflow save
+          setLoading(true, "Finalizing...");
+          const workflowStore = app.extensionManager?.workflow;
+          if (workflowStore?.saveWorkflow && workflowStore?.activeWorkflow) {
+            await workflowStore.saveWorkflow(workflowStore.activeWorkflow);
           }
 
           app.extensionManager.toast.add({
@@ -444,7 +429,7 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
       if (remixTypeSelect) {
         // Get valid types based on slot direction and primitive type
         const typeMap = isInput ? COMFYUI_INPUT_TYPE_MAP : COMFYUI_OUTPUT_TYPE_MAP;
-        const validTypes = typeMap[slot.primitiveType] || typeMap["*"];
+        const validTypes = typeMap[slot.primitiveType] || [REMIX_TYPE.AUTO];
 
         validTypes.forEach((type) => {
           const option = document.createElement("option");

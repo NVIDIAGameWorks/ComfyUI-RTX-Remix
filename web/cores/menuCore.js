@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-import { createRemixMenuHTML } from "../utils/html.js";
 import { COMFYUI_INPUT_TYPE_MAP, COMFYUI_OUTPUT_TYPE_MAP } from "../utils/constants.js";
+import { createMenuItemHTML } from "../utils/html.js";
 import { getPrimitiveTypeName } from "../utils/types.js";
 import { exportWorkflow } from "../controllers/exportDialogController.js";
 import { isInputSlotMarked, isNodeOutputMarked, toggleInputSlotMark, toggleNodeOutputMark } from "./slotMarkingCore.js";
@@ -106,71 +106,29 @@ function buildSlotTaggingMenu(node, app) {
 }
 
 /**
- * Hook into LiteGraph's ContextMenu to reorder RTX Remix items to the top.
- * This is a hack since ComfyUI doesn't provide an official ordering mechanism.
- */
-export function setupMenuPriority() {
-  const OriginalContextMenu = LiteGraph.ContextMenu;
-
-  LiteGraph.ContextMenu = function (options, settings) {
-    if (Array.isArray(options)) {
-      const remixItems = [];
-      const otherItems = [];
-      let lastWasRemix = false;
-
-      for (const item of options) {
-        // Only lift RTX Remix items created by our menu template.
-        const isRemixItem = item?.content?.includes('data-remix-menu="true"');
-
-        if (isRemixItem) {
-          remixItems.push(item);
-          lastWasRemix = true;
-        } else if (item === null && lastWasRemix) {
-          // Keep separator with the Remix item it follows
-          remixItems.push(item);
-          lastWasRemix = false;
-        } else {
-          otherItems.push(item);
-          lastWasRemix = false;
-        }
-      }
-
-      // Put RTX Remix items (with their separators) first, then others
-      if (remixItems.length > 0) {
-        options = [...remixItems, ...otherItems];
-      }
-    }
-
-    return new OriginalContextMenu(options, settings);
-  };
-
-  // Copy static properties and prototype
-  Object.setPrototypeOf(LiteGraph.ContextMenu, OriginalContextMenu);
-  LiteGraph.ContextMenu.prototype = OriginalContextMenu.prototype;
-}
-
-/**
- * Get canvas context menu items for RTX Remix
+ * Canvas context menu items (background right-click)
  */
 export function getCanvasMenuItems(app) {
   return [
+    null, // separator above
     {
-      content: createRemixMenuHTML("Export Workflow for RTX Remix"),
+      content: createMenuItemHTML("Export Workflow for RTX Remix"),
       callback: () => exportWorkflow(app),
     },
-    null,
+    null, // separator below
   ];
 }
 
 /**
- * Get node context menu items for RTX Remix
+ * Node context menu items (node right-click)
  */
 export function getNodeMenuItems(node, app) {
   return [
+    null, // separator above
     {
-      content: createRemixMenuHTML("Tag for RTX Remix"),
+      content: createMenuItemHTML("Tag for RTX Remix"),
       submenu: buildSlotTaggingMenu(node, app),
     },
-    null,
+    null, // separator below
   ];
 }

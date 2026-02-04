@@ -159,10 +159,10 @@ export function bindTemplateData(element, data) {
  * @param {string} text - Menu text
  * @returns {string} HTML string
  */
-export function createRemixMenuHTML(text) {
+export function createMenuItemHTML(text) {
   const element = cloneTemplate("rtx-remix-menu-item-template");
   if (!element) {
-    console.error("Failed to load menu item template");
+    // Fallback if template not loaded yet
     return text;
   }
 
