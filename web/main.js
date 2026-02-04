@@ -18,7 +18,7 @@
 import { app } from "../../scripts/app.js";
 import { loadResources } from "./utils/loader.js";
 import { NODE_PREFIX, REMIX_KEYS } from "./utils/constants.js";
-import { getCanvasMenuItems, getNodeMenuItems, setupMenuPriority } from "./cores/menuCore.js";
+import { getCanvasMenuItems, getNodeMenuItems } from "./cores/menuCore.js";
 import { setupNode } from "./cores/nodeInteractivityCore.js";
 import { drawNodeHighlights } from "./cores/slotMarkingCore.js";
 
@@ -81,7 +81,6 @@ app.registerExtension({
   async setup() {
     loadResources();
     setupApiListeners();
-    setupMenuPriority();
   },
 
   getCanvasMenuItems: () => getCanvasMenuItems(app),

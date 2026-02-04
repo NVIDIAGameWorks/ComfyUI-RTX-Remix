@@ -24,9 +24,12 @@ export const API_ENDPOINTS = {
 // Prefix for all RTX Remix nodes
 export const NODE_PREFIX = "RTXRemix";
 
-// ComfyUI automatically serves the web directory at /extensions/{folder-name}/
+// Dynamically determine extension base path from current module URL
+export const EXTENSION_BASE = new URL(".", import.meta.url).pathname.replace(/\/utils\/$/, "");
+
+// Asset paths relative to the extension's web directory
 export const ASSETS = {
-  REMIX_ICON: "/extensions/comfyui-rtx_remix/resources/images/remix_icon.png",
+  REMIX_ICON: `${EXTENSION_BASE}/resources/images/remix_icon.png`,
 };
 
 // RTX Remix metadata keys - hierarchically organized
