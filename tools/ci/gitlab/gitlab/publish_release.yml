@@ -39,3 +39,6 @@ publish-gitlab-release:
     # using release feature from the yaml doesn't work with powershell. Need to run the CLI directly
     - glab auth login --hostname "$env:CI_SERVER_HOST" --token "$env:GITLAB_RELEASE_TOKEN"
     - glab release create "$env:CI_COMMIT_TAG" --name "$env:CI_COMMIT_TAG" -F _current_changelog.md --ref "$env:CI_COMMIT_SHA" --assets-links="[$assets_win, $assets_linux]"
+  after_script:
+    - glab auth logout --hostname "$env:CI_SERVER_HOST"
+
