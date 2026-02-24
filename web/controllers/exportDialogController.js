@@ -196,9 +196,8 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
 
     // Handle export process
     async function handleExport(filename) {
-      // Get filename stem (without extension) - backend adds .json automatically
-      const lastDotIndex = filename.lastIndexOf(".");
-      const workflowName = lastDotIndex > 0 ? filename.substring(0, lastDotIndex) : filename;
+      // Strip .json extension if present - backend adds it automatically
+      const workflowName = filename.endsWith(".json") ? filename.slice(0, -5) : filename;
 
       setLoading(true, "Checking if file exists...");
 
