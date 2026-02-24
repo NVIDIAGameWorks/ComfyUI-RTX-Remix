@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [2.2.1] - 2026-02-23
+
+### Fixed
+
+- Fixed an issue with the export dialog not properly handling workflows with `.` in them
+
 ## [2.2.0] - 2026-02-02
 
 ### Changed
