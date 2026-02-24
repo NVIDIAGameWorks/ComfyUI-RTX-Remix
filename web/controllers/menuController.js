@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,29 @@
  * limitations under the License.
  */
 
-import { COMFYUI_INPUT_TYPE_MAP, COMFYUI_OUTPUT_TYPE_MAP } from "../utils/constants.js";
+/**
+ * Menu Controller
+ *
+ * Handles context menu building for canvas and node right-click menus.
+ * Uses slotMarkingCore for state queries and actions.
+ * Follows the dependency rule: controllers → cores → stores → utils
+ */
+
+import { COMFYUI_INPUT_TYPE_MAP, COMFYUI_OUTPUT_TYPE_MAP, EVENTS } from "../utils/constants.js";
 import { createMenuItemHTML } from "../utils/html.js";
 import { getPrimitiveTypeName } from "../utils/types.js";
-import { exportWorkflow } from "../controllers/exportDialogController.js";
-import { isInputSlotMarked, isNodeOutputMarked, toggleInputSlotMark, toggleNodeOutputMark } from "./slotMarkingCore.js";
+import {
+  isInputSlotMarked,
+  isNodeOutputMarked,
+  toggleInputSlotMark,
+  toggleNodeOutputMark,
+} from "../cores/slotMarkingCore.js";
 
 /**
  * Build menu items for input slots
+ * @param {Object} node - LiteGraph node
+ * @param {Object} app - ComfyUI app instance
+ * @returns {Object[]} Array of menu item objects
  */
 function buildInputSlotMenuItems(node, app) {
   const selectedNodes = Object.values(app.canvas.selected_nodes || {});
@@ -56,6 +71,9 @@ function buildInputSlotMenuItems(node, app) {
 
 /**
  * Build slot tagging submenu
+ * @param {Object} node - LiteGraph node
+ * @param {Object} app - ComfyUI app instance
+ * @returns {Object} Submenu object with options
  */
 function buildSlotTaggingMenu(node, app) {
   const submenu = { options: [] };
@@ -106,21 +124,29 @@ function buildSlotTaggingMenu(node, app) {
 }
 
 /**
- * Canvas context menu items (background right-click)
+ * Get canvas context menu items (background right-click)
+ * @param {Object} app - ComfyUI app instance
+ * @returns {Object[]} Array of menu item objects
  */
 export function getCanvasMenuItems(app) {
   return [
     null, // separator above
     {
       content: createMenuItemHTML("Export Workflow for RTX Remix"),
-      callback: () => exportWorkflow(app),
+      callback: () => {
+        // Dispatch event - exportDialogController listens and handles export
+        app.api.dispatchEvent(new CustomEvent(EVENTS.EXPORT_WORKFLOW_REQUESTED, { detail: { app } }));
+      },
     },
     null, // separator below
   ];
 }
 
 /**
- * Node context menu items (node right-click)
+ * Get node context menu items (node right-click)
+ * @param {Object} node - LiteGraph node
+ * @param {Object} app - ComfyUI app instance
+ * @returns {Object[]} Array of menu item objects
  */
 export function getNodeMenuItems(node, app) {
   return [

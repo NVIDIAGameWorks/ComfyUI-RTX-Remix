@@ -1,0 +1,65 @@
+<!--
+  SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+  SPDX-License-Identifier: Apache-2.0
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- Main container template -->
+<template id="rtx-remix-group-picker-template">
+  <div class="rtx-remix-group-picker">
+    <button type="button" class="rtx-remix-group-picker-trigger" data-element="trigger">
+      <span data-bind="selectedGroup">Ungrouped</span>
+      <span class="rtx-remix-group-picker-chevron">▼</span>
+    </button>
+    <div class="rtx-remix-popover rtx-remix-group-picker-dropdown rtx-hidden" data-element="dropdown">
+      <!-- Options rendered dynamically -->
+    </div>
+  </div>
+</template>
+
+<!-- Individual group option template -->
+<template id="rtx-remix-group-picker-option-template">
+  <div class="rtx-remix-popover-item rtx-remix-group-picker-option" data-group="">
+    <span class="rtx-remix-group-picker-option-name" data-bind="groupName">Group Name</span>
+    <div class="rtx-remix-group-picker-option-actions">
+      <button type="button" class="rtx-remix-group-picker-action" data-action="rename" title="Rename group">
+        <span class="pi pi-pencil"></span>
+      </button>
+      <button type="button" class="rtx-remix-group-picker-action" data-action="delete" title="Delete group">
+        <span class="pi pi-trash"></span>
+      </button>
+    </div>
+  </div>
+</template>
+
+<!-- Inline input row for create/rename -->
+<template id="rtx-remix-group-picker-input-template">
+  <div class="rtx-remix-group-picker-input-row">
+    <input type="text" class="rtx-remix-group-picker-input" placeholder="Group name" data-element="input" />
+    <button type="button" class="rtx-remix-group-picker-action" data-action="confirm" title="Confirm">
+      <span class="pi pi-check"></span>
+    </button>
+    <button type="button" class="rtx-remix-group-picker-action" data-action="cancel" title="Cancel">
+      <span class="pi pi-times"></span>
+    </button>
+  </div>
+</template>
+
+<!-- Create new group option -->
+<template id="rtx-remix-group-picker-create-template">
+  <div class="rtx-remix-popover-item rtx-remix-group-picker-option rtx-remix-group-picker-create" data-action="create">
+    <span class="pi pi-plus"></span>
+    <span>Create new group...</span>
+  </div>
+</template>

@@ -18,14 +18,14 @@
 /* RTX Remix Button Styles */
 
 .rtx-remix-btn {
-  padding: 10px 24px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
+  padding: 10px var(--space-6);
+  border-radius: var(--radius-md);
+  font-size: var(--font-md);
+  font-weight: var(--font-medium);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--rtx-animation-normal) ease;
   outline: none;
-  border: 2px solid;
+  border: var(--border-width-medium) solid;
 }
 
 .rtx-remix-btn:disabled {
@@ -45,31 +45,90 @@
   color: var(--text-primary);
 }
 
+.rtx-remix-btn-secondary {
+  padding: var(--space-2) 14px;
+  font-size: var(--font-base);
+  font-weight: var(--font-medium);
+  background: transparent;
+  border-color: var(--border-light);
+  color: var(--text-muted);
+}
+
+.rtx-remix-btn-secondary:hover:not(:disabled) {
+  background: var(--bg-hover);
+  border-color: var(--border-lighter);
+  color: var(--text-primary);
+}
+
+/* Muted button with subtle red tint (for discard/destructive secondary actions) */
+.rtx-remix-btn-muted {
+  padding: var(--space-2) 14px;
+  font-size: var(--font-base);
+  font-weight: var(--font-medium);
+  background: rgba(255, 100, 100, 0.1);
+  border-color: rgba(255, 100, 100, 0.3);
+  color: rgba(255, 150, 150, 0.9);
+}
+
+.rtx-remix-btn-muted:hover:not(:disabled) {
+  background: rgba(255, 100, 100, 0.2);
+  border-color: rgba(255, 100, 100, 0.5);
+  color: #ff9999;
+}
+
+/* Subtle primary button with green tint (for save/positive secondary actions) */
+.rtx-remix-btn-subtle-primary {
+  padding: 10px 14px;
+  font-size: var(--font-base);
+  font-weight: var(--font-semibold);
+  background: rgba(118, 185, 0, 0.15);
+  border-color: rgba(118, 185, 0, 0.4);
+  color: var(--text-primary);
+}
+
+.rtx-remix-btn-subtle-primary:hover:not(:disabled) {
+  background: rgba(118, 185, 0, 0.25);
+  border-color: rgba(118, 185, 0, 0.6);
+  color: var(--text-primary);
+}
+
 .rtx-remix-btn-primary {
   padding: 10px 28px;
   background: var(--remix-color);
   border-color: var(--remix-color);
-  color: var(--text-black);
-  font-weight: 600;
+  color: var(--text-primary);
+  font-weight: var(--font-semibold);
 }
 
 .rtx-remix-btn-primary:hover:not(:disabled) {
   background: var(--remix-color-hover);
   border-color: var(--remix-color-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--remix-color-shadow-hover);
+  box-shadow: var(--shadow-btn-primary-hover);
+}
+
+.rtx-remix-btn-outline-primary {
+  background: transparent;
+  border-color: var(--remix-color);
+  color: var(--remix-color);
+  font-weight: var(--font-semibold);
+}
+
+.rtx-remix-btn-outline-primary:hover:not(:disabled) {
+  background: var(--remix-color);
+  color: var(--text-black);
 }
 
 .rtx-remix-btn-danger {
-  padding: 8px 20px;
+  padding: var(--space-2) var(--space-5);
   background: var(--status-danger);
-  border: 2px solid var(--status-danger);
-  border-radius: 6px;
+  border: var(--border-width-medium) solid var(--status-danger);
+  border-radius: var(--radius-md);
   color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--font-md);
+  font-weight: var(--font-semibold);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--rtx-animation-normal) ease;
 }
 
 .rtx-remix-btn-danger:hover {
@@ -80,13 +139,13 @@
 /* Details Button */
 .rtx-remix-details-btn {
   background: transparent;
-  border: 1px solid var(--border-base);
+  border: var(--border-width-thin) solid var(--border-base);
   color: var(--text-subtle);
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 14px;
-  transition: all 0.2s ease;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-md);
+  transition: all var(--rtx-animation-normal) ease;
   outline: none;
 }
 
@@ -100,4 +159,33 @@
   transform: rotate(180deg);
   color: var(--remix-color);
   border-color: var(--remix-color);
+}
+
+/* Split Button - joins two buttons flush with visible separator */
+.rtx-remix-split-btn {
+  display: inline-flex;
+}
+
+.rtx-remix-split-btn > .rtx-remix-btn:first-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: none;
+}
+
+.rtx-remix-split-btn > .rtx-remix-btn:last-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: var(--border-width-thin) solid var(--split-btn-separator);
+  padding: var(--space-1);
+}
+
+/* Disable individual hover effects on split buttons to keep them unified */
+.rtx-remix-split-btn > .rtx-remix-btn:hover:not(:disabled) {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Apply hover effects to entire split button container */
+.rtx-remix-split-btn:hover:has(.rtx-remix-btn:not(:disabled)) {
+  filter: brightness(1.1);
 }

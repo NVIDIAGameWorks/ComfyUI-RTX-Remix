@@ -1,0 +1,28 @@
+<!--
+  SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+  SPDX-License-Identifier: Apache-2.0
+
+  Layout: 2 columns. Col1 = Input name (bold) on top, Node name (light) below. Col2 = Edit field + Reset.
+-->
+
+<template id="rtx-remix-preset-input-field-template">
+  <div class="rtx-remix-input-row" data-fields="nodeId,slotName">
+    <div class="rtx-remix-input-row-indicator" data-element="override-indicator"></div>
+    <div class="rtx-remix-input-row-col1">
+      <span class="rtx-remix-input-row-slot" data-bind="slotName"></span>
+      <span class="rtx-remix-input-row-node" data-bind="nodeTitle"></span>
+    </div>
+    <div class="rtx-remix-input-row-col2" data-element="input-wrap">
+      <!-- Input injected by presetCore -->
+    </div>
+    <button
+      type="button"
+      class="rtx-remix-input-menu-btn"
+      data-action="input-menu"
+      title="Open Input Actions"
+      aria-label="Open Input Actions"
+    >
+      <span class="pi pi-ellipsis-v"></span>
+    </button>
+  </div>
+</template>

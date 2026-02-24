@@ -15,6 +15,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [3.0.0] - 2026-02-10
+
+### Added
+
+- **Preset Panel**: New sidebar panel to save, manage, and apply preset configurations for tagged inputs
+  - Save current input values as named presets
+  - Apply presets to restore saved values
+  - Set default presets that auto-apply on workflow load
+  - Edit and delete presets via context menu
+  - Group presets for organization
+- **Grouped List Component**: Reusable collapsible grouped list UI component
+- **Popover Component**: Reusable popover UI component for contextual actions
+- **Form Field Components**: Standardized input components (text, number, checkbox, select, textarea)
+- **Graph Store**: Centralized store for managing graph state and tagged inputs
+- **Preset Store**: Centralized store for managing presets with localStorage persistence
+- **Frontend Documentation**: Added web/README.md with architecture and contribution guidelines
+- **Download Node**: Auto-reset hash and archive fields when URL changes to prevent stale data
+- **Download Node**: Progress bar in UI during file downloads
+- **Download Node**: Cancellation support - stops download and cleans up partial files when prompt is cancelled
+
+### Changed
+
+- **Export Dialog**: Improved layout, better details panel, pending changes detection
+- **UI Architecture**: Refactored to controller/core/store pattern for better separation of concerns
+- **Keyboard Shortcuts**: Improved keybind handling and consistency
+- **Styling**: Enhanced CSS with new utility classes, variables, and animations
+
 ## [2.2.1] - 2026-02-23
 
 ### Fixed

@@ -18,10 +18,11 @@
 /* RTX Remix CSS Variables */
 :root {
   /* Brand Colors */
-  --remix-color: #76b900;
-  --remix-color-hover: #8acc00;
-  --remix-color-shadow: rgba(118, 185, 0, 0.1);
-  --remix-color-shadow-hover: rgba(118, 185, 0, 0.3);
+  --remix-color: #569e00;
+  --remix-color-rgb: 86, 158, 0;
+  --remix-color-hover: color-mix(in srgb, var(--remix-color) 80%, white);
+  --remix-color-shadow: rgba(var(--remix-color-rgb), 0.1);
+  --remix-color-shadow-hover: rgba(var(--remix-color-rgb), 0.3);
 
   /* Background Colors */
   --bg-darkest: #0f0f0f;
@@ -35,7 +36,6 @@
   --border-base: #3a3a3a;
   --border-light: #4a4a4a;
   --border-lighter: #5a5a5a;
-  --border-dashed: #3a3a3a;
 
   /* Text Colors */
   --text-primary: #ffffff;
@@ -57,12 +57,107 @@
   --status-warning: #ffc107;
   --status-warning-bg: rgba(255, 193, 7, 0.1);
 
+  /* Danger Colors (aliases for semantic use) */
+  --danger-color: #d93636;
+  --danger-rgb: 217, 54, 54;
+
   /* Overlay Colors */
-  --overlay-light: rgba(0, 0, 0, 0.7);
-  --overlay-dark: rgba(0, 0, 0, 0.8);
+  --overlay: rgba(0, 0, 0, 0.75);
 
   /* Shadow Colors */
   --shadow-base: rgba(0, 0, 0, 0.6);
   --shadow-light: rgba(0, 0, 0, 0.3);
 
+  /* Box Shadows (semantic shadows) */
+  --shadow-sm: 0 1px 3px var(--shadow-light);
+  --shadow-md: 0 2px 4px var(--shadow-light);
+  --shadow-lg: 0 4px 12px var(--shadow-base);
+  --shadow-xl: 0 8px 32px var(--shadow-base);
+  --shadow-focus: 0 0 0 2px var(--remix-color-shadow);
+  --shadow-focus-lg: 0 0 0 3px var(--remix-color-shadow);
+  --shadow-btn-primary-hover: 0 4px 12px var(--remix-color-shadow-hover);
+
+  /* Z-Index Layers */
+  --rtx-z-sticky-header: 10;
+  --rtx-z-popover: 9999;
+  --rtx-z-dropdown: 10000;
+  --rtx-z-dialog-overlay: 10000;
+  --rtx-z-confirm-overlay: 10001;
+
+  /* Animation Timing */
+  --rtx-animation-fast: 150ms;
+  --rtx-animation-normal: 200ms;
+  --rtx-animation-slow: 300ms;
+
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  /* Border Widths */
+  --border-width-thin: 1px;
+  --border-width-medium: 2px;
+  --border-width-thick: 3px;
+
+  /* Indicator Width (selection/override bars) */
+  --indicator-width: 4px;
+
+  /* Border Radius Scale */
+  --radius-xs: 3px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  /* Font Sizes (rem for accessibility - scales with user preferences) */
+  --font-xxs: 0.625rem; /* 10px */
+  --font-xs: 0.6875rem; /* 11px */
+  --font-sm: 0.75rem; /* 12px */
+  --font-base: 0.8125rem; /* 13px */
+  --font-md: 0.875rem; /* 14px */
+  --font-lg: 0.9375rem; /* 15px */
+  --font-xl: 1.125rem; /* 18px */
+  --font-xxl: 1.25rem; /* 20px */
+
+  /* Font Weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* Icon Sizes (rem to scale with font preferences) */
+  --icon-sm: 1rem; /* 16px */
+  --icon-md: 1.25rem; /* 20px */
+  --icon-lg: 1.75rem; /* 28px */
+  --icon-xl: 2rem; /* 32px */
+
+  /* Blur Values */
+  --blur-md: 4px;
+
+  /* Line Heights */
+  --leading-normal: 1.5;
+
+  /* Input/Control Sizes */
+  --control-height-sm: 28px;
+  --control-height-lg: 36px;
+
+  /* Grid Layout - shared column widths */
+  --cell-padding-x: 10px;
+  --drag-column-width: 28px;
+  --chevron-column-width: 20px;
+  --menu-column-width: 40px;
+  --label-column-min-width: 120px;
+  --label-column-max-width: 25%;
+  --flex-column-min-width: 80px;
+  --type-column-width: 60px;
+  --remix-type-column-width: 260px;
+  --details-column-width: 36px;
+
+  /* Split Button */
+  --split-btn-separator: rgba(0, 0, 0, 0.25);
 }

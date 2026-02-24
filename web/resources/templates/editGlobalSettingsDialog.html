@@ -1,0 +1,50 @@
+<!--
+  SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+  SPDX-License-Identifier: Apache-2.0
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<template id="rtx-remix-edit-global-settings-dialog-template">
+  <div class="rtx-remix-overlay">
+    <div class="rtx-remix-dialog rtx-remix-dialog-medium">
+      <!-- Header -->
+      <div class="rtx-remix-dialog-header">
+        <div class="rtx-remix-dialog-header-content">
+          <h2 class="rtx-remix-dialog-title" data-bind="title">Edit Input Metadata</h2>
+          <div class="rtx-remix-dialog-subtitle" data-bind="subtitle">
+            <span class="rtx-remix-dialog-subtitle-node" data-bind="subtitle-node"></span>
+            <span class="rtx-remix-dialog-subtitle-separator">|</span>
+            <span class="rtx-remix-dialog-subtitle-slot" data-bind="subtitle-slot"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="rtx-remix-dialog-body">
+        <div class="rtx-remix-edit-details-info">
+          Configure metadata for this input. These settings are shared across all presets.
+        </div>
+        <div data-element="form-container">
+          <!-- Form populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="rtx-remix-dialog-footer">
+        <button class="rtx-remix-btn rtx-remix-btn-cancel" data-action="cancel">Cancel</button>
+        <button class="rtx-remix-btn rtx-remix-btn-primary" data-action="save">Save</button>
+      </div>
+    </div>
+  </div>
+</template>

@@ -16,20 +16,57 @@
  */
 
 import { api } from "../../../scripts/api.js";
-import { API_ENDPOINTS, COMFYUI_INPUT_TYPE_MAP, COMFYUI_OUTPUT_TYPE_MAP, REMIX_TYPE } from "../utils/constants.js";
+import {
+  API_ENDPOINTS,
+  COMFYUI_INPUT_TYPE_MAP,
+  COMFYUI_OUTPUT_TYPE_MAP,
+  EVENTS,
+  REMIX_TYPE,
+  REMIX_KEYS,
+  TEMPLATE_IDS,
+} from "../utils/constants.js";
 import { cloneTemplate, bindTemplateData } from "../utils/html.js";
+import {
+  createSlotLabelCell,
+  createInputCell,
+  createTextCell,
+  createSelectCell,
+  createButtonCell,
+  setRowDataAttributes,
+} from "./slotRowController.js";
 import {
   addRemixMetadataToPrompt,
   applySlotEditsToGraphNodes,
   extractTaggedSlots,
   getApplicableMetadataFields,
+  updateGroupOrder,
 } from "../cores/workflowExportCore.js";
+import { getGroupOrder } from "../stores/graphStore.js";
+import { createGroupedList } from "./groupedListController.js";
+import { updateInputMetadata } from "../cores/metadataEditorCore.js";
+import { createGroupPicker } from "./groupPickerController.js";
+import { cleanupDeletedInputs } from "../cores/presetCore.js";
+import { handlePendingChangesBeforeAction } from "./presetSidebarController.js";
+
+/**
+ * Initialize the export controller - registers event listeners.
+ * @param {Object} app - ComfyUI app instance
+ */
+export function initExportController(app) {
+  app.api.addEventListener(EVENTS.EXPORT_WORKFLOW_REQUESTED, () => exportWorkflow(app));
+}
 
 /**
  * Export workflow handler - retrieves current workflow name and shows export dialog
  * @param {Object} app - ComfyUI app instance
  */
 export async function exportWorkflow(app) {
+  // Check for pending preset changes before export
+  const canProceed = await handlePendingChangesBeforeAction(app);
+  if (!canProceed) {
+    return; // User cancelled, don't show export dialog
+  }
+
   // Get current workflow filename (without extension)
   let workflowName = "workflow";
 
@@ -50,10 +87,14 @@ export async function exportWorkflow(app) {
 /**
  * Create metadata accordion with dynamic fields based on slot context
  * @param {Object} options - Accordion options
+ * @param {Object} options.app - ComfyUI app instance (for group picker)
+ * @param {Object} options.context - Slot context
+ * @param {Object} options.slotData - Slot data
+ * @param {boolean} [options.includeGroup=true] - Whether to include the group field
  * @returns {HTMLElement} Accordion element
  */
-function createMetadataAccordion({ context, slotData }) {
-  const accordion = cloneTemplate("rtx-remix-metadata-accordion-template");
+function createMetadataAccordion({ app, context, slotData, includeGroup = true }) {
+  const accordion = cloneTemplate(TEMPLATE_IDS.METADATA_ACCORDION);
   if (!accordion) {
     console.error("Failed to load metadata accordion template");
     return null;
@@ -66,6 +107,11 @@ function createMetadataAccordion({ context, slotData }) {
 
   // Create field for each applicable metadata
   applicableFields.forEach((fieldConfig) => {
+    // Skip group field if not included
+    if (!includeGroup && fieldConfig.key === REMIX_KEYS.PROPERTY.ADDITIONAL_DATA.GROUP) {
+      return;
+    }
+
     const fieldDiv = document.createElement("div");
     fieldDiv.className = "rtx-remix-metadata-field";
 
@@ -74,29 +120,51 @@ function createMetadataAccordion({ context, slotData }) {
     label.textContent = fieldConfig.label;
     fieldDiv.appendChild(label);
 
-    let input;
-    if (fieldConfig.inputType === "textarea") {
-      input = document.createElement("textarea");
-      input.className = "rtx-remix-metadata-input";
-      input.rows = 3;
-    } else {
-      input = document.createElement("input");
-      input.className = "rtx-remix-metadata-input";
-      input.type = fieldConfig.inputType;
-    }
-
-    input.dataset.fieldKey = fieldConfig.key;
-    input.dataset.nodeId = context.nodeId;
-    input.dataset.slotName = context.slotName || "";
-    input.dataset.isInput = context.isInput;
-
     // Get current value from slotData additional_data or use computed default
     const currentValue = slotData.additionalData?.[fieldConfig.key] ?? fieldConfig.computedDefault;
-    if (currentValue !== null && currentValue !== undefined) {
-      input.value = currentValue;
+
+    // Use group picker for the group field
+    if (fieldConfig.key === REMIX_KEYS.PROPERTY.ADDITIONAL_DATA.GROUP) {
+      const picker = createGroupPicker({
+        app,
+        currentValue: currentValue || "",
+        onChange: (newGroup) => {
+          // Value is stored in data attribute for form extraction
+          picker.dataset.selectedGroup = newGroup || "";
+        },
+      });
+      picker.dataset.fieldKey = fieldConfig.key;
+      picker.dataset.nodeId = context.nodeId;
+      picker.dataset.slotName = context.slotName || "";
+      picker.dataset.isInput = context.isInput;
+      picker.dataset.isAdditionalData = "true";
+      picker.dataset.selectedGroup = currentValue || "";
+      fieldDiv.appendChild(picker);
+    } else {
+      // Standard input field
+      let input;
+      if (fieldConfig.inputType === "textarea") {
+        input = document.createElement("textarea");
+        input.className = "rtx-remix-metadata-input";
+        input.rows = 3;
+      } else {
+        input = document.createElement("input");
+        input.className = "rtx-remix-metadata-input";
+        input.type = fieldConfig.inputType;
+      }
+
+      input.dataset.fieldKey = fieldConfig.key;
+      input.dataset.nodeId = context.nodeId;
+      input.dataset.slotName = context.slotName || "";
+      input.dataset.isInput = context.isInput;
+
+      if (currentValue !== null && currentValue !== undefined) {
+        input.value = currentValue;
+      }
+
+      fieldDiv.appendChild(input);
     }
 
-    fieldDiv.appendChild(input);
     form.appendChild(fieldDiv);
   });
 
@@ -113,7 +181,7 @@ function createMetadataAccordion({ context, slotData }) {
 export async function showExportDialog({ app, defaultValue = "workflow" } = {}) {
   return new Promise((resolve) => {
     // Clone the dialog template
-    const overlay = cloneTemplate("rtx-remix-export-dialog-template");
+    const overlay = cloneTemplate(TEMPLATE_IDS.EXPORT_DIALOG);
     if (!overlay) {
       console.error("Failed to load export dialog template");
       resolve(false);
@@ -135,11 +203,14 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
     const slotsSection = overlay.querySelector('[data-element="slots-section"]');
     const inputsWrapper = overlay.querySelector('[data-element="inputs-wrapper"]');
     const outputsWrapper = overlay.querySelector('[data-element="outputs-wrapper"]');
-    const inputsTbody = overlay.querySelector('[data-element="inputs-tbody"]');
+    // Note: inputs use grouped list (no inputsTbody), outputs use traditional tbody
     const outputsTbody = overlay.querySelector('[data-element="outputs-tbody"]');
 
     // Set up initial values
     input.value = defaultValue;
+
+    // Track collapsed groups state for inputs (must be before populateSlotsTable call)
+    const inputsCollapsedGroups = new Set();
 
     // Extract and populate tagged slots
     const slotData = extractTaggedSlots(app);
@@ -221,7 +292,10 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
 
         // Apply UI edits directly to graph nodes first
         setLoading(true, "Preparing workflow...");
-        applySlotEditsToGraphNodes(app, inputsTbody, outputsTbody);
+        applySlotEditsToGraphNodes(app, inputsWrapper, outputsWrapper);
+
+        // Clean up stale metadata (orphaned groups, empty presets) before serialization
+        cleanupDeletedInputs(app);
 
         // Now serialize the graph (which has updated metadata)
         setLoading(true, "Generating workflow data...");
@@ -229,7 +303,7 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
         const apiWorkflow = promptResult.output;
         const workflowGraph = app.graph.serialize();
 
-        // Add Remix metadata inline to the API workflow
+        // Add RTX Remix metadata inline to the API workflow
         const enrichedPrompt = addRemixMetadataToPrompt(apiWorkflow, workflowGraph);
 
         // Send to backend to save (send name without extension)
@@ -249,17 +323,15 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
         const responseData = await response.json();
 
         if (responseData.success) {
-          // Clear the dirty state using official workflow save
-          setLoading(true, "Finalizing...");
-          const workflowStore = app.extensionManager?.workflow;
-          if (workflowStore?.saveWorkflow && workflowStore?.activeWorkflow) {
-            await workflowStore.saveWorkflow(workflowStore.activeWorkflow);
-          }
+          // Note: We intentionally do NOT save the original workflow here.
+          // The RTX Remix export saves to user/rtx-remix/workflows/ via the backend.
+          // The original workflow file should remain unchanged (clean/readonly).
+          // If users want to save their changes to the original, they can do so manually.
 
           app.extensionManager.toast.add({
             severity: "success",
             summary: "Export Successful",
-            detail: `Workflow saved as "${responseData.name}.json"`,
+            detail: `Workflow exported to "${responseData.name}.json"`,
             life: 5000,
           });
           closeDialog(true);
@@ -276,7 +348,7 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
     // Show overwrite confirmation
     function showOverwriteConfirmation(filename) {
       return new Promise((resolveConfirm) => {
-        const confirmOverlay = cloneTemplate("rtx-remix-confirm-dialog-template");
+        const confirmOverlay = cloneTemplate(TEMPLATE_IDS.CONFIRM_DIALOG);
         if (!confirmOverlay) {
           resolveConfirm(false);
           return;
@@ -316,7 +388,7 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
       exportBtn.disabled = loading;
 
       if (loading) {
-        const spinner = cloneTemplate("rtx-remix-spinner-template");
+        const spinner = cloneTemplate(TEMPLATE_IDS.SPINNER);
         if (spinner) {
           exportBtn.innerHTML = "";
           exportBtn.appendChild(spinner);
@@ -403,196 +475,155 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
       mouseDownOnOverlay = false;
     });
 
-    // Create a table row for a slot using template
-    function createSlotRow(slot, isInput) {
-      // Clone the row template
-      const row = cloneTemplate("rtx-remix-slot-row-template");
-      if (!row) {
-        console.error("Failed to load slot row template");
-        return null;
-      }
+    /**
+     * Render header cells into a header row
+     * @param {HTMLElement} headerRow - The header row element to populate
+     * @param {boolean} isInput - Whether this is for inputs (affects column labels)
+     */
+    function renderExportHeader(headerRow, isInput = true) {
+      // Drag column (empty)
+      const dragCol = document.createElement("div");
+      headerRow.appendChild(dragCol);
 
-      // Bind data to template
-      bindTemplateData(row, {
-        nodeTitle: slot.nodeTitle,
-        slotName: slot.slotName,
-        exportName: slot.exportName,
-        comfyuiType: slot.primitiveType || "unknown",
+      // Chevron spacer column (empty, for alignment with group headers)
+      const chevronCol = document.createElement("div");
+      headerRow.appendChild(chevronCol);
+
+      // Slot name column
+      const slotCol = document.createElement("div");
+      slotCol.textContent = isInput ? "Input" : "Output";
+      headerRow.appendChild(slotCol);
+
+      // Export Name column
+      const nameCol = document.createElement("div");
+      nameCol.textContent = "Export Name";
+      headerRow.appendChild(nameCol);
+
+      // Type column
+      const typeCol = document.createElement("div");
+      typeCol.textContent = "Type";
+      headerRow.appendChild(typeCol);
+
+      // RTX Remix Type column
+      const remixTypeCol = document.createElement("div");
+      remixTypeCol.textContent = "RTX Remix Type";
+      headerRow.appendChild(remixTypeCol);
+
+      // Details column (empty)
+      const detailsCol = document.createElement("div");
+      headerRow.appendChild(detailsCol);
+    }
+
+    /**
+     * Populate a slot row with data (used as row delegate for grouped list)
+     * @param {Object} slot - Slot data
+     * @param {HTMLElement} row - The row element to populate
+     * @param {boolean} isInput - Whether this is an input slot
+     */
+    function populateSlotRow(slot, row, isInput) {
+      // Set data attributes using shared utility
+      setRowDataAttributes(row, {
         nodeId: slot.nodeId,
         slotName: slot.slotName,
-        isInput: isInput,
+        isInput,
       });
 
-      // Populate the remix type dropdown
-      const remixTypeSelect = row.querySelector(".rtx-remix-slot-type-select");
-      if (remixTypeSelect) {
-        // Get valid types based on slot direction and primitive type
-        const typeMap = isInput ? COMFYUI_INPUT_TYPE_MAP : COMFYUI_OUTPUT_TYPE_MAP;
-        const validTypes = typeMap[slot.primitiveType] || [REMIX_TYPE.AUTO];
+      // Cell 1: Stacked slot name (bold) + node title (muted)
+      const labelCell = createSlotLabelCell({
+        primaryLabel: slot.slotName,
+        secondaryLabel: slot.nodeTitle,
+        primaryTooltip: slot.slotName,
+        secondaryTooltip: slot.nodeTitle,
+      });
+      row.appendChild(labelCell);
 
-        validTypes.forEach((type) => {
-          const option = document.createElement("option");
-          option.value = type;
-          option.textContent = type;
-          if (type === slot.remixType) {
-            option.selected = true;
-          }
-          remixTypeSelect.appendChild(option);
-        });
-      }
+      // Cell 2: Export name input
+      const { cell: nameCell } = createInputCell({
+        value: slot.exportName || slot.slotName,
+        fieldKey: "exportName",
+        cellClass: "rtx-remix-slot-name-cell",
+        inputClass: "rtx-remix-slot-name-input",
+      });
+      row.appendChild(nameCell);
 
-      // Create metadata accordion
+      // Cell 3: Primitive type (read-only)
+      const primitiveTypeCell = createTextCell({
+        text: slot.primitiveType || "unknown",
+        cellClass: "rtx-remix-slot-primitive-type-cell",
+        textClass: "rtx-remix-slot-primitive-type",
+      });
+      row.appendChild(primitiveTypeCell);
+
+      // Cell 4: RTX Remix type dropdown
+      const typeMap = isInput ? COMFYUI_INPUT_TYPE_MAP : COMFYUI_OUTPUT_TYPE_MAP;
+      const validTypes = typeMap[slot.primitiveType] || [REMIX_TYPE.AUTO];
+      const { cell: typeCell } = createSelectCell({
+        options: validTypes.map((type) => ({ value: type, label: type })),
+        selectedValue: slot.remixType,
+        fieldKey: "remixType",
+        cellClass: "rtx-remix-slot-type-cell",
+        selectClass: "rtx-remix-slot-type-select",
+      });
+      row.appendChild(typeCell);
+
+      // Cell 5: Details button (for accordion)
+      const { cell: detailsCell, button: detailsBtn } = createButtonCell({
+        iconClass: "pi pi-chevron-down",
+        title: "Show metadata details",
+        cellClass: "rtx-remix-slot-details-cell",
+        buttonClass: "rtx-remix-details-btn",
+      });
+      row.appendChild(detailsCell);
+
+      // Store button reference for toggle handler (set by companion row renderer)
+      row._detailsBtn = detailsBtn;
+    }
+
+    /**
+     * Create companion row (accordion) for a slot
+     * @param {Object} slot - Slot data
+     * @param {HTMLElement} mainRow - The main row element
+     * @returns {HTMLElement|null} Accordion row
+     */
+    function createSlotCompanionRow(slot, mainRow) {
       const accordion = createMetadataAccordion({
+        app,
         context: slot.context,
         slotData: slot,
       });
 
-      // Setup chevron button to toggle accordion
-      const chevronBtn = row.querySelector(".rtx-remix-details-btn");
-      if (chevronBtn) {
-        chevronBtn.addEventListener("click", () => {
-          const isExpanded = accordion.style.display !== "none";
-          accordion.style.display = isExpanded ? "none" : "table-row";
-          chevronBtn.classList.toggle("expanded", !isExpanded);
+      if (!accordion) return null;
+
+      // Initially hidden
+      accordion.classList.add("rtx-hidden");
+
+      // Add companion row class for proper styling
+      accordion.classList.add("rtx-remix-companion-row");
+
+      // Wire up details button to toggle accordion
+      const detailsBtn = mainRow._detailsBtn;
+      if (detailsBtn) {
+        detailsBtn.addEventListener("click", () => {
+          const isExpanded = !accordion.classList.contains("rtx-hidden");
+          accordion.classList.toggle("rtx-hidden", isExpanded);
+          detailsBtn.classList.toggle("expanded", !isExpanded);
         });
       }
 
-      // Return both row and accordion as a fragment
-      const fragment = document.createDocumentFragment();
-      fragment.appendChild(row);
-      fragment.appendChild(accordion);
-
-      return fragment;
+      return accordion;
     }
 
-    // Setup drag and drop for a tbody
-    function setupDragAndDrop(tbody) {
-      let draggedRow = null;
-      let sourceTbody = null;
-
-      // Disable row dragging when focusing interactive elements
-      tbody.addEventListener(
-        "focus",
-        (e) => {
-          const row = e.target.closest("tr");
-          if (row) row.setAttribute("draggable", "false");
-        },
-        true
-      );
-
-      // Re-enable row dragging when blurring interactive elements
-      tbody.addEventListener(
-        "blur",
-        (e) => {
-          const row = e.target.closest("tr");
-          if (row) row.setAttribute("draggable", "true");
-        },
-        true
-      );
-
-      tbody.addEventListener("dragstart", (e) => {
-        if (e.target.classList.contains("rtx-remix-draggable-row")) {
-          draggedRow = e.target;
-          sourceTbody = tbody;
-          e.target.classList.add("dragging");
-          e.dataTransfer.effectAllowed = "move";
-        }
-      });
-
-      tbody.addEventListener("dragend", (e) => {
-        if (e.target.classList.contains("rtx-remix-draggable-row")) {
-          e.target.classList.remove("dragging");
-          draggedRow = null;
-          sourceTbody = null;
-        }
-        // Remove all drag-over indicators
-        tbody.querySelectorAll(".drag-over, .drag-over-bottom").forEach((el) => {
-          el.classList.remove("drag-over", "drag-over-bottom");
-        });
-      });
-
-      tbody.addEventListener("dragover", (e) => {
-        // Only allow drag over if we're in the same tbody as the source
-        if (sourceTbody !== tbody) {
-          return;
-        }
-
-        e.preventDefault();
-        e.dataTransfer.dropEffect = "move";
-
-        // Find the closest draggable row, not accordion rows
-        const row = e.target.closest("tr.rtx-remix-draggable-row");
-        if (!row || row === draggedRow) {
-          return;
-        }
-
-        // Remove all drag-over indicators
-        tbody.querySelectorAll(".drag-over, .drag-over-bottom").forEach((el) => {
-          el.classList.remove("drag-over", "drag-over-bottom");
-        });
-
-        // Determine if we should insert before or after
-        const rect = row.getBoundingClientRect();
-        const midpoint = rect.top + rect.height / 2;
-
-        if (e.clientY < midpoint) {
-          row.classList.add("drag-over");
-        } else {
-          row.classList.add("drag-over-bottom");
-        }
-      });
-
-      tbody.addEventListener("drop", (e) => {
-        // Only allow drop if we're in the same tbody as the source
-        if (sourceTbody !== tbody) {
-          return;
-        }
-
-        e.preventDefault();
-
-        const targetRow = e.target.closest("tr.rtx-remix-draggable-row");
-        if (!targetRow || !draggedRow || targetRow === draggedRow) {
-          return;
-        }
-
-        // Get the accordion row that follows the dragged row
-        const draggedAccordion = draggedRow.nextElementSibling;
-        const isDraggedAccordion =
-          draggedAccordion && draggedAccordion.classList.contains("rtx-remix-metadata-accordion");
-
-        // Determine insert position
-        const rect = targetRow.getBoundingClientRect();
-        const midpoint = rect.top + rect.height / 2;
-
-        if (e.clientY < midpoint) {
-          // Insert before target
-          tbody.insertBefore(draggedRow, targetRow);
-          if (isDraggedAccordion) {
-            tbody.insertBefore(draggedAccordion, targetRow);
-          }
-        } else {
-          // Insert after target (and its accordion if it has one)
-          const targetAccordion = targetRow.nextElementSibling;
-          const isTargetAccordion =
-            targetAccordion && targetAccordion.classList.contains("rtx-remix-metadata-accordion");
-
-          if (isTargetAccordion) {
-            tbody.insertBefore(draggedRow, targetAccordion.nextSibling);
-            if (isDraggedAccordion) {
-              tbody.insertBefore(draggedAccordion, targetAccordion.nextSibling);
-            }
-          } else {
-            tbody.insertBefore(draggedRow, targetRow.nextSibling);
-            if (isDraggedAccordion) {
-              tbody.insertBefore(draggedAccordion, targetRow.nextSibling);
-            }
-          }
-        }
-
-        // Remove drag indicators
-        tbody.querySelectorAll(".drag-over, .drag-over-bottom").forEach((el) => {
-          el.classList.remove("drag-over", "drag-over-bottom");
-        });
+    /**
+     * Create accordion for output slots (without group field)
+     * @param {Object} slot - Slot data
+     * @returns {HTMLElement|null} Accordion element
+     */
+    function createOutputAccordion(slot) {
+      return createMetadataAccordion({
+        app,
+        context: slot.context,
+        slotData: slot,
+        includeGroup: false, // Outputs don't have groups
       });
     }
 
@@ -600,53 +631,140 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
     function populateSlotsTable(slotData) {
       const { inputs, outputs } = slotData;
 
-      // Clear existing rows
-      inputsTbody.innerHTML = "";
-      outputsTbody.innerHTML = "";
+      // Clear existing content
+      inputsWrapper.querySelector(".rtx-remix-export-scroll-wrapper")?.remove();
+      inputsWrapper.querySelector(".rtx-remix-warning-row")?.remove();
+      outputsWrapper.querySelector(".rtx-remix-export-scroll-wrapper")?.remove();
+      outputsWrapper.querySelector(".rtx-remix-warning-row")?.remove();
 
-      // Populate inputs table
+      // Populate inputs using grouped list with header
       if (inputs.length > 0) {
         inputsWrapper.style.display = "block";
-        inputs.forEach((slot) => {
-          const row = createSlotRow(slot, true);
-          if (row) {
-            inputsTbody.appendChild(row);
-          }
+
+        // Create scroll wrapper container
+        const scrollWrapper = document.createElement("div");
+        scrollWrapper.className = "rtx-remix-export-scroll-wrapper";
+
+        // Create grouped list container with export-specific columns
+        const inputsContainer = document.createElement("div");
+        inputsContainer.className = "rtx-remix-grouped-list rtx-remix-export-inputs";
+
+        // Create grouped list with header, grouping, and companion rows (accordions)
+        createGroupedList({
+          container: inputsContainer,
+          items: inputs.map((slot) => ({
+            ...slot,
+            group: slot.group || "",
+            order: slot.order ?? 999,
+          })),
+          groupOrder: getGroupOrder(app),
+          collapsedGroups: inputsCollapsedGroups,
+          // Column header row (above groups)
+          renderHeader: (headerRow) => {
+            renderExportHeader(headerRow, true);
+          },
+          // Data row cells
+          renderRow: (item, rowEl) => {
+            populateSlotRow(item, rowEl, true);
+          },
+          // Accordion below each row
+          renderCompanionRow: (item, rowEl) => {
+            return createSlotCompanionRow(item, rowEl);
+          },
+          companionRowClass: "rtx-remix-metadata-accordion",
+          onItemOrderChange: (groupName, orderedItems) => {
+            // Update node metadata with new order values
+            orderedItems.forEach((item) => {
+              updateInputMetadata(app, item.nodeId, item.slotName, { order: item.order });
+            });
+          },
+          onGroupOrderChange: (newOrder) => {
+            updateGroupOrder(app, newOrder);
+          },
+          emptyMessage: "No input slots tagged.",
         });
-        // Setup drag and drop for inputs table
-        setupDragAndDrop(inputsTbody);
+
+        scrollWrapper.appendChild(inputsContainer);
+        inputsWrapper.appendChild(scrollWrapper);
       } else {
         // Show warning when no inputs are tagged
         inputsWrapper.style.display = "block";
-        const warningRow = cloneTemplate("rtx-remix-warning-row-template");
+        const warningRow = cloneTemplate(TEMPLATE_IDS.WARNING_ROW);
         if (warningRow) {
           bindTemplateData(warningRow, {
             message: "No input slots tagged. Tag at least one input slot using the node context menu.",
           });
-          inputsTbody.appendChild(warningRow);
+          inputsWrapper.appendChild(warningRow);
         }
       }
 
-      // Populate outputs table
+      // Populate outputs using flat list with header (no grouping)
       if (outputs.length > 0) {
         outputsWrapper.style.display = "block";
+
+        // Create scroll wrapper container
+        const scrollWrapper = document.createElement("div");
+        scrollWrapper.className = "rtx-remix-export-scroll-wrapper";
+
+        // Create flat list container with export-specific columns
+        const outputsContainer = document.createElement("div");
+        outputsContainer.className = "rtx-remix-grouped-list rtx-remix-export-outputs";
+
+        // Add header row manually (same grid, same alignment)
+        const headerRow = document.createElement("div");
+        headerRow.className = "rtx-remix-list-row rtx-remix-list-header";
+        renderExportHeader(headerRow, false);
+        outputsContainer.appendChild(headerRow);
+
+        // Render each output as a simple row (no grouping)
         outputs.forEach((slot) => {
-          const row = createSlotRow(slot, false);
-          if (row) {
-            outputsTbody.appendChild(row);
+          // Create row from template
+          const row = cloneTemplate(TEMPLATE_IDS.GROUPED_LIST_ROW);
+          if (!row) return;
+
+          row.dataset.nodeId = slot.nodeId;
+          row.dataset.slotName = slot.slotName;
+          row.draggable = false; // No drag for outputs
+
+          // Hide drag handle for outputs
+          const dragHandle = row.querySelector("[data-element='drag-handle']");
+          if (dragHandle) {
+            dragHandle.style.visibility = "hidden";
+          }
+
+          // Populate row cells
+          populateSlotRow(slot, row, false);
+          outputsContainer.appendChild(row);
+
+          // Create accordion (companion row)
+          const accordion = createOutputAccordion(slot);
+          if (accordion) {
+            accordion.className = "rtx-remix-companion-row rtx-remix-metadata-accordion rtx-hidden";
+            outputsContainer.appendChild(accordion);
+
+            // Wire up details button
+            const detailsBtn = row.querySelector(".rtx-remix-details-btn");
+            if (detailsBtn) {
+              detailsBtn.addEventListener("click", () => {
+                const isExpanded = !accordion.classList.contains("rtx-hidden");
+                accordion.classList.toggle("rtx-hidden", isExpanded);
+                detailsBtn.classList.toggle("expanded", !isExpanded);
+              });
+            }
           }
         });
-        // Setup drag and drop for outputs table
-        setupDragAndDrop(outputsTbody);
+
+        scrollWrapper.appendChild(outputsContainer);
+        outputsWrapper.appendChild(scrollWrapper);
       } else {
         // Show warning when no outputs are tagged
         outputsWrapper.style.display = "block";
-        const warningRow = cloneTemplate("rtx-remix-warning-row-template");
+        const warningRow = cloneTemplate(TEMPLATE_IDS.WARNING_ROW);
         if (warningRow) {
           bindTemplateData(warningRow, {
             message: "No output nodes tagged. Tag at least one output node using the node context menu.",
           });
-          outputsTbody.appendChild(warningRow);
+          outputsWrapper.appendChild(warningRow);
         }
       }
     }

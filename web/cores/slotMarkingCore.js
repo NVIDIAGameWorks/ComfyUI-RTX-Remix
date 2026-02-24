@@ -15,12 +15,40 @@
  * limitations under the License.
  */
 
-import { NODE_DEFAULTS, COMFYUI_INPUT_TYPE_MAP, COMFYUI_OUTPUT_TYPE_MAP, REMIX_KEYS } from "../utils/constants.js";
+/**
+ * Slot Marking Core - Business Logic Only
+ *
+ * Handles the business logic for marking/unmarking input slots and node outputs.
+ * Does NOT contain any UI/rendering code (moved to slotMarkingController.js).
+ * Follows the dependency rule: cores → stores → utils
+ */
+
+import {
+  NODE_DEFAULTS,
+  COMFYUI_INPUT_TYPE_MAP,
+  COMFYUI_OUTPUT_TYPE_MAP,
+  REMIX_KEYS,
+  EVENTS,
+} from "../utils/constants.js";
 import { getPrimitiveTypeName } from "../utils/types.js";
-import { getRemixColor } from "../utils/html.js";
+
+// Module-level callback for input tag changes
+let onInputTagChanged = null;
+
+/**
+ * Register a callback to be called when inputs are tagged/untagged.
+ * @param {Function|null} callback - Callback function: ({action, nodeId, slotName, app}) => void
+ *   action: "tagged" | "untagged"
+ */
+export function setOnInputTagChanged(callback) {
+  onInputTagChanged = callback;
+}
 
 /**
  * Check if an input slot is marked
+ * @param {Object} node - LiteGraph node
+ * @param {number} slotIndex - Index of the input slot
+ * @returns {boolean} True if the slot is marked
  */
 export function isInputSlotMarked(node, slotIndex) {
   if (!node.inputs || !node.inputs[slotIndex]) return false;
@@ -32,6 +60,8 @@ export function isInputSlotMarked(node, slotIndex) {
 
 /**
  * Check if the node output is marked (node-level, not per-slot)
+ * @param {Object} node - LiteGraph node
+ * @returns {boolean} True if the node output is marked
  */
 export function isNodeOutputMarked(node) {
   return !!node?.properties?.[REMIX_KEYS.ROOT]?.[REMIX_KEYS.STRUCTURE.OUTPUT];
@@ -39,6 +69,9 @@ export function isNodeOutputMarked(node) {
 
 /**
  * Resolve export name from defaults (may reference widget values)
+ * @param {Object} node - LiteGraph node
+ * @param {Object} defaults - Default values configuration
+ * @returns {string|null} Resolved export name
  */
 function resolveExportName(node, defaults) {
   let exportName = defaults[REMIX_KEYS.PROPERTY.NAME];
@@ -60,6 +93,9 @@ function resolveExportName(node, defaults) {
 
 /**
  * Resolve additional data from defaults
+ * @param {Object} node - LiteGraph node
+ * @param {Object} defaults - Default values configuration
+ * @returns {Object} Resolved additional data
  */
 function resolveAdditionalData(node, defaults) {
   const additionalData = {};
@@ -82,6 +118,9 @@ function resolveAdditionalData(node, defaults) {
 
 /**
  * Toggle an input slot mark
+ * @param {Object} node - LiteGraph node
+ * @param {number} slotIndex - Index of the input slot
+ * @param {Object} app - ComfyUI app instance
  */
 export function toggleInputSlotMark(node, slotIndex, app) {
   if (!node.inputs || !node.inputs[slotIndex]) return;
@@ -142,10 +181,28 @@ export function toggleInputSlotMark(node, slotIndex, app) {
 
     targetNode.setDirtyCanvas(true, true);
   });
+
+  // Notify listeners of the tag change
+  const tagAction = isCurrentlyMarked ? "untagged" : "tagged";
+  onInputTagChanged?.({
+    action: tagAction,
+    nodeId: node.id,
+    slotName,
+    app,
+  });
+
+  // Dispatch event for UI updates
+  app.api.dispatchEvent(
+    new CustomEvent(EVENTS.INPUTS_TAGGED, {
+      detail: { action: tagAction, nodeId: node.id, slotName },
+    })
+  );
 }
 
 /**
  * Toggle node output mark (node-level, not per-slot)
+ * @param {Object} node - LiteGraph node
+ * @param {Object} app - ComfyUI app instance
  */
 export function toggleNodeOutputMark(node, app) {
   const isCurrentlyMarked = !!node.properties?.[REMIX_KEYS.ROOT]?.[REMIX_KEYS.STRUCTURE.OUTPUT];
@@ -202,51 +259,4 @@ export function toggleNodeOutputMark(node, app) {
 
     targetNode.setDirtyCanvas(true, true);
   });
-}
-
-/**
- * Draw highlight circle on marked input slots
- */
-function drawInputSlotHighlight(ctx, node, slotIndex) {
-  const slotPos = node.getConnectionPos(true, slotIndex);
-  const localX = slotPos[0] - node.pos[0];
-  const localY = slotPos[1] - node.pos[1];
-
-  ctx.fillStyle = getRemixColor();
-  ctx.beginPath();
-  ctx.arc(localX, localY, 7, 0, Math.PI * 2);
-  ctx.fill();
-}
-
-/**
- * Draw outline highlight on nodes with marked outputs
- */
-function drawNodeOutputHighlight(ctx, node) {
-  const titleHeight = LiteGraph.NODE_TITLE_HEIGHT || 30;
-
-  ctx.save();
-  ctx.strokeStyle = getRemixColor();
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.roundRect(1, -titleHeight + 1, node.size[0] - 2, node.size[1] + titleHeight - 2, [10]);
-  ctx.stroke();
-  ctx.restore();
-}
-
-/**
- * Main drawing function for all node highlights
- */
-export function drawNodeHighlights(ctx, node) {
-  const markedInputs = node.properties?.[REMIX_KEYS.ROOT]?.[REMIX_KEYS.STRUCTURE.INPUTS];
-  if (node.inputs && markedInputs) {
-    node.inputs.forEach((input, index) => {
-      if (markedInputs.hasOwnProperty(input.name)) {
-        drawInputSlotHighlight(ctx, node, index);
-      }
-    });
-  }
-
-  if (isNodeOutputMarked(node)) {
-    drawNodeOutputHighlight(ctx, node);
-  }
 }

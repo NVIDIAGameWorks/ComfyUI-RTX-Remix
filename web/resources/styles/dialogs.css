@@ -24,56 +24,92 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--overlay-light);
+  background: var(--overlay);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000;
-  backdrop-filter: blur(4px);
-  animation: rtx-fadeIn 0.2s ease-out;
+  z-index: var(--rtx-z-dialog-overlay);
+  backdrop-filter: blur(var(--blur-md));
+  animation: rtx-fadeIn var(--rtx-animation-normal) ease-out;
 }
 
 /* Dialog Container */
 .rtx-remix-dialog {
   background: var(--bg-base);
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   padding: 0;
   min-width: 500px;
   max-width: 900px;
   max-height: 95vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 32px var(--shadow-base);
+  box-shadow: var(--shadow-xl);
   color: var(--text-secondary);
-  animation: rtx-slideIn 0.2s ease-out;
+  animation: rtx-slideIn var(--rtx-animation-normal) ease-out;
 }
 
 /* Header */
 .rtx-remix-dialog-header {
   background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-base) 100%);
-  padding: 20px 24px;
-  border-bottom: 2px solid var(--remix-color);
-  border-radius: 12px 12px 0 0;
+  padding: var(--space-5) var(--space-6);
+  border-bottom: var(--border-width-medium) solid var(--remix-color);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .rtx-remix-dialog-icon {
-  width: 28px;
-  height: 28px;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
 }
 
 .rtx-remix-dialog-title {
   margin: 0;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: var(--font-xl);
+  font-weight: var(--font-semibold);
   color: var(--text-primary);
+}
+
+/* Dialog header content wrapper for title + subtitle layout */
+.rtx-remix-dialog-header-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.rtx-remix-dialog-header-content .rtx-remix-dialog-title {
+  margin-bottom: var(--space-2);
+}
+
+/* Dialog subtitle */
+.rtx-remix-dialog-subtitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-base);
+  font-weight: var(--font-normal);
+  color: var(--text-muted);
+  min-width: 0;
+}
+
+.rtx-remix-dialog-subtitle-node,
+.rtx-remix-dialog-subtitle-slot {
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rtx-remix-dialog-subtitle-separator {
+  flex-shrink: 0;
+  color: var(--text-subtle);
 }
 
 /* Body */
 .rtx-remix-dialog-body {
-  padding: 24px;
+  padding: var(--space-6);
   overflow-y: auto;
   flex: 1;
 }
@@ -82,58 +118,59 @@
 .rtx-remix-info-content code {
   background: var(--bg-darker);
   color: var(--remix-color);
-  padding: 3px 8px;
-  border-radius: 4px;
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-sm);
   font-family: "Consolas", "Monaco", "Courier New", monospace;
   font-size: 0.95em;
-  font-weight: 500;
-  border: 1px solid var(--border-base);
-  box-shadow: 0 1px 3px var(--shadow-light);
+  font-weight: var(--font-medium);
+  border: var(--border-width-thin) solid var(--border-base);
+  box-shadow: var(--shadow-sm);
 }
 
 .rtx-remix-dialog-body pre,
 .rtx-remix-info-content pre {
   background: var(--bg-darker);
   color: var(--remix-color);
-  padding: 12px 16px;
-  border-radius: 6px;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
   font-family: "Consolas", "Monaco", "Courier New", monospace;
   font-size: 0.95em;
-  font-weight: 500;
+  font-weight: var(--font-medium);
   overflow-x: auto;
-  border: 1px solid var(--border-base);
-  border-left: 3px solid var(--remix-color);
-  box-shadow: 0 2px 4px var(--shadow-light);
+  border: var(--border-width-thin) solid var(--border-base);
+  border-left: var(--border-width-thick) solid var(--remix-color);
+  box-shadow: var(--shadow-md);
 }
 
 .rtx-remix-section-title {
-  margin: 0 0 12px 0;
-  font-size: 15px;
-  font-weight: 600;
+  margin: 0 0 var(--space-3) 0;
+  font-size: var(--font-lg);
+  font-weight: var(--font-semibold);
   color: var(--text-primary);
 }
 
 .rtx-remix-input-container {
   position: relative;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-3);
 }
 
 .rtx-remix-input {
   width: 100%;
-  padding: 12px 16px;
+  padding: var(--space-3) var(--space-4);
   background: var(--bg-darker);
-  border: 2px solid var(--border-base);
-  border-radius: 6px;
+  border: var(--border-width-medium) solid var(--border-base);
+  border-radius: var(--radius-md);
   color: var(--text-primary);
-  font-size: 15px;
+  font-family: inherit;
+  font-size: var(--font-lg);
   box-sizing: border-box;
   outline: none;
-  transition: all 0.2s ease;
+  transition: all var(--rtx-animation-normal) ease;
 }
 
 .rtx-remix-input:focus {
   border-color: var(--remix-color);
-  box-shadow: 0 0 0 3px var(--remix-color-shadow);
+  box-shadow: var(--shadow-focus-lg);
 }
 
 .rtx-remix-input:disabled {
@@ -146,9 +183,9 @@
 }
 
 .rtx-remix-validation-msg {
-  margin-top: 8px;
-  font-size: 13px;
-  min-height: 18px;
+  margin-top: var(--space-2);
+  font-size: var(--font-base);
+  min-height: var(--font-xl);
   color: var(--status-error);
   display: none;
 }
@@ -158,8 +195,8 @@
 }
 
 .rtx-remix-info-msg {
-  margin-top: 8px;
-  font-size: 12px;
+  margin-top: var(--space-2);
+  font-size: var(--font-sm);
   color: var(--text-subtle);
   font-style: italic;
 }
@@ -170,27 +207,27 @@
 
 /* Footer */
 .rtx-remix-dialog-footer {
-  padding: 16px 24px;
+  padding: var(--space-4) var(--space-6);
   background: var(--bg-darker);
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  border-top: 1px solid var(--border-base);
+  gap: var(--space-3);
+  border-top: var(--border-width-thin) solid var(--border-base);
 }
 
 /* Spinner */
 .rtx-remix-spinner {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .rtx-remix-spinner-icon {
   display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid var(--shadow-light);
+  width: var(--font-md);
+  height: var(--font-md);
+  border: var(--border-width-medium) solid var(--shadow-light);
   border-top-color: var(--text-black);
   border-radius: 50%;
   animation: rtx-spin 0.6s linear infinite;
@@ -203,47 +240,57 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--overlay-dark);
+  background: var(--overlay);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10001;
-  animation: rtx-fadeIn 0.15s ease-out;
+  z-index: var(--rtx-z-confirm-overlay);
+  animation: rtx-fadeIn var(--rtx-animation-fast) ease-out;
 }
 
 .rtx-remix-confirm-dialog {
   background: var(--bg-base);
-  border-radius: 8px;
-  padding: 24px;
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
   max-width: 400px;
-  box-shadow: 0 8px 32px var(--shadow-base);
-  animation: rtx-slideIn 0.15s ease-out;
+  box-shadow: var(--shadow-xl);
+  animation: rtx-slideIn var(--rtx-animation-fast) ease-out;
   color: var(--text-secondary);
 }
 
 .rtx-remix-confirm-title {
-  margin: 0 0 16px 0;
+  margin: 0 0 var(--space-4) 0;
   color: var(--text-primary);
-  font-size: 16px;
-  font-weight: 600;
+  font-size: var(--font-md);
+  font-weight: var(--font-semibold);
 }
 
 .rtx-remix-confirm-message {
-  margin: 0 0 20px 0;
+  margin: 0 0 var(--space-5) 0;
   color: var(--text-muted);
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: var(--font-md);
+  line-height: var(--leading-normal);
 }
 
 .rtx-remix-confirm-filename {
   color: var(--remix-color);
-  font-weight: 500;
+  font-weight: var(--font-medium);
 }
 
 .rtx-remix-confirm-actions {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   justify-content: flex-end;
+}
+
+/* Split actions: Cancel left, other buttons right */
+.rtx-remix-confirm-actions.rtx-remix-confirm-actions-split {
+  justify-content: space-between;
+}
+
+.rtx-remix-confirm-actions-right {
+  display: flex;
+  gap: var(--space-3);
 }
 
 /* Info Dialog */
@@ -253,40 +300,40 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--overlay-light);
+  background: var(--overlay);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10001;
-  animation: rtx-fadeIn 0.15s ease-out;
+  z-index: var(--rtx-z-confirm-overlay);
+  animation: rtx-fadeIn var(--rtx-animation-fast) ease-out;
 }
 
 .rtx-remix-info-dialog {
   background: var(--bg-base);
-  border-radius: 8px;
-  padding: 24px;
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
   max-width: 600px;
-  box-shadow: 0 8px 32px var(--shadow-base);
-  animation: rtx-slideIn 0.15s ease-out;
+  box-shadow: var(--shadow-xl);
+  animation: rtx-slideIn var(--rtx-animation-fast) ease-out;
   color: var(--text-secondary);
 }
 
 .rtx-remix-info-title {
-  margin: 0 0 16px 0;
+  margin: 0 0 var(--space-4) 0;
   color: var(--text-primary);
-  font-size: 18px;
-  font-weight: 600;
+  font-size: var(--font-xl);
+  font-weight: var(--font-semibold);
 }
 
 .rtx-remix-info-content {
-  margin: 0 0 20px 0;
+  margin: 0 0 var(--space-5) 0;
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: var(--font-md);
   line-height: 1.6;
 }
 
 .rtx-remix-info-content p {
-  margin: 0 0 12px 0;
+  margin: 0 0 var(--space-3) 0;
 }
 
 .rtx-remix-info-content p:last-child {
@@ -295,18 +342,18 @@
 
 .rtx-remix-info-content ol,
 .rtx-remix-info-content ul {
-  margin: 8px 0 12px 0;
-  padding-left: 24px;
+  margin: var(--space-2) 0 var(--space-3) 0;
+  padding-left: var(--space-6);
 }
 
 .rtx-remix-info-content li {
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
 }
 
 .rtx-remix-info-content a {
   color: var(--accent-link);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color var(--rtx-animation-normal) ease;
 }
 
 .rtx-remix-info-content a:hover {
@@ -316,7 +363,7 @@
 
 .rtx-remix-info-content strong {
   color: var(--text-primary);
-  font-weight: 600;
+  font-weight: var(--font-semibold);
 }
 
 .rtx-remix-info-content em {
@@ -325,6 +372,75 @@
 
 .rtx-remix-info-actions {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   justify-content: flex-end;
 }
+
+/* Medium dialog size variant */
+.rtx-remix-dialog-medium {
+  min-width: 400px;
+  max-width: 500px;
+}
+
+/* Large dialog size variant (for export dialog) */
+.rtx-remix-dialog-large {
+  width: 100%;
+  min-width: 700px;
+  max-width: 900px;
+}
+
+/* Edit Details Dialog */
+.rtx-remix-edit-details-info {
+  color: var(--text-muted);
+  font-size: var(--font-base);
+  margin-bottom: var(--space-4);
+  line-height: var(--leading-normal);
+}
+
+.rtx-remix-edit-details-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.rtx-remix-edit-details-form .rtx-remix-metadata-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.rtx-remix-edit-details-form .rtx-remix-metadata-label {
+  font-size: var(--font-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+}
+
+.rtx-remix-edit-details-form .rtx-remix-metadata-input {
+  padding: var(--space-2) 10px;
+  border-radius: var(--radius-md);
+  border: var(--border-width-thin) solid var(--border-base);
+  background: var(--bg-darker);
+  color: var(--text-primary);
+  font-size: var(--font-base);
+  font-family: inherit;
+  transition:
+    border-color var(--rtx-animation-fast) ease,
+    box-shadow var(--rtx-animation-fast) ease;
+}
+
+.rtx-remix-edit-details-form .rtx-remix-metadata-input:focus {
+  outline: none;
+  border-color: var(--remix-color);
+  box-shadow: var(--shadow-focus);
+}
+
+.rtx-remix-edit-details-form select.rtx-remix-metadata-input {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+}
+
+/* NOTE: Old group combobox styles removed - now using groupPickerController */

@@ -1,0 +1,109 @@
+<!--
+  SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+  SPDX-License-Identifier: Apache-2.0
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<template id="rtx-remix-sidebar-panel-template">
+  <div class="rtx-remix-sidebar">
+    <div class="rtx-remix-sidebar-header">
+      <img src="" alt="RTX Remix" data-asset="remix-icon" class="rtx-remix-sidebar-icon" />
+      <h2 class="rtx-remix-sidebar-title">RTX Remix Presets</h2>
+    </div>
+
+    <div class="rtx-remix-sidebar-preset-search-wrap" data-element="preset-search-wrap">
+      <div class="rtx-remix-sidebar-preset-search-inner">
+        <span class="pi pi-search rtx-remix-sidebar-preset-search-icon" aria-hidden="true"></span>
+        <input
+          type="text"
+          class="rtx-remix-sidebar-preset-search"
+          data-input="preset-search"
+          placeholder="Search for presets..."
+          aria-label="Search Presets"
+        />
+        <button
+          type="button"
+          class="rtx-remix-sidebar-preset-search-clear is-hidden"
+          data-action="preset-search-clear"
+          aria-label="Clear Search"
+          title="Clear Search"
+        >
+          <span class="pi pi-times"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="rtx-remix-preset-list-section">
+      <div class="rtx-remix-preset-list" data-element="preset-list">
+        <!-- Preset rows rendered by presetCore -->
+      </div>
+      <button
+        type="button"
+        class="rtx-remix-btn rtx-remix-btn-subtle-primary rtx-remix-preset-create-btn"
+        data-action="create-preset"
+        title="Create New Preset"
+      >
+        <span class="pi pi-plus"></span> Create Preset
+      </button>
+    </div>
+
+    <div class="rtx-remix-inputs-section">
+      <div class="rtx-remix-inputs-header">
+        <h3 class="rtx-remix-section-title">Tagged Inputs</h3>
+        <div class="rtx-remix-inputs-actions">
+          <div data-element="save-btn-container"></div>
+          <div class="rtx-remix-inputs-separator"></div>
+          <button
+            type="button"
+            class="rtx-remix-btn rtx-remix-btn-secondary rtx-remix-inputs-action-btn"
+            data-action="apply-all"
+          >
+            Apply All
+          </button>
+          <button
+            type="button"
+            class="rtx-remix-btn rtx-remix-btn-secondary rtx-remix-inputs-action-btn"
+            data-action="reset-all"
+          >
+            Reset All
+          </button>
+        </div>
+      </div>
+      <div class="rtx-remix-inputs-search-wrap" data-element="inputs-search-wrap">
+        <div class="rtx-remix-inputs-search-inner">
+          <span class="pi pi-search rtx-remix-inputs-search-icon" aria-hidden="true"></span>
+          <input
+            type="text"
+            class="rtx-remix-inputs-search"
+            data-input="inputs-search"
+            placeholder="Filter inputs..."
+            aria-label="Filter Inputs"
+          />
+          <button
+            type="button"
+            class="rtx-remix-inputs-search-clear is-hidden"
+            data-action="inputs-search-clear"
+            aria-label="Clear Filter"
+            title="Clear Filter"
+          >
+            <span class="pi pi-times"></span>
+          </button>
+        </div>
+      </div>
+      <div class="rtx-remix-inputs-list" data-element="inputs-list">
+        <!-- Tagged input rows rendered by presetCore -->
+      </div>
+    </div>
+  </div>
+</template>

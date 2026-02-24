@@ -1,0 +1,465 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* ==========================================================================
+   RTX Remix Utility Classes
+   Tailwind-inspired utility classes for consistent styling
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Display Utilities
+   -------------------------------------------------------------------------- */
+.rtx-hidden {
+  display: none !important;
+}
+
+.rtx-visible {
+  display: block;
+}
+
+.rtx-invisible {
+  visibility: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Flexbox Utilities
+   -------------------------------------------------------------------------- */
+.rtx-flex {
+  display: flex;
+}
+
+.rtx-inline-flex {
+  display: inline-flex;
+}
+
+.rtx-flex-col {
+  flex-direction: column;
+}
+
+.rtx-flex-row {
+  flex-direction: row;
+}
+
+.rtx-flex-wrap {
+  flex-wrap: wrap;
+}
+
+.rtx-flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.rtx-flex-1 {
+  flex: 1;
+}
+
+.rtx-flex-auto {
+  flex: auto;
+}
+
+.rtx-flex-none {
+  flex: none;
+}
+
+.rtx-items-start {
+  align-items: flex-start;
+}
+
+.rtx-items-center {
+  align-items: center;
+}
+
+.rtx-items-end {
+  align-items: flex-end;
+}
+
+.rtx-items-stretch {
+  align-items: stretch;
+}
+
+.rtx-justify-start {
+  justify-content: flex-start;
+}
+
+.rtx-justify-center {
+  justify-content: center;
+}
+
+.rtx-justify-end {
+  justify-content: flex-end;
+}
+
+.rtx-justify-between {
+  justify-content: space-between;
+}
+
+.rtx-justify-around {
+  justify-content: space-around;
+}
+
+/* --------------------------------------------------------------------------
+   Gap Utilities (using spacing scale)
+   -------------------------------------------------------------------------- */
+.rtx-gap-1 {
+  gap: var(--space-1);
+}
+
+.rtx-gap-2 {
+  gap: var(--space-2);
+}
+
+.rtx-gap-3 {
+  gap: var(--space-3);
+}
+
+.rtx-gap-4 {
+  gap: var(--space-4);
+}
+
+.rtx-gap-5 {
+  gap: var(--space-5);
+}
+
+.rtx-gap-6 {
+  gap: var(--space-6);
+}
+
+/* --------------------------------------------------------------------------
+   Padding Utilities (using spacing scale)
+   -------------------------------------------------------------------------- */
+.rtx-p-0 {
+  padding: 0;
+}
+
+.rtx-p-1 {
+  padding: var(--space-1);
+}
+
+.rtx-p-2 {
+  padding: var(--space-2);
+}
+
+.rtx-p-3 {
+  padding: var(--space-3);
+}
+
+.rtx-p-4 {
+  padding: var(--space-4);
+}
+
+.rtx-p-5 {
+  padding: var(--space-5);
+}
+
+.rtx-p-6 {
+  padding: var(--space-6);
+}
+
+/* Horizontal padding */
+.rtx-px-1 {
+  padding-left: var(--space-1);
+  padding-right: var(--space-1);
+}
+
+.rtx-px-2 {
+  padding-left: var(--space-2);
+  padding-right: var(--space-2);
+}
+
+.rtx-px-3 {
+  padding-left: var(--space-3);
+  padding-right: var(--space-3);
+}
+
+.rtx-px-4 {
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+/* Vertical padding */
+.rtx-py-1 {
+  padding-top: var(--space-1);
+  padding-bottom: var(--space-1);
+}
+
+.rtx-py-2 {
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
+}
+
+.rtx-py-3 {
+  padding-top: var(--space-3);
+  padding-bottom: var(--space-3);
+}
+
+.rtx-py-4 {
+  padding-top: var(--space-4);
+  padding-bottom: var(--space-4);
+}
+
+/* --------------------------------------------------------------------------
+   Margin Utilities (using spacing scale)
+   -------------------------------------------------------------------------- */
+.rtx-m-0 {
+  margin: 0;
+}
+
+.rtx-m-1 {
+  margin: var(--space-1);
+}
+
+.rtx-m-2 {
+  margin: var(--space-2);
+}
+
+.rtx-m-3 {
+  margin: var(--space-3);
+}
+
+.rtx-m-4 {
+  margin: var(--space-4);
+}
+
+/* Horizontal margin */
+.rtx-mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rtx-mx-1 {
+  margin-left: var(--space-1);
+  margin-right: var(--space-1);
+}
+
+.rtx-mx-2 {
+  margin-left: var(--space-2);
+  margin-right: var(--space-2);
+}
+
+/* Vertical margin */
+.rtx-my-1 {
+  margin-top: var(--space-1);
+  margin-bottom: var(--space-1);
+}
+
+.rtx-my-2 {
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+/* Individual margins */
+.rtx-mt-1 {
+  margin-top: var(--space-1);
+}
+
+.rtx-mt-2 {
+  margin-top: var(--space-2);
+}
+
+.rtx-mt-3 {
+  margin-top: var(--space-3);
+}
+
+.rtx-mb-1 {
+  margin-bottom: var(--space-1);
+}
+
+.rtx-mb-2 {
+  margin-bottom: var(--space-2);
+}
+
+.rtx-mb-3 {
+  margin-bottom: var(--space-3);
+}
+
+/* --------------------------------------------------------------------------
+   Width Utilities
+   -------------------------------------------------------------------------- */
+.rtx-w-full {
+  width: 100%;
+}
+
+.rtx-w-auto {
+  width: auto;
+}
+
+.rtx-min-w-0 {
+  min-width: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Text Utilities
+   -------------------------------------------------------------------------- */
+.rtx-text-left {
+  text-align: left;
+}
+
+.rtx-text-center {
+  text-align: center;
+}
+
+.rtx-text-right {
+  text-align: right;
+}
+
+.rtx-text-muted {
+  color: var(--text-muted);
+}
+
+.rtx-text-subtle {
+  color: var(--text-subtle);
+}
+
+.rtx-text-primary {
+  color: var(--text-primary);
+}
+
+.rtx-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Border Radius Utilities (using radius scale)
+   -------------------------------------------------------------------------- */
+.rtx-rounded-none {
+  border-radius: 0;
+}
+
+.rtx-rounded-sm {
+  border-radius: var(--radius-sm);
+}
+
+.rtx-rounded {
+  border-radius: var(--radius-md);
+}
+
+.rtx-rounded-lg {
+  border-radius: var(--radius-lg);
+}
+
+.rtx-rounded-xl {
+  border-radius: var(--radius-xl);
+}
+
+.rtx-rounded-full {
+  border-radius: 9999px;
+}
+
+/* --------------------------------------------------------------------------
+   Overflow Utilities
+   -------------------------------------------------------------------------- */
+.rtx-overflow-hidden {
+  overflow: hidden;
+}
+
+.rtx-overflow-auto {
+  overflow: auto;
+}
+
+.rtx-overflow-y-auto {
+  overflow-y: auto;
+}
+
+.rtx-overflow-x-auto {
+  overflow-x: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Cursor Utilities
+   -------------------------------------------------------------------------- */
+.rtx-cursor-pointer {
+  cursor: pointer;
+}
+
+.rtx-cursor-default {
+  cursor: default;
+}
+
+.rtx-cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+.rtx-cursor-grab {
+  cursor: grab;
+}
+
+.rtx-cursor-grabbing {
+  cursor: grabbing;
+}
+
+/* --------------------------------------------------------------------------
+   Transition Utilities
+   -------------------------------------------------------------------------- */
+.rtx-transition {
+  transition-property: color, background-color, border-color, opacity, transform;
+  transition-duration: var(--rtx-animation-normal);
+  transition-timing-function: ease;
+}
+
+.rtx-transition-fast {
+  transition-duration: var(--rtx-animation-fast);
+}
+
+.rtx-transition-slow {
+  transition-duration: var(--rtx-animation-slow);
+}
+
+/* --------------------------------------------------------------------------
+   Opacity Utilities
+   -------------------------------------------------------------------------- */
+.rtx-opacity-0 {
+  opacity: 0;
+}
+
+.rtx-opacity-50 {
+  opacity: 0.5;
+}
+
+.rtx-opacity-75 {
+  opacity: 0.75;
+}
+
+.rtx-opacity-100 {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Pointer Events Utilities
+   -------------------------------------------------------------------------- */
+.rtx-pointer-events-none {
+  pointer-events: none;
+}
+
+.rtx-pointer-events-auto {
+  pointer-events: auto;
+}
+
+/* --------------------------------------------------------------------------
+   User Select Utilities
+   -------------------------------------------------------------------------- */
+.rtx-select-none {
+  user-select: none;
+}
+
+.rtx-select-text {
+  user-select: text;
+}
+
+.rtx-select-all {
+  user-select: all;
+}

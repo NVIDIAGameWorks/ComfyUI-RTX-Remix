@@ -33,7 +33,9 @@ from huggingface_hub import get_hf_file_metadata, hf_hub_url
 
 import folder_paths
 from comfy_execution.utils import get_executing_context
+from comfy_execution.progress import get_progress_state
 from comfy_api.latest import io
+from comfy.model_management import processing_interrupted, InterruptProcessingException
 from server import PromptServer
 
 from .constant import (
@@ -310,7 +312,7 @@ class DownloadModelNode(io.ComfyNode):
 
         # === PHASE 3: Download the file ===
         logger.info(f"Downloading {download_info.filename} from {model_source}")
-        cls._download_file(download_info.url, target_path, timeout, headers=download_info.headers)
+        cls._download_file(download_info.url, target_path, timeout, headers=download_info.headers, node_id=unique_id)
         logger.info(f"Downloaded to {target_path}")
 
         # === PHASE 4: Verify hash (if provided) ===
@@ -647,15 +649,18 @@ class DownloadModelNode(io.ComfyNode):
         return file_hash.hexdigest()
 
     @staticmethod
-    def _download_file(url: str, filepath: Path, timeout: int, headers: dict | None = None) -> None:
+    def _download_file(
+        url: str, filepath: Path, timeout: int, headers: dict | None = None, node_id: str | None = None
+    ) -> None:
         """
-        Download a file from URL to filepath with progress logging.
+        Download a file from URL to filepath with progress logging and UI updates.
 
         Args:
             url: The URL to download from
             filepath: Path where the file will be saved
             timeout: Download timeout in seconds
             headers: Optional HTTP headers to include in the request
+            node_id: Optional node ID for progress updates in the UI
 
         Raises:
             ValueError: If URL returns HTML content instead of a file
@@ -681,28 +686,57 @@ class DownloadModelNode(io.ComfyNode):
         downloaded_size = 0
         last_logged_percent = -1
 
+        # Send initial progress
+        if node_id and total_size > 0:
+            get_progress_state().update_progress(node_id=node_id, value=0, max_value=total_size)
+
         # Download and validate content
         first_chunk = None
-        with filepath.open("wb") as f:
-            for chunk in response.iter_content(chunk_size=CHUNK_SIZE_BYTES):
-                if first_chunk is None:
-                    first_chunk = chunk
-                f.write(chunk)
-                downloaded_size += len(chunk)
+        try:
+            with filepath.open("wb") as f:
+                for chunk in response.iter_content(chunk_size=CHUNK_SIZE_BYTES):
+                    # Check if user cancelled the prompt
+                    if processing_interrupted():
+                        raise InterruptProcessingException()
 
-                # Log progress every 10%
-                if total_size > 0:
-                    percent = int((downloaded_size / total_size) * 100)
-                    if percent >= last_logged_percent + 10:
-                        last_logged_percent = (percent // 10) * 10
-                        downloaded_mb = downloaded_size / (1024 * 1024)
-                        total_mb = total_size / (1024 * 1024)
-                        logger.info(f"Downloading: {downloaded_mb:.1f} MB / {total_mb:.1f} MB ({last_logged_percent}%)")
+                    if first_chunk is None:
+                        first_chunk = chunk
+                    f.write(chunk)
+                    downloaded_size += len(chunk)
 
-        # Log completion
+                    # Update progress every 10%
+                    if total_size > 0:
+                        percent = int((downloaded_size / total_size) * 100)
+                        if percent >= last_logged_percent + 10:
+                            last_logged_percent = (percent // 10) * 10
+                            downloaded_mb = downloaded_size / (1024 * 1024)
+                            total_mb = total_size / (1024 * 1024)
+                            logger.info(f"Downloading: {downloaded_mb:.1f} MB / {total_mb:.1f} MB ({last_logged_percent}%)")
+
+                            # Update UI progress bar
+                            if node_id:
+                                get_progress_state().update_progress(
+                                    node_id=node_id,
+                                    value=downloaded_size,
+                                    max_value=total_size,
+                                )
+        except InterruptProcessingException:
+            # Clean up partial file on cancellation
+            logger.info("Download cancelled by user")
+            try:
+                if filepath.exists():
+                    filepath.unlink()
+                    logger.info(f"Deleted partial download: {filepath.name}")
+            except Exception as e:
+                logger.warning(f"Failed to delete partial download {filepath.name}: {e}")
+            raise
+
+        # Log completion and update UI
         if total_size > 0:
             total_mb = total_size / (1024 * 1024)
             logger.info(f"Download complete: {total_mb:.1f} MB (100%)")
+            if node_id:
+                get_progress_state().update_progress(node_id=node_id, value=total_size, max_value=total_size)
         else:
             downloaded_mb = downloaded_size / (1024 * 1024)
             logger.info(f"Download complete: {downloaded_mb:.1f} MB")

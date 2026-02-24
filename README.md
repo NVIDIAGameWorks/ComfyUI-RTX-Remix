@@ -45,8 +45,9 @@ Mixing approaches is also _possible_ but **not recommended**.
 **Key benefits:**
 
 - Simple to set up and use: Tag your inputs and outputs, export the workflow, and the RTX Remix Toolkit will discover the workflow automatically.
-- Works directly from within the RTX RemixToolkit interface: Queue up jobs and set the workflow input values directly from the RTX Remix Toolkit interface.
+- Works directly from within the RTX Remix Toolkit interface: Queue up jobs and set the workflow input values directly from the RTX Remix Toolkit interface.
 - Easy workflow development and iteration: use standard ComfyUI nodes like `Load Image` to test your workflow without the RTX Remix Toolkit running
+- Built-in [Presets](#managing-presets) system for saving and switching between different parameter configurations during development
 
 👉 **[Jump to Integration Workflow Guide](#integration-workflow-guide)**
 
@@ -84,6 +85,8 @@ The integration workflow system consists of three key steps:
 1. **Build your workflow** - Create a ComfyUI workflow for AI texture processing
 2. **Tag inputs and outputs** - Mark which inputs/outputs the RTX Remix Toolkit should control
 3. **Export the workflow** - Save the workflow for the RTX Remix Toolkit to use
+
+Optionally, use **[Presets](#managing-presets)** to save and compare different parameter configurations for your tagged inputs during workflow development.
 
 Once exported, your workflow can be selected and run directly from within the RTX Remix Toolkit, which will:
 
@@ -170,6 +173,8 @@ Output nodes are the final nodes in your workflow that produce the textures/mesh
 - **Green circles** on input slots = Tagged input
 - **Green outline** around entire node = Tagged output (must save files to disk)
 
+**Tip:** Tagged inputs also appear in the [Presets](#managing-presets) sidebar panel, where you can save different value configurations and organize inputs into groups.
+
 ### Step 3: Export the Workflow
 
 Once you've tagged your inputs and outputs, export the workflow for use in the RTX Remix Toolkit.
@@ -199,7 +204,8 @@ The exported workflow is saved to the `user/rtx-remix/workflows/` and `user/rtx-
 - **Set texture types for outputs** - Configure which texture map type each output represents (albedo, normal, roughness, etc.) - essential for proper shader input matching when using multiple outputs
 - **Add descriptions** - Provide user guidance for each parameter
 - **Set value ranges** - Define min/max constraints for numeric inputs
-- **Reorder inputs/outputs** - Drag and drop rows to change the order
+- **Reorder inputs/outputs** - Drag and drop rows to change order within a group
+- **Reorder groups** - Drag group headers to change the order of entire groups
 - **Expand metadata** - Click the chevron to see and edit additional fields
 
 ### Using Your Workflow in the RTX Remix Toolkit
@@ -219,6 +225,93 @@ After exporting, your workflow becomes available in the RTX Remix Toolkit's work
 - **Processing:** ComfyUI performs all the AI processing (upscaling, PBR generation, style transfer, etc.)
 - **Outputs:** Your workflow saves textures/meshes to disk (e.g., using `RTX Remix Save Texture` or `Save Image` nodes)
 - **Integration:** The RTX Remix Toolkit retrieves the output file paths from ComfyUI's output history and imports the processed assets into your project
+
+### Managing Presets
+
+Presets let you save and switch between different sets of parameter values for your tagged inputs. They're useful for:
+
+- Testing your workflow with different parameter combinations (e.g., different upscale strengths, model choices, or prompt variations)
+- Shipping workflows with pre-configured settings for different use cases
+- Quickly comparing results across configurations without manually adjusting every input
+
+Presets only work with [tagged inputs](#tagging-input-slots) — tag at least one input before creating presets.
+
+#### The Preset Panel
+
+Open the preset panel by clicking the **★** (star) icon in the ComfyUI sidebar. The panel has two sections:
+
+- **Preset list** (top) — All presets for the current workflow, with search, create, edit, and delete controls
+- **Tagged inputs** (bottom) — All tagged inputs for the active preset, with inline value editing and per-input actions
+
+#### How Presets Work
+
+Presets use a **default + override** model:
+
+1. **Default Values** — A special preset that stores the baseline value for every tagged input. Created automatically when you make your first custom preset.
+2. **Custom presets** — Store only the values that **differ** from the default. Any value not explicitly overridden falls back to the Default Values.
+
+**Value resolution order:** Custom preset override → Default Values → Current widget value
+
+This keeps presets lightweight — you only configure what's different, and everything else inherits the baseline.
+
+#### Creating and Managing Presets
+
+| Action | How |
+|--------|-----|
+| **Create** | Click **Create Preset** in the panel header. Enter a name and optional description. The preset captures any values that currently differ from the Default Values. |
+| **Switch** | Click a preset in the list to activate it. Its values are applied to all tagged widgets. If you have unsaved changes, you'll be prompted to save or discard. |
+| **Rename** | Click the edit icon on a preset. The Default Values preset cannot be renamed. |
+| **Delete** | Click the delete icon. Default Values can only be cleared when no other presets exist. |
+
+#### Editing Values and Overrides
+
+Values can be edited in two ways — both stay in sync:
+
+- **In the preset panel** — Edit inputs directly in the sidebar
+- **On the canvas** — Edit node widgets as usual; changes flow to the panel
+
+Inputs whose values differ from the Default Values show a **colored override indicator** on the left side of the row, making it easy to see which values are customized in the current preset.
+
+**Per-input actions** (click the **⋮** menu on any input row):
+
+- **Focus Node** — Center the canvas on the input's node
+- **Edit Metadata** — Change the input's export name, group, tooltip, or min/max/step values
+- **Apply to Default** — Promote this input's current value to the Default Values preset
+- **Reset to Default** — Revert this input back to the Default Values
+- **Untag Input** — Remove the RTX Remix tag from this input (removes it from all presets)
+
+**Bulk actions** (buttons above the inputs list):
+
+- **Apply All** — Apply all overrides in the current preset to the Default Values
+- **Reset All** — Revert all overrides in the current preset back to Default Values
+
+Changes are held as **pending** until you click **Save**. You can also enable auto-save to skip the manual step.
+
+#### Auto-Save
+
+Click the **▾** dropdown arrow next to the Save button to access save options:
+
+- **Discard** — Discard all pending changes and revert to the last saved state
+- **Auto-save** toggle — When enabled, changes save immediately as you edit. The manual Save button is disabled while auto-save is active.
+
+#### Organizing Inputs with Groups
+
+When a workflow has many tagged inputs, groups help keep them organized:
+
+1. Click **⋮** on any input → **Edit Metadata** → set a **Group** name
+2. Inputs sharing the same group name are displayed together in collapsible sections
+3. Drag group headers to reorder groups
+4. Drag rows within a group to reorder inputs
+5. Use the group header **⋮** menu to untag all inputs in a group at once
+
+Groups are shared between the preset panel and the [export dialog](#step-3-export-the-workflow) — organizing in one place updates the other.
+
+#### Preset Storage
+
+- Presets are **embedded in the workflow file** (stored in the graph's extra data). Loading a workflow restores all its presets automatically.
+- There are no external preset files — everything travels with the workflow.
+- Before exporting, the system checks for unsaved preset changes and prompts you to save or discard.
+- Presets manage input values for your development workflow. The exported workflow uses whatever values are currently set in the widgets at export time.
 
 ### Integration Workflow Nodes
 
