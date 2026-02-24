@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import { ASSETS } from "./constants.js";
+import { ASSETS, TEMPLATE_IDS } from "./constants.js";
 
 /** Cached remix color value */
 let remixColor = null;
@@ -106,8 +106,8 @@ export function cloneTemplate(templateId) {
  * @returns {HTMLElement} The element with bound data
  */
 export function bindTemplateData(element, data) {
-  // Bind text content to span/div elements with data-bind attribute
-  element.querySelectorAll("span[data-bind], div[data-bind]").forEach((el) => {
+  // Bind text content to span/div/label elements with data-bind attribute
+  element.querySelectorAll("span[data-bind], div[data-bind], label[data-bind]").forEach((el) => {
     const key = el.getAttribute("data-bind");
     if (data[key] !== undefined) {
       el.textContent = data[key];
@@ -155,12 +155,12 @@ export function bindTemplateData(element, data) {
 }
 
 /**
- * Create HTML for Remix menu item with icon
+ * Create HTML for RTX Remix menu item with icon
  * @param {string} text - Menu text
  * @returns {string} HTML string
  */
 export function createMenuItemHTML(text) {
-  const element = cloneTemplate("rtx-remix-menu-item-template");
+  const element = cloneTemplate(TEMPLATE_IDS.MENU_ITEM);
   if (!element) {
     // Fallback if template not loaded yet
     return text;

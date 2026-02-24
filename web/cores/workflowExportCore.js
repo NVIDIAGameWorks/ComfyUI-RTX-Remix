@@ -15,10 +15,34 @@
  * limitations under the License.
  */
 
-import { NODE_DEFAULTS, METADATA_FIELD_CONFIG, REMIX_KEYS, REMIX_TYPE } from "../utils/constants.js";
+import { NODE_DEFAULTS, METADATA_FIELD_CONFIG, REMIX_KEYS, REMIX_TYPE, EVENTS } from "../utils/constants.js";
+import { setGroupOrder as _setGroupOrder } from "../stores/graphStore.js";
 
 /**
- * Add Remix metadata inline to the API workflow prompt
+ * Update the group display order.
+ * This is the canonical way to change group order - it updates the store
+ * and dispatches the GROUP_ORDER_CHANGED event.
+ *
+ * @param {Object} app - ComfyUI app instance
+ * @param {string[]} groupOrder - Array of group names in display order
+ */
+export function updateGroupOrder(app, groupOrder) {
+  _setGroupOrder(app, groupOrder);
+
+  // Dispatch event for UI updates
+  app.api.dispatchEvent(
+    new CustomEvent(EVENTS.GROUP_ORDER_CHANGED, {
+      detail: { groupOrder },
+    })
+  );
+}
+
+// ============================================================
+// WORKFLOW EXPORT
+// ============================================================
+
+/**
+ * Add RTX Remix metadata inline to the API workflow prompt
  */
 export function addRemixMetadataToPrompt(apiWorkflow, workflowGraph) {
   const nodeMap = new Map();
@@ -203,11 +227,10 @@ export function extractTaggedSlots(app) {
             primitiveType,
             isInput: true,
             remixType:
-              metadata[REMIX_KEYS.PROPERTY.REMIX_TYPE] ||
-              defaults[REMIX_KEYS.PROPERTY.REMIX_TYPE] ||
-              REMIX_TYPE.AUTO,
+              metadata[REMIX_KEYS.PROPERTY.REMIX_TYPE] || defaults[REMIX_KEYS.PROPERTY.REMIX_TYPE] || REMIX_TYPE.AUTO,
           });
 
+          const additionalData = metadata[REMIX_KEYS.PROPERTY.ADDITIONAL_DATA_ROOT] || {};
           inputs.push({
             nodeId: node.id,
             nodeTitle,
@@ -215,11 +238,10 @@ export function extractTaggedSlots(app) {
             exportName: resolvedExportName || slotName,
             primitiveType: primitiveType,
             remixType:
-              metadata[REMIX_KEYS.PROPERTY.REMIX_TYPE] ||
-              defaults[REMIX_KEYS.PROPERTY.REMIX_TYPE] ||
-              REMIX_TYPE.AUTO,
+              metadata[REMIX_KEYS.PROPERTY.REMIX_TYPE] || defaults[REMIX_KEYS.PROPERTY.REMIX_TYPE] || REMIX_TYPE.AUTO,
             order: metadata[REMIX_KEYS.PROPERTY.ORDER] ?? index,
-            additionalData: metadata[REMIX_KEYS.PROPERTY.ADDITIONAL_DATA_ROOT] || {},
+            group: additionalData[REMIX_KEYS.PROPERTY.ADDITIONAL_DATA.GROUP] || "",
+            additionalData,
             context,
           });
         });
@@ -269,100 +291,116 @@ export function extractTaggedSlots(app) {
 }
 
 /**
- * Apply slot edits from UI back to graph nodes
+ * Apply slot edits from UI back to graph nodes.
+ * Supports both old template-based rows and new grouped list rows.
+ *
+ * @param {Object} app - ComfyUI app instance
+ * @param {HTMLElement} inputsContainer - Container element for inputs
+ * @param {HTMLElement} outputsContainer - Container element for outputs
  */
-export function applySlotEditsToGraphNodes(app, inputsTbody, outputsTbody) {
+export function applySlotEditsToGraphNodes(app, inputsContainer, outputsContainer) {
   const graphNodes = app.graph._nodes || app.graph.nodes || [];
 
-  inputsTbody.querySelectorAll("tr.rtx-remix-draggable-row").forEach((row, index) => {
-    const nameInput = row.querySelector(".rtx-remix-slot-name-input");
-    const typeSelect = row.querySelector(".rtx-remix-slot-type-select");
-    const typeSpan = row.querySelector(".rtx-remix-slot-type");
+  // Helper to extract slot data from a row (handles both old and new structures)
+  function extractSlotData(row) {
+    // Try new grouped list structure first (data on row)
+    let nodeId = parseInt(row.dataset.nodeId, 10);
+    let slotName = row.dataset.slotName;
 
-    if (nameInput && typeSelect && typeSpan) {
-      const nodeId = parseInt(nameInput.dataset.nodeId);
-      const slotName = nameInput.dataset.slotName;
-      const node = graphNodes.find((n) => n.id === nodeId);
-
-      if (node) {
-        if (!node.properties) node.properties = {};
-        if (!node.properties[REMIX_KEYS.ROOT]) node.properties[REMIX_KEYS.ROOT] = {};
-        if (!node.properties[REMIX_KEYS.ROOT][REMIX_KEYS.STRUCTURE.INPUTS])
-          node.properties[REMIX_KEYS.ROOT][REMIX_KEYS.STRUCTURE.INPUTS] = {};
-
-        const accordionRow = row.nextElementSibling;
-        const additionalData = {};
-        if (accordionRow && accordionRow.classList.contains("rtx-remix-metadata-accordion")) {
-          accordionRow.querySelectorAll("[data-field-key]").forEach((input) => {
-            const key = input.dataset.fieldKey;
-            const value = input.value;
-
-            if (input.type === "number") {
-              const numValue = parseFloat(value);
-              if (!isNaN(numValue)) {
-                additionalData[key] = numValue;
-              } else if (value === "") {
-                additionalData[key] = null;
-              }
-            } else {
-              additionalData[key] = value;
-            }
-          });
-        }
-
-        node.properties[REMIX_KEYS.ROOT][REMIX_KEYS.STRUCTURE.INPUTS][slotName] = {
-          [REMIX_KEYS.PROPERTY.NAME]: nameInput.value.trim(),
-          [REMIX_KEYS.PROPERTY.TYPE]: typeSpan.textContent,
-          [REMIX_KEYS.PROPERTY.REMIX_TYPE]: typeSelect.value,
-          [REMIX_KEYS.PROPERTY.ORDER]: index,
-          [REMIX_KEYS.PROPERTY.ADDITIONAL_DATA_ROOT]: additionalData,
-        };
+    // Fall back to old structure (data on input element)
+    if (isNaN(nodeId)) {
+      const nameInput = row.querySelector(".rtx-remix-slot-name-input");
+      if (nameInput) {
+        nodeId = parseInt(nameInput.dataset.nodeId, 10);
+        slotName = nameInput.dataset.slotName;
       }
     }
+
+    if (isNaN(nodeId) || !slotName) return null;
+
+    // Get export name
+    const nameInput = row.querySelector(".rtx-remix-slot-name-input, [data-field-key='exportName']");
+    const exportName = nameInput?.value?.trim() || slotName;
+
+    // Get remix type
+    const typeSelect = row.querySelector(".rtx-remix-slot-type-select, [data-field-key='remixType']");
+    const remixType = typeSelect?.value || REMIX_TYPE.AUTO;
+
+    // Get primitive type from span (supports both old and new class names)
+    const typeSpan = row.querySelector(".rtx-remix-slot-type, .rtx-remix-slot-primitive-type");
+    const primitiveType = typeSpan?.textContent || row.dataset.primitiveType || "unknown";
+
+    // Get additional data from accordion
+    const accordionRow = row.nextElementSibling;
+    const additionalData = {};
+    if (accordionRow && accordionRow.classList.contains("rtx-remix-metadata-accordion")) {
+      accordionRow.querySelectorAll("[data-field-key]").forEach((el) => {
+        const key = el.dataset.fieldKey;
+        // Handle group picker (div with dataset.selectedGroup) vs regular inputs
+        const value = el.dataset.selectedGroup !== undefined ? el.dataset.selectedGroup : el.value;
+
+        if (el.type === "number") {
+          const numValue = parseFloat(value);
+          if (!isNaN(numValue)) {
+            additionalData[key] = numValue;
+          } else if (value === "") {
+            additionalData[key] = null;
+          }
+        } else {
+          additionalData[key] = value;
+        }
+      });
+    }
+
+    return { nodeId, slotName, exportName, remixType, primitiveType, additionalData };
+  }
+
+  // Process inputs - support both old tbody and new div-based layout
+  const inputRows = inputsContainer.querySelectorAll(
+    "tr.rtx-remix-draggable-row, tr.rtx-remix-list-row:not(.rtx-remix-metadata-accordion), div.rtx-remix-list-row:not(.rtx-remix-metadata-accordion)"
+  );
+  inputRows.forEach((row, index) => {
+    const data = extractSlotData(row);
+    if (!data) return;
+
+    const node = graphNodes.find((n) => n.id === data.nodeId);
+    if (!node) return;
+
+    if (!node.properties) node.properties = {};
+    if (!node.properties[REMIX_KEYS.ROOT]) node.properties[REMIX_KEYS.ROOT] = {};
+    if (!node.properties[REMIX_KEYS.ROOT][REMIX_KEYS.STRUCTURE.INPUTS])
+      node.properties[REMIX_KEYS.ROOT][REMIX_KEYS.STRUCTURE.INPUTS] = {};
+
+    node.properties[REMIX_KEYS.ROOT][REMIX_KEYS.STRUCTURE.INPUTS][data.slotName] = {
+      [REMIX_KEYS.PROPERTY.NAME]: data.exportName,
+      [REMIX_KEYS.PROPERTY.TYPE]: data.primitiveType,
+      [REMIX_KEYS.PROPERTY.REMIX_TYPE]: data.remixType,
+      [REMIX_KEYS.PROPERTY.ORDER]: index,
+      [REMIX_KEYS.PROPERTY.ADDITIONAL_DATA_ROOT]: data.additionalData,
+    };
   });
 
-  outputsTbody.querySelectorAll("tr.rtx-remix-draggable-row").forEach((row, index) => {
-    const nameInput = row.querySelector(".rtx-remix-slot-name-input");
-    const typeSelect = row.querySelector(".rtx-remix-slot-type-select");
-    const typeSpan = row.querySelector(".rtx-remix-slot-type");
+  // Process outputs - support both old tbody and new div-based layout
+  const outputRows = outputsContainer.querySelectorAll(
+    "tr.rtx-remix-draggable-row, div.rtx-remix-list-row:not(.rtx-remix-metadata-accordion)"
+  );
+  outputRows.forEach((row, index) => {
+    const data = extractSlotData(row);
+    if (!data) return;
 
-    if (nameInput && typeSelect && typeSpan) {
-      const nodeId = parseInt(nameInput.dataset.nodeId);
-      const node = graphNodes.find((n) => n.id === nodeId);
+    const node = graphNodes.find((n) => n.id === data.nodeId);
+    if (!node) return;
 
-      if (node) {
-        if (!node.properties) node.properties = {};
-        if (!node.properties[REMIX_KEYS.ROOT]) node.properties[REMIX_KEYS.ROOT] = {};
+    if (!node.properties) node.properties = {};
+    if (!node.properties[REMIX_KEYS.ROOT]) node.properties[REMIX_KEYS.ROOT] = {};
 
-        const accordionRow = row.nextElementSibling;
-        const additionalData = {};
-        if (accordionRow && accordionRow.classList.contains("rtx-remix-metadata-accordion")) {
-          accordionRow.querySelectorAll("[data-field-key]").forEach((input) => {
-            const key = input.dataset.fieldKey;
-            const value = input.value;
-
-            if (input.type === "number") {
-              const numValue = parseFloat(value);
-              if (!isNaN(numValue)) {
-                additionalData[key] = numValue;
-              } else if (value === "") {
-                additionalData[key] = null;
-              }
-            } else {
-              additionalData[key] = value;
-            }
-          });
-        }
-
-        node.properties[REMIX_KEYS.ROOT][REMIX_KEYS.STRUCTURE.OUTPUT] = {
-          [REMIX_KEYS.PROPERTY.NAME]: nameInput.value.trim(),
-          [REMIX_KEYS.PROPERTY.TYPE]: typeSpan.textContent,
-          [REMIX_KEYS.PROPERTY.REMIX_TYPE]: typeSelect.value,
-          [REMIX_KEYS.PROPERTY.ORDER]: index,
-          [REMIX_KEYS.PROPERTY.ADDITIONAL_DATA_ROOT]: additionalData,
-        };
-      }
-    }
+    node.properties[REMIX_KEYS.ROOT][REMIX_KEYS.STRUCTURE.OUTPUT] = {
+      [REMIX_KEYS.PROPERTY.NAME]: data.exportName,
+      [REMIX_KEYS.PROPERTY.TYPE]: data.primitiveType,
+      [REMIX_KEYS.PROPERTY.REMIX_TYPE]: data.remixType,
+      [REMIX_KEYS.PROPERTY.ORDER]: index,
+      [REMIX_KEYS.PROPERTY.ADDITIONAL_DATA_ROOT]: data.additionalData,
+    };
   });
 
   app.graph.setDirtyCanvas(true, true);

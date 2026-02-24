@@ -1,0 +1,336 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* ============================================================ */
+/* GROUPED LIST COMPONENT - SHARED STYLES (CSS Grid layout)     */
+/* ============================================================ */
+
+/* Main container - flex column for groups */
+.rtx-remix-grouped-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+/* Group container */
+.rtx-remix-list-group {
+  background: var(--bg-darker);
+  border: var(--border-width-thin) solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* Group header button - default layout: drag | chevron | content */
+.rtx-remix-group-header {
+  display: grid;
+  grid-template-columns: var(--grid-columns, var(--drag-column-width) var(--chevron-column-width) 1fr);
+  align-items: center;
+  width: 100%;
+  padding: 0; /* Reset browser button defaults */
+  background: var(--bg-darker);
+  border: none;
+  border-bottom: var(--border-width-thin) solid var(--border-base);
+  cursor: pointer;
+  font-size: var(--font-base);
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+  text-align: left;
+  transition: background-color var(--rtx-animation-fast) ease;
+}
+
+.rtx-remix-group-header:hover {
+  background: var(--bg-hover);
+}
+
+/* Default cell padding - shared by group headers and list rows */
+.rtx-remix-group-header > div,
+.rtx-remix-list-row > div {
+  padding: var(--space-2) var(--cell-padding-x);
+  min-width: 0;
+}
+
+/* Chevron cell - narrow column for expand/collapse indicator (needs higher specificity) */
+.rtx-remix-group-header > .rtx-remix-chevron-cell,
+.rtx-remix-list-row > .rtx-remix-chevron-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2) 0;
+}
+
+/* Group content cell - spans remaining columns after chevron */
+.rtx-remix-group-content-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  /* Default: just column 3 in the 3-column default grid */
+  /* Context-specific overrides set proper spanning */
+}
+
+/* Hide drag handle only for the ungrouped group header (not for individual rows within) */
+.rtx-remix-group-ungrouped > .rtx-remix-group-header .rtx-remix-drag-handle {
+  display: none;
+}
+
+.rtx-remix-group-chevron {
+  font-size: var(--font-xxs);
+  color: var(--text-muted);
+  transition: transform var(--rtx-animation-fast) ease;
+}
+
+.rtx-remix-group-collapsed .rtx-remix-group-chevron {
+  transform: rotate(-90deg);
+}
+
+.rtx-remix-group-name {
+  color: var(--text-secondary);
+}
+
+.rtx-remix-group-count {
+  color: var(--text-muted);
+  font-size: var(--font-sm);
+  font-weight: var(--font-normal);
+}
+
+/* Group menu button - styled like input menu button but without background on hover */
+.rtx-remix-group-menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
+  margin: 0 auto;
+  color: var(--text-muted);
+  font-size: var(--font-md);
+  cursor: pointer;
+  transition: color var(--rtx-animation-fast) ease;
+}
+
+.rtx-remix-group-menu-btn:hover {
+  color: var(--remix-color);
+}
+
+/* Group being dragged */
+.rtx-remix-group-dragging {
+  opacity: 0.5;
+}
+
+/* Group drop placeholder */
+.rtx-remix-group-placeholder {
+  height: var(--space-10);
+  background: var(--remix-color);
+  opacity: 0.2;
+  border-radius: var(--radius-md);
+}
+
+/* Items container within group */
+.rtx-remix-group-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.rtx-remix-group-collapsed .rtx-remix-group-items {
+  display: none;
+}
+
+/* Temporarily collapse groups during drag (CSS-only, no DOM changes) */
+.rtx-remix-group-drag-collapsed .rtx-remix-group-items {
+  display: none;
+}
+
+.rtx-remix-group-drag-collapsed .rtx-remix-group-chevron {
+  transform: rotate(-90deg);
+}
+
+/* Ungrouped group - pinned to top, visually distinct during drag */
+.rtx-remix-group-ungrouped.rtx-remix-group-drag-collapsed {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.rtx-remix-group-ungrouped.rtx-remix-group-drag-collapsed [data-action="toggle-group"] {
+  cursor: not-allowed;
+}
+
+/* Item row - CSS Grid layout with columns defined by consumer via --grid-columns */
+.rtx-remix-list-row {
+  display: grid;
+  grid-template-columns: var(
+    --grid-columns,
+    var(--drag-column-width) var(--chevron-column-width) 1fr var(--menu-column-width)
+  );
+  align-items: center;
+  background: var(--bg-base);
+  border-bottom: var(--border-width-thin) solid var(--border-base);
+  transition: background-color var(--rtx-animation-fast) ease;
+}
+
+.rtx-remix-list-row:hover:not(.rtx-remix-list-header) {
+  background: var(--bg-hover);
+}
+
+.rtx-remix-list-row:last-child {
+  border-bottom: none;
+}
+
+/* Column header row - uses same grid as data rows for perfect alignment */
+.rtx-remix-list-header {
+  background: var(--bg-medium);
+  border-bottom: var(--border-width-thin) solid var(--border-base);
+}
+
+.rtx-remix-list-header > div {
+  padding: var(--space-2) var(--cell-padding-x);
+  font-weight: var(--font-semibold);
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* First cell (drag column) in header has tighter padding to match data rows */
+.rtx-remix-list-header > div:first-child {
+  padding: var(--space-2) var(--space-1);
+}
+
+/* Drag handle cell - tighter padding (needs higher specificity to override default) */
+.rtx-remix-group-header > .rtx-remix-drag-handle-cell,
+.rtx-remix-list-row > .rtx-remix-drag-handle-cell {
+  padding: var(--space-2) 2px var(--space-2) var(--space-1);
+}
+
+/* Companion row (accordion) - spans full width */
+.rtx-remix-companion-row {
+  grid-column: 1 / -1;
+  background: var(--bg-darker);
+  border-bottom: var(--border-width-thin) solid var(--border-base);
+}
+
+.rtx-remix-drag-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--font-xl);
+  height: var(--space-6);
+  color: var(--text-muted);
+  cursor: grab;
+  font-size: var(--font-sm);
+  letter-spacing: 2px;
+  opacity: 0.5;
+  transition:
+    opacity var(--rtx-animation-fast) ease,
+    color var(--rtx-animation-fast) ease;
+  user-select: none;
+}
+
+/* Drag handle hover - works for both list rows and group headers */
+.rtx-remix-list-row:hover .rtx-remix-drag-handle,
+.rtx-remix-group-header:hover .rtx-remix-drag-handle {
+  opacity: 0.8;
+  color: var(--text-secondary);
+}
+
+.rtx-remix-drag-handle:hover {
+  opacity: 1;
+}
+
+.rtx-remix-drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Row being dragged */
+.rtx-remix-dragging {
+  opacity: 0.5;
+  background: var(--bg-hover);
+}
+
+/* Row drop placeholder */
+.rtx-remix-drag-placeholder {
+  height: var(--space-10);
+  background: var(--remix-color);
+  opacity: 0.2;
+  border-radius: var(--radius-sm);
+}
+
+/* Empty message */
+.rtx-remix-grouped-list-empty {
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--font-base);
+  font-style: italic;
+}
+
+/* ============================================================ */
+/* PRESET PANEL SPECIFIC STYLES                                 */
+/* ============================================================ */
+
+/* Indicator cell - no padding (needs higher specificity to override default) */
+.rtx-remix-group-header > .rtx-remix-indicator-cell,
+.rtx-remix-list-row > .rtx-remix-indicator-cell {
+  padding: 0;
+  align-self: stretch;
+}
+
+.rtx-remix-indicator-cell .rtx-remix-input-row-indicator {
+  width: var(--space-1);
+  height: 100%;
+  min-height: var(--space-10);
+  background: transparent;
+  transition: background-color var(--rtx-animation-fast) ease;
+}
+
+.rtx-remix-override-indicator .rtx-remix-indicator-cell .rtx-remix-input-row-indicator {
+  background: var(--remix-color);
+}
+
+/* Label cell */
+.rtx-remix-label-cell .rtx-remix-input-row-col1 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0; /* Allow truncation in flex container */
+}
+
+.rtx-remix-label-cell .rtx-remix-input-row-slot {
+  font-size: var(--font-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rtx-remix-label-cell .rtx-remix-input-row-node {
+  font-size: var(--font-xs);
+  font-weight: var(--font-normal);
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Input cell */
+.rtx-remix-input-cell .rtx-remix-input-row-col2 {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Menu cell */
+.rtx-remix-menu-cell {
+  text-align: center;
+}

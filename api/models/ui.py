@@ -18,7 +18,8 @@
 __all__ = [
     "UrlParser",
     "UrlHandler",
-    "WidgetVisibility",
+    "WidgetVisibilityRule",
+    "WidgetResetRule",
     "HelpContent",
     "DynamicHelp",
     "NodeUI",
@@ -51,7 +52,7 @@ class UrlHandler(BaseModel):
     """URL parsers keyed by source value"""
 
 
-class WidgetVisibility(BaseModel):
+class WidgetVisibilityRule(BaseModel):
     """Shows/hides widgets based on another widget's value."""
 
     source_field: str
@@ -62,6 +63,16 @@ class WidgetVisibility(BaseModel):
 
     show_when_filled: list[str] = []
     """Widget names to show when source_field has any non-empty value"""
+
+
+class WidgetResetRule(BaseModel):
+    """Resets widget values when another widget's value changes."""
+
+    source_field: str
+    """Widget whose change triggers the reset (e.g., "url")"""
+
+    reset_fields: list[str] = []
+    """Widget names to clear when source_field changes"""
 
 
 class HelpContent(BaseModel):
@@ -93,8 +104,11 @@ class NodeUI(BaseModel):
     url_handler: UrlHandler | None = None
     """Auto-detect URLs and populate fields"""
 
-    visibility_rules: list[WidgetVisibility] = []
+    visibility_rules: list[WidgetVisibilityRule] = []
     """Conditional widget visibility rules"""
+
+    reset_rules: list[WidgetResetRule] = []
+    """Reset widget values when source fields change"""
 
     info_button: DynamicHelp | None = None
     """Context-sensitive help button"""

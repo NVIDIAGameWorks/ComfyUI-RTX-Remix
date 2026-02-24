@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +15,16 @@
  * limitations under the License.
  */
 
+/**
+ * Node Controller
+ *
+ * Handles RTX Remix node setup, UI configuration, and API event handling.
+ * Follows the dependency rule: controllers → cores → stores → utils
+ */
+
 import { api } from "../../../scripts/api.js";
 import { cloneTemplate, bindTemplateData } from "../utils/html.js";
+import { TEMPLATE_IDS, REMIX_KEYS, EVENTS } from "../utils/constants.js";
 
 /** Cache for frontend configs fetched from Python backend */
 const configCache = new Map();
@@ -60,7 +68,7 @@ async function fetchFrontendConfig(nodeClass) {
  * @param {string} content - HTML content to display in the dialog body
  */
 function showInfoDialog(title, content) {
-  const dialog = cloneTemplate("rtx-remix-info-dialog-template");
+  const dialog = cloneTemplate(TEMPLATE_IDS.INFO_DIALOG);
   if (!dialog) return;
 
   bindTemplateData(dialog, { title });
@@ -372,6 +380,41 @@ function setupVisibility(node, visibilityRules, app) {
 }
 
 /**
+ * Setup reset rules that clear specified widgets when source fields change.
+ *
+ * @param {Object} node - The LiteGraph node instance
+ * @param {Array<Object>} resetRules - Array of reset rule objects containing:
+ *   - source_field: Widget name to watch for changes
+ *   - reset_fields: Array of widget names to clear when source changes
+ * @param {Object} app - The ComfyUI app instance
+ */
+function setupResetRules(node, resetRules, app) {
+  for (const { source_field, reset_fields } of resetRules) {
+    const sourceWidget = node.widgets?.find((w) => w.name === source_field);
+    if (!sourceWidget || !reset_fields?.length) continue;
+
+    let previousValue = sourceWidget.value ?? "";
+
+    const originalCallback = sourceWidget.callback;
+    sourceWidget.callback = (value) => {
+      originalCallback?.apply(sourceWidget, [value]);
+
+      // Skip if value hasn't actually changed
+      if (value === previousValue) return;
+
+      // Reset specified fields
+      for (const name of reset_fields) {
+        const w = node.widgets?.find((w) => w.name === name);
+        if (w) w.value = "";
+      }
+
+      previousValue = value;
+      app.graph.setDirtyCanvas(true, true);
+    };
+  }
+}
+
+/**
  * Main setup function for RTX Remix nodes.
  * Fetches UI configuration from the backend and applies interactive behaviors
  * including URL handling, visibility rules, and info buttons.
@@ -389,5 +432,51 @@ export async function setupNode(node, app) {
 
   if (config.url_handler) setupUrlHandler(node, config.url_handler, config.visibility_rules, app);
   if (config.visibility_rules) setupVisibility(node, config.visibility_rules, app);
+  if (config.reset_rules) setupResetRules(node, config.reset_rules, app);
   if (config.info_button) setupInfoButton(node, config.info_button);
+}
+
+/**
+ * Initialize API event listeners for node input updates from the backend.
+ * Handles real-time value updates pushed from Python to the frontend.
+ *
+ * @param {Object} app - The ComfyUI app instance
+ */
+export function setupApiListeners(app) {
+  app.api.addEventListener(EVENTS.UPDATE_NODE_INPUT, (event) => {
+    const { node_id, input_name, value } = event.detail;
+    const node = app.graph.getNodeById(node_id);
+    if (!node) return;
+
+    const widget = node.widgets?.find((w) => w.name === input_name);
+    if (!widget) return;
+
+    widget.value = value;
+    widget.callback?.(value);
+    app.graph.setDirtyCanvas(true, true);
+    app.graph.change?.();
+  });
+}
+
+/**
+ * Load RTX Remix metadata when a node is restored from a saved workflow.
+ * Transfers persisted metadata from nodeData to the live node properties.
+ *
+ * @param {Object} node - The LiteGraph node instance
+ * @param {Object} nodeData - The serialized node data from the workflow
+ */
+export function loadNodeMetadata(node, nodeData) {
+  const remixData = nodeData.properties?.[REMIX_KEYS.ROOT];
+  if (!remixData) return;
+
+  node.properties ??= {};
+  node.properties[REMIX_KEYS.ROOT] ??= {};
+
+  const { INPUTS, OUTPUT } = REMIX_KEYS.STRUCTURE;
+  if (remixData[INPUTS]) {
+    node.properties[REMIX_KEYS.ROOT][INPUTS] = remixData[INPUTS];
+  }
+  if (remixData[OUTPUT]) {
+    node.properties[REMIX_KEYS.ROOT][OUTPUT] = remixData[OUTPUT];
+  }
 }

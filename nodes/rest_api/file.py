@@ -19,17 +19,17 @@ from __future__ import annotations
 
 __all__ = ["RestAPIDeleteFileNode"]
 
-import logging
 from pathlib import Path
 
 from comfy_api.latest import io
 
 from .common import RemixContext, context_input, context_output, enable_input
 from ..constant import PREFIX_MENU_API
+from ...utils import get_logger
 
 _file_name = Path(__file__).stem
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class RestAPIDeleteFileNode(io.ComfyNode):

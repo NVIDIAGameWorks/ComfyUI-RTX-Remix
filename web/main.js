@@ -17,59 +17,12 @@
 
 import { app } from "../../scripts/app.js";
 import { loadResources } from "./utils/loader.js";
-import { NODE_PREFIX, REMIX_KEYS } from "./utils/constants.js";
-import { getCanvasMenuItems, getNodeMenuItems } from "./cores/menuCore.js";
-import { setupNode } from "./cores/nodeInteractivityCore.js";
-import { drawNodeHighlights } from "./cores/slotMarkingCore.js";
-
-/**
- * Initialize API event listeners for node input updates from the backend
- */
-function setupApiListeners() {
-  app.api.addEventListener("rtx-remix-update-node-input", (event) => {
-    const { node_id, input_name, value } = event.detail;
-    const node = app.graph.getNodeById(node_id);
-    if (!node) return;
-
-    const widget = node.widgets?.find((w) => w.name === input_name);
-    if (!widget) return;
-
-    widget.value = value;
-    widget.callback?.(value);
-    app.graph.setDirtyCanvas(true, true);
-    app.graph.change?.();
-  });
-}
-
-/**
- * Hook into node's draw foreground to render custom highlights
- */
-function setupNodeDrawing(node) {
-  const originalOnDrawForeground = node.onDrawForeground;
-  node.onDrawForeground = function (ctx) {
-    originalOnDrawForeground?.apply(this, arguments);
-    drawNodeHighlights(ctx, this);
-  };
-}
-
-/**
- * Load RTX Remix metadata when a node is restored from a saved workflow
- */
-function loadNodeMetadata(node, nodeData) {
-  const remixData = nodeData.properties?.[REMIX_KEYS.ROOT];
-  if (!remixData) return;
-
-  node.properties ??= {};
-  node.properties[REMIX_KEYS.ROOT] ??= {};
-
-  const { INPUTS, OUTPUT } = REMIX_KEYS.STRUCTURE;
-  if (remixData[INPUTS]) {
-    node.properties[REMIX_KEYS.ROOT][INPUTS] = remixData[INPUTS];
-  }
-  if (remixData[OUTPUT]) {
-    node.properties[REMIX_KEYS.ROOT][OUTPUT] = remixData[OUTPUT];
-  }
-}
+import { NODE_PREFIX } from "./utils/constants.js";
+import { getCanvasMenuItems, getNodeMenuItems } from "./controllers/menuController.js";
+import { setupNode, setupApiListeners, loadNodeMetadata } from "./controllers/nodeController.js";
+import { setupNodeDrawing } from "./controllers/slotMarkingController.js";
+import { registerPresetsSidebar, refreshPresetsSidebar, handlePendingChangesBeforeAction } from "./controllers/presetSidebarController.js";
+import { initExportController } from "./controllers/exportDialogController.js";
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Extension registration
@@ -80,7 +33,9 @@ app.registerExtension({
 
   async setup() {
     loadResources();
-    setupApiListeners();
+    setupApiListeners(app);
+    registerPresetsSidebar(app);
+    initExportController(app);
   },
 
   getCanvasMenuItems: () => getCanvasMenuItems(app),
@@ -95,5 +50,21 @@ app.registerExtension({
 
   async loadedGraphNode(node, nodeData) {
     loadNodeMetadata(node, nodeData);
+  },
+
+  /**
+   * Called before a graph is configured (workflow loaded/switched).
+   * Handle any pending preset changes to prevent data loss.
+   */
+  async beforeConfigureGraph() {
+    await handlePendingChangesBeforeAction(app);
+  },
+
+  /**
+   * Called after a graph is configured (workflow loaded/switched).
+   * Refresh the preset sidebar to reflect the new workflow's data.
+   */
+  afterConfigureGraph() {
+    refreshPresetsSidebar();
   },
 });

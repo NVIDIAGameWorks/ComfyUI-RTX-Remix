@@ -21,7 +21,8 @@ from .ui import (
     NodeUI,
     UrlHandler,
     UrlParser,
-    WidgetVisibility,
+    WidgetResetRule,
+    WidgetVisibilityRule,
 )
 
 __all__ = [
@@ -30,5 +31,6 @@ __all__ = [
     "NodeUI",
     "UrlHandler",
     "UrlParser",
-    "WidgetVisibility",
+    "WidgetResetRule",
+    "WidgetVisibilityRule",
 ]

@@ -15,6 +15,32 @@
  * limitations under the License.
  */
 
+// Preset storage keys - consolidated under rtx-remix root
+// Structure: app.graph.extra["rtx-remix"].activePreset, .presets, .groupOrder
+export const PRESET_KEYS = {
+  ACTIVE_PRESET: "activePreset",
+  PRESETS: "presets",
+  DEFAULT: "default",
+  INPUTS: "inputs",
+  VALUE: "value",
+  DESCRIPTION: "description",
+  GROUP_ORDER: "groupOrder",
+  AUTO_SAVE: "autoSave",
+};
+
+// Keyboard key constants
+export const KEYS = {
+  ENTER: "Enter",
+  ESCAPE: "Escape",
+};
+
+// Sidebar configuration
+export const SIDEBAR = {
+  ID: "rtx-remix-presets",
+  TITLE: "Presets",
+  TOOLTIP: "RTX Remix Presets - Manage preset values for tagged inputs",
+};
+
 // API Endpoints
 export const API_ENDPOINTS = {
   WORKFLOWS_BASE: "/rtx-remix/v1/workflows",
@@ -108,7 +134,7 @@ export const COMFYUI_OUTPUT_TYPE_MAP = {
 export const METADATA_FIELD_CONFIG = [
   {
     key: REMIX_KEYS.PROPERTY.ADDITIONAL_DATA.MIN,
-    label: "Mininum Value",
+    label: "Minimum Value",
     inputType: "number",
     applyTo: (context) => ["float", "int"].includes(context.primitiveType),
     defaultValue: (context) => context.widgetConfig?.min ?? null,
@@ -146,12 +172,81 @@ export const METADATA_FIELD_CONFIG = [
   },
   {
     key: REMIX_KEYS.PROPERTY.ADDITIONAL_DATA.GROUP,
-    label: "UI Group",
+    label: "Group",
     inputType: "text",
     applyTo: () => true, // Always available
     defaultValue: () => "",
   },
 ];
+
+// Template IDs for cloneTemplate() calls
+export const TEMPLATE_IDS = {
+  // Dialogs
+  EXPORT_DIALOG: "rtx-remix-export-dialog-template",
+  CONFIRM_DIALOG: "rtx-remix-confirm-dialog-template",
+  INFO_DIALOG: "rtx-remix-info-dialog-template",
+  EDIT_PRESET_DIALOG: "rtx-remix-edit-preset-dialog-template",
+  DELETE_PRESET_CONFIRM: "rtx-remix-delete-preset-confirm-template",
+  CLEAR_DEFAULT_CONFIRM: "rtx-remix-clear-default-confirm-template",
+  APPLY_ALL_CONFIRM: "rtx-remix-apply-all-confirm-template",
+  RESET_ALL_CONFIRM: "rtx-remix-reset-all-confirm-template",
+  UNSAVED_CHANGES_DIALOG: "rtx-remix-unsaved-changes-dialog-template",
+
+  // Components
+  SIDEBAR_PANEL: "rtx-remix-sidebar-panel-template",
+  GROUPED_LIST_GROUP: "rtx-remix-grouped-list-group-template",
+  GROUPED_LIST_ROW: "rtx-remix-grouped-list-row-template",
+  PRESET_LIST_ROW: "rtx-remix-preset-list-row-template",
+  PRESET_LIST_EMPTY: "rtx-remix-preset-list-empty-template",
+  INPUTS_EMPTY: "rtx-remix-inputs-empty-template",
+  WARNING_ROW: "rtx-remix-warning-row-template",
+  METADATA_ACCORDION: "rtx-remix-metadata-accordion-template",
+  SLIDER_INPUT: "rtx-remix-slider-input-template",
+  SPINNER: "rtx-remix-spinner-template",
+  MENU_ITEM: "rtx-remix-menu-item-template",
+
+  // Popover/Menu
+  POPOVER: "rtx-remix-popover-template",
+  POPOVER_ITEM: "rtx-remix-popover-item-template",
+  INPUT_MENU: "rtx-remix-input-menu-template",
+  GROUP_MENU: "rtx-remix-group-menu-template",
+  SAVE_MENU: "rtx-remix-save-menu-template",
+
+  // Global Settings
+  EDIT_GLOBAL_SETTINGS_DIALOG: "rtx-remix-edit-global-settings-dialog-template",
+
+  // Group Picker
+  GROUP_PICKER: "rtx-remix-group-picker-template",
+  GROUP_PICKER_OPTION: "rtx-remix-group-picker-option-template",
+  GROUP_PICKER_CREATE: "rtx-remix-group-picker-create-template",
+  GROUP_PICKER_INPUT: "rtx-remix-group-picker-input-template",
+
+  // Reusable Components
+  FORM_FIELD: "rtx-remix-form-field-template",
+  TEXT_INPUT: "rtx-remix-text-input-template",
+  NUMBER_INPUT: "rtx-remix-number-input-template",
+  SELECT_INPUT: "rtx-remix-select-input-template",
+  CHECKBOX_INPUT: "rtx-remix-checkbox-input-template",
+  TEXTAREA_INPUT: "rtx-remix-textarea-input-template",
+};
+
+// Event names for app.api event system
+export const EVENTS = {
+  // API events (server → client)
+  UPDATE_NODE_INPUT: "rtx-remix-update-node-input",
+
+  // Internal events (data → UI, using app.api as event bus per ComfyUI pattern)
+  SIDEBAR_INIT: "rtx-remix-sidebar-init",
+  METADATA_CHANGED: "rtx-remix-metadata-changed",
+  PRESET_CHANGED: "rtx-remix-preset-changed",
+  PRESET_VALUE_CHANGED: "rtx-remix-preset-value-changed",
+  INPUTS_TAGGED: "rtx-remix-inputs-tagged",
+  GROUP_ORDER_CHANGED: "rtx-remix-group-order-changed",
+  AUTO_SAVE_CHANGED: "rtx-remix-auto-save-changed",
+
+  // Action events (UI → action, decouples menus from controllers)
+  EXPORT_WORKFLOW_REQUESTED: "rtx-remix-export-workflow-requested",
+};
 
 // Default export names and types for specific nodes
 //

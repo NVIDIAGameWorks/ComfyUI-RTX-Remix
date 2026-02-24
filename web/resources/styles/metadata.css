@@ -19,47 +19,42 @@
 
 .rtx-remix-metadata-accordion {
   background: var(--bg-darker);
-}
-
-.rtx-remix-metadata-accordion td {
-  padding: 0 !important;
-  border-top: none !important;
+  /* Full width in grid context */
+  grid-column: 1 / -1;
 }
 
 .rtx-remix-metadata-form {
-  padding: 16px;
-  border-top: 1px solid var(--border-base);
+  padding: var(--space-4);
+  border-top: var(--border-width-thin) solid var(--border-base);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .rtx-remix-metadata-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-2);
 }
 
 .rtx-remix-metadata-label {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: var(--font-sm);
+  font-weight: var(--font-semibold);
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .rtx-remix-metadata-input,
 .rtx-remix-metadata-input[type="text"],
 .rtx-remix-metadata-input[type="number"] {
   width: 100%;
-  padding: 8px 10px;
+  padding: var(--space-2) 10px;
   background: var(--bg-darkest);
-  border: 1px solid var(--border-base);
-  border-radius: 4px;
+  border: var(--border-width-thin) solid var(--border-base);
+  border-radius: var(--radius-sm);
   color: var(--text-primary);
-  font-size: 13px;
+  font-size: var(--font-base);
   outline: none;
-  transition: all 0.2s ease;
+  transition: all var(--rtx-animation-normal) ease;
   box-sizing: border-box;
 }
 
@@ -71,7 +66,7 @@ textarea.rtx-remix-metadata-input {
 
 .rtx-remix-metadata-input:focus {
   border-color: var(--remix-color);
-  box-shadow: 0 0 0 2px var(--remix-color-shadow);
+  box-shadow: var(--shadow-focus);
 }
 
 .rtx-remix-metadata-input::placeholder {

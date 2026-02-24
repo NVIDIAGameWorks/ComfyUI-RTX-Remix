@@ -1,0 +1,49 @@
+<!--
+  SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+  SPDX-License-Identifier: Apache-2.0
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Used for both "Edit a preset" and "Create a preset". Title and button label set in JS.
+-->
+
+<template id="rtx-remix-edit-preset-dialog-template">
+  <div class="rtx-remix-overlay">
+    <div class="rtx-remix-dialog rtx-remix-dialog-small">
+      <div class="rtx-remix-dialog-header">
+        <img class="rtx-remix-dialog-icon" src="" alt="RTX Remix" data-asset="remix-icon" />
+        <h2 class="rtx-remix-dialog-title" data-element="dialog-title">Edit a preset</h2>
+      </div>
+      <div class="rtx-remix-dialog-body">
+        <div class="rtx-remix-input-container">
+          <label class="rtx-remix-input-label">Preset name</label>
+          <input type="text" class="rtx-remix-input" placeholder="My Preset" data-input="preset-name" />
+        </div>
+        <div class="rtx-remix-input-container">
+          <label class="rtx-remix-input-label">Description</label>
+          <textarea
+            class="rtx-remix-input rtx-remix-preset-description-input"
+            placeholder="Optional description"
+            rows="3"
+            data-input="preset-description"
+          ></textarea>
+        </div>
+        <div class="rtx-remix-validation-msg" data-element="validation"></div>
+      </div>
+      <div class="rtx-remix-dialog-footer">
+        <button class="rtx-remix-btn rtx-remix-btn-cancel" data-action="cancel">Cancel</button>
+        <button class="rtx-remix-btn rtx-remix-btn-primary" data-action="save">Edit</button>
+      </div>
+    </div>
+  </div>
+</template>

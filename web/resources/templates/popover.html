@@ -1,0 +1,98 @@
+<!--
+  SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+  SPDX-License-Identifier: Apache-2.0
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<template id="rtx-remix-popover-template">
+  <div class="rtx-remix-popover" data-element="popover"></div>
+</template>
+
+<template id="rtx-remix-popover-item-template">
+  <div class="rtx-remix-popover-item" data-action="select">
+    <span data-bind="label"></span>
+  </div>
+</template>
+
+<template id="rtx-remix-input-menu-template">
+  <div class="rtx-remix-popover">
+    <div
+      class="rtx-remix-popover-item"
+      data-action="focus-node"
+      title="Navigate to and select the source node on the canvas"
+    >
+      <span>Focus on Node</span>
+    </div>
+    <hr class="rtx-remix-popover-separator" />
+    <div
+      class="rtx-remix-popover-item"
+      data-action="edit-metadata"
+      title="Edit export name, group, and description for this input"
+    >
+      <span>Edit Input Metadata...</span>
+    </div>
+    <hr class="rtx-remix-popover-separator" />
+    <div
+      class="rtx-remix-popover-item"
+      data-action="apply-to-default"
+      title="Save current value as the default for this input"
+    >
+      <span>Apply to Default Values</span>
+    </div>
+    <div class="rtx-remix-popover-item" data-action="reset-to-default" title="Restore this input to its default value">
+      <span>Reset to Default Value</span>
+    </div>
+    <hr class="rtx-remix-popover-separator" />
+    <div
+      class="rtx-remix-popover-item rtx-remix-popover-item-danger"
+      data-action="untag-input"
+      title="Remove RTX Remix metadata from this input"
+    >
+      <span>Untag Input</span>
+    </div>
+  </div>
+</template>
+
+<template id="rtx-remix-group-menu-template">
+  <div class="rtx-remix-popover">
+    <div
+      class="rtx-remix-popover-item rtx-remix-popover-item-danger"
+      data-action="untag-group"
+      title="Remove RTX Remix metadata from all inputs in this group"
+    >
+      <span>Untag All in Group</span>
+    </div>
+  </div>
+</template>
+
+<template id="rtx-remix-save-menu-template">
+  <div>
+    <div
+      class="rtx-remix-popover-item"
+      data-action="discard"
+      title="Discard all unsaved changes"
+    >
+      <span>Discard Changes</span>
+    </div>
+    <hr class="rtx-remix-popover-separator" />
+    <label
+      class="rtx-remix-popover-item"
+      data-action="auto-save"
+      title="Automatically save changes when values are modified"
+    >
+      <input type="checkbox" data-element="auto-save-checkbox" />
+      <span>Auto-Save</span>
+    </label>
+  </div>
+</template>

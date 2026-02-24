@@ -1,0 +1,787 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* Small Dialog Variant */
+.rtx-remix-dialog-small {
+  max-width: 400px;
+}
+
+.rtx-remix-input-label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--font-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-muted);
+}
+
+/* Remix Presets Sidebar Panel (registerSidebarTab) */
+.rtx-remix-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--bg-darker);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.rtx-remix-sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-6);
+  background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-base) 100%);
+  border-bottom: var(--border-width-medium) solid var(--remix-color);
+}
+
+.rtx-remix-sidebar-icon {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+  object-fit: contain;
+}
+
+.rtx-remix-sidebar-title {
+  margin: 0;
+  font-size: var(--font-xl);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+}
+
+/* Search bar with icons inside */
+.rtx-remix-sidebar-preset-search-wrap {
+  padding: var(--space-3) var(--space-6) 0 var(--space-6);
+}
+
+.rtx-remix-sidebar-preset-search-inner {
+  position: relative;
+}
+
+.rtx-remix-sidebar-preset-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: var(--font-md);
+  pointer-events: none;
+}
+
+.rtx-remix-sidebar-preset-search {
+  width: 100%;
+  padding: var(--space-2) 36px var(--space-2) 32px;
+  border: var(--border-width-thin) solid var(--border-base);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-size: var(--font-base);
+  outline: none;
+  transition:
+    border-color var(--rtx-animation-fast) ease,
+    box-shadow var(--rtx-animation-fast) ease;
+  box-sizing: border-box;
+}
+
+.rtx-remix-sidebar-preset-search::placeholder {
+  color: var(--text-placeholder);
+}
+
+.rtx-remix-sidebar-preset-search:focus {
+  border-color: var(--remix-color);
+  box-shadow: var(--shadow-focus);
+}
+
+.rtx-remix-sidebar-preset-search-clear {
+  position: absolute;
+  right: var(--space-2);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-md);
+  height: var(--icon-md);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--rtx-animation-fast) ease;
+}
+
+.rtx-remix-sidebar-preset-search-clear:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.rtx-remix-sidebar-preset-search-clear.is-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Preset list section */
+.rtx-remix-preset-list-section {
+  padding: var(--space-4) var(--space-6);
+  border-bottom: var(--border-width-thin) solid var(--border-base);
+}
+
+.rtx-remix-preset-list-section .rtx-remix-section-title {
+  margin: 0 0 var(--space-3) 0;
+  font-size: var(--font-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+}
+
+.rtx-remix-preset-list {
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: var(--border-width-thin) solid var(--border-base);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-dark);
+}
+
+.rtx-remix-preset-list::-webkit-scrollbar {
+  width: var(--space-2);
+}
+
+.rtx-remix-preset-list::-webkit-scrollbar-thumb {
+  background-color: var(--border-light);
+  border-radius: var(--radius-xs);
+}
+
+.rtx-remix-preset-list-empty {
+  padding: var(--space-3);
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.rtx-remix-preset-list-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  height: var(--control-height-lg);
+  border-left: var(--indicator-width) solid transparent; /* Reserve space for active indicator */
+  border-bottom: var(--border-width-thin) solid var(--border-base);
+  background-color: var(--bg-base);
+  cursor: pointer;
+  transition:
+    background-color var(--rtx-animation-fast) ease,
+    border-color var(--rtx-animation-fast) ease;
+}
+
+.rtx-remix-preset-list-row:last-child {
+  border-bottom: none;
+}
+
+.rtx-remix-preset-list-row:hover {
+  background-color: var(--bg-hover);
+}
+
+.rtx-remix-preset-list-row.rtx-remix-preset-list-row-active {
+  border-left-color: var(--remix-color);
+  background-color: var(--bg-hover);
+}
+
+.rtx-remix-preset-list-row-label {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.rtx-remix-preset-list-row-name {
+  flex-shrink: 0;
+  font-size: var(--font-base);
+  font-weight: var(--font-medium);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rtx-remix-preset-list-row-desc {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rtx-remix-preset-list-row-actions {
+  display: flex;
+  gap: var(--space-1);
+  opacity: 0;
+  transition: opacity var(--rtx-animation-fast) ease;
+  flex-shrink: 0;
+  height: var(--control-height-sm);
+}
+
+.rtx-remix-preset-list-row-default {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Default row: hide edit button (always disabled), show delete button (conditionally enabled) */
+.rtx-remix-preset-list-row-default [data-action="preset-edit"] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.rtx-remix-preset-list-row:hover .rtx-remix-preset-list-row-actions {
+  opacity: 1;
+}
+
+.rtx-remix-preset-list-row-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
+  padding: 0;
+  min-width: var(--control-height-sm);
+}
+
+.rtx-remix-preset-list-row-btn-delete:hover:not(:disabled) {
+  color: var(--status-danger);
+  border-color: var(--status-danger);
+}
+
+.rtx-remix-preset-list-row-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.rtx-remix-preset-create-btn {
+  width: 100%;
+  margin-top: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.rtx-remix-preset-create-btn .pi-plus {
+  font-size: var(--font-sm);
+}
+
+/* Tagged inputs section */
+.rtx-remix-inputs-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: var(--space-4) var(--space-6);
+}
+
+.rtx-remix-inputs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+  gap: var(--space-3);
+}
+
+.rtx-remix-inputs-section .rtx-remix-section-title {
+  margin: 0;
+  font-size: var(--font-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+}
+
+.rtx-remix-inputs-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.rtx-remix-inputs-separator {
+  width: 1px;
+  height: var(--icon-md);
+  background-color: var(--border-base);
+  margin: 0 var(--space-1);
+}
+
+.rtx-remix-inputs-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) 10px;
+  font-size: var(--font-sm);
+  height: var(--control-height-sm);
+  box-sizing: border-box;
+}
+
+/* Inputs search bar */
+.rtx-remix-inputs-search-wrap {
+  margin-bottom: var(--space-3);
+}
+
+.rtx-remix-inputs-search-inner {
+  position: relative;
+}
+
+.rtx-remix-inputs-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: var(--font-md);
+  pointer-events: none;
+}
+
+.rtx-remix-inputs-search {
+  width: 100%;
+  padding: var(--space-2) 36px var(--space-2) 32px;
+  border: var(--border-width-thin) solid var(--border-base);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-size: var(--font-base);
+  outline: none;
+  transition:
+    border-color var(--rtx-animation-fast) ease,
+    box-shadow var(--rtx-animation-fast) ease;
+  box-sizing: border-box;
+}
+
+.rtx-remix-inputs-search::placeholder {
+  color: var(--text-placeholder);
+}
+
+.rtx-remix-inputs-search:focus {
+  border-color: var(--remix-color);
+  box-shadow: var(--shadow-focus);
+}
+
+.rtx-remix-inputs-search-clear {
+  position: absolute;
+  right: var(--space-2);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-md);
+  height: var(--icon-md);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--rtx-animation-fast) ease;
+}
+
+.rtx-remix-inputs-search-clear:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.rtx-remix-inputs-search-clear.is-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.rtx-remix-inputs-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  min-width: 0; /* Allow flex item to shrink properly */
+}
+
+/* Grid columns for preset panel: indicator | drag | chevron | label | input | menu */
+.rtx-remix-inputs-list .rtx-remix-list-row,
+.rtx-remix-inputs-list .rtx-remix-group-header {
+  --grid-columns: var(--indicator-width) var(--drag-column-width) var(--chevron-column-width)
+    minmax(var(--label-column-min-width), var(--label-column-max-width)) minmax(var(--flex-column-min-width), 1fr)
+    var(--menu-column-width);
+}
+
+/* Preset panel group content spans label+input columns (4-5 in 6-column grid) */
+.rtx-remix-inputs-list .rtx-remix-group-content-cell {
+  grid-column: 4 / 6;
+}
+
+.rtx-remix-inputs-list::-webkit-scrollbar {
+  width: var(--space-2);
+}
+
+.rtx-remix-inputs-list::-webkit-scrollbar-thumb {
+  background-color: var(--border-light);
+  border-radius: var(--radius-xs);
+}
+
+.rtx-remix-inputs-empty {
+  font-size: var(--font-base);
+  color: var(--text-muted);
+  padding: var(--space-4) 0;
+  text-align: center;
+}
+
+/* NOTE: Input group styles moved to groupedList.css */
+
+.rtx-remix-input-row-indicator {
+  width: var(--indicator-width);
+  min-width: var(--indicator-width);
+  background-color: transparent;
+  border-radius: 0;
+  align-self: stretch;
+}
+
+.rtx-remix-input-row-col1 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.rtx-remix-input-row-slot {
+  font-size: var(--font-sm);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.rtx-remix-input-row-node {
+  font-size: var(--font-xs);
+  font-weight: var(--font-normal);
+  color: var(--text-muted);
+  word-break: break-word;
+}
+
+.rtx-remix-input-row-col2 {
+  min-width: 0;
+}
+
+.rtx-remix-input-row-col2 input[type="checkbox"] {
+  width: auto;
+  min-width: 0;
+}
+
+.rtx-remix-input-row-col2 input[type="text"],
+.rtx-remix-input-row-col2 > input[type="number"] {
+  width: 100%;
+}
+
+.rtx-remix-preset-input {
+  width: 100%;
+  padding: var(--space-2) 10px;
+  border: var(--border-width-thin) solid var(--border-base);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-size: var(--font-sm);
+  box-sizing: border-box;
+}
+
+.rtx-remix-preset-input:focus {
+  border-color: var(--remix-color);
+  outline: none;
+}
+
+.rtx-remix-input-menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--text-muted);
+  font-size: var(--font-md);
+  cursor: pointer;
+  transition: all var(--rtx-animation-fast) ease;
+}
+
+.rtx-remix-input-menu-btn:hover:not(:disabled) {
+  background-color: var(--bg-hover);
+  color: var(--remix-color);
+}
+
+.rtx-remix-input-menu-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Popover menu */
+.rtx-remix-popover {
+  position: fixed;
+  z-index: var(--rtx-z-popover);
+  width: fit-content;
+  padding: var(--space-2);
+  border: var(--border-width-thin) solid var(--border-base);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-dark);
+  box-shadow: var(--shadow-xl);
+}
+
+.rtx-remix-popover-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-sm);
+  color: var(--text-primary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.rtx-remix-popover-item:hover {
+  background-color: var(--bg-hover);
+}
+
+.rtx-remix-popover-item-disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.rtx-remix-popover-item-disabled:hover {
+  background-color: transparent;
+}
+
+.rtx-remix-popover-item-danger {
+  color: var(--danger-color);
+}
+
+.rtx-remix-popover-item-danger:hover {
+  background-color: rgba(var(--danger-rgb), 0.1);
+}
+
+hr.rtx-remix-popover-separator {
+  border: none;
+  border-top: var(--border-width-thin) solid rgba(255, 255, 255, 0.15);
+  margin: var(--space-1) var(--space-2);
+}
+
+/* Slider for float values */
+.rtx-remix-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--control-height-sm);
+}
+
+.rtx-remix-preset-slider {
+  flex: 1;
+  height: var(--space-2);
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--bg-dark);
+  border: var(--border-width-thin) solid var(--border-base);
+  border-radius: var(--radius-xs);
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rtx-remix-preset-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--font-md);
+  height: var(--font-md);
+  border-radius: 50%;
+  background: var(--remix-color);
+  cursor: pointer;
+  border: var(--border-width-medium) solid var(--bg-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+.rtx-remix-preset-slider::-moz-range-thumb {
+  width: var(--font-md);
+  height: var(--font-md);
+  border-radius: 50%;
+  background: var(--remix-color);
+  cursor: pointer;
+  border: var(--border-width-medium) solid var(--bg-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+.rtx-remix-preset-slider:focus {
+  border-color: var(--remix-color);
+}
+
+.rtx-remix-slider-value {
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  flex-shrink: 0;
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--font-xs);
+  font-family: monospace;
+  color: var(--text-primary);
+  background: var(--bg-dark);
+  border: var(--border-width-thin) solid var(--border-base);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  box-sizing: border-box;
+  -moz-appearance: textfield;
+}
+
+.rtx-remix-slider-value::-webkit-outer-spin-button,
+.rtx-remix-slider-value::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.rtx-remix-slider-value:focus {
+  border-color: var(--remix-color);
+  outline: none;
+}
+
+/* Group Picker - Custom dropdown component */
+.rtx-remix-group-picker {
+  position: relative;
+  width: 100%;
+}
+
+.rtx-remix-group-picker-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-dark);
+  border: var(--border-width-thin) solid var(--border-base);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: var(--font-base);
+  cursor: pointer;
+  transition: border-color var(--rtx-animation-fast) ease;
+}
+
+.rtx-remix-group-picker-trigger:hover {
+  border-color: var(--border-hover);
+}
+
+.rtx-remix-group-picker-trigger:focus {
+  border-color: var(--remix-color);
+  outline: none;
+}
+
+.rtx-remix-group-picker-chevron {
+  font-size: var(--font-xxs);
+  color: var(--text-muted);
+}
+
+/* Group Picker - Dropdown - Width set via JavaScript to match trigger */
+.rtx-remix-group-picker-dropdown {
+  z-index: var(--rtx-z-dropdown);
+  box-sizing: border-box;
+}
+
+.rtx-remix-group-picker-dropdown .rtx-remix-popover-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Group Picker - Option */
+.rtx-remix-group-picker-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rtx-remix-group-picker-option-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Group Picker - Actions (rename/delete icons) */
+.rtx-remix-group-picker-option-actions {
+  display: flex;
+  gap: var(--space-1);
+  opacity: 0;
+  transition: opacity var(--rtx-animation-fast) ease;
+}
+
+.rtx-remix-group-picker-option:hover .rtx-remix-group-picker-option-actions {
+  opacity: 1;
+}
+
+.rtx-remix-group-picker-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-6);
+  height: var(--space-6);
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all var(--rtx-animation-fast) ease;
+}
+
+.rtx-remix-group-picker-action:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.rtx-remix-group-picker-action[data-action="delete"]:hover {
+  color: var(--status-danger);
+}
+
+/* Group Picker - Inline input row */
+.rtx-remix-group-picker-input-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2);
+}
+
+.rtx-remix-group-picker-input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2);
+  background: var(--bg-input);
+  border: var(--border-width-thin) solid var(--border-base);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: var(--font-base);
+}
+
+.rtx-remix-group-picker-input:focus {
+  border-color: var(--remix-color);
+  outline: none;
+}
+
+/* Group Picker - Create new group option */
+.rtx-remix-group-picker-create {
+  color: var(--text-muted);
+  gap: var(--space-2);
+  justify-content: flex-start; /* Left-align the create option */
+}
+
+.rtx-remix-group-picker-create:hover {
+  color: var(--text-primary);
+}

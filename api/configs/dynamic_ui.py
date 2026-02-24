@@ -27,7 +27,8 @@ from ..models import (
     NodeUI,
     UrlHandler,
     UrlParser,
-    WidgetVisibility,
+    WidgetResetRule,
+    WidgetVisibilityRule,
 )
 from ...nodes.constant import ModelSource
 
@@ -61,12 +62,12 @@ NODE_UI_CONFIGS: dict[NodeUIConfig, NodeUI] = {
         ),
         visibility_rules=[
             # Show model_source only after a URL is entered
-            WidgetVisibility(
+            WidgetVisibilityRule(
                 source_field="url",
                 show_when_filled=["model_source"],
             ),
             # Show source-specific fields based on detected source
-            WidgetVisibility(
+            WidgetVisibilityRule(
                 source_field="model_source",
                 mapping={
                     ModelSource.HUGGINGFACE: [
@@ -79,11 +80,18 @@ NODE_UI_CONFIGS: dict[NodeUIConfig, NodeUI] = {
                 },
             ),
             # Show archive fields when extract_archive is enabled
-            WidgetVisibility(
+            WidgetVisibilityRule(
                 source_field="extract_archive",
                 mapping={
                     True: ["archive_model_filename", "extracted_model_hash"],
                 },
+            ),
+        ],
+        reset_rules=[
+            # Reset hash and archive fields when URL changes
+            WidgetResetRule(
+                source_field="url",
+                reset_fields=["file_hash", "archive_model_filename", "extracted_model_hash"],
             ),
         ],
         info_button=DynamicHelp(
