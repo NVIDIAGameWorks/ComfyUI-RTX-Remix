@@ -1,0 +1,1015 @@
+{
+  "1": {
+    "inputs": {
+      "intensity_blend": 0.3,
+      "opengl_normal": false,
+      "optimize": true,
+      "bilateral_d": 10,
+      "bilateral_sigma_color": 50,
+      "bilateral_sigma_space": 50,
+      "scharr_scale_xy": 1,
+      "image": [
+        "143",
+        0
+      ]
+    },
+    "class_type": "AIXPOLY_PBRFusion4SimpleDepthAndNormalGenerator",
+    "_meta": {
+      "title": "PBRFusion4 Simple Depth & Normal Generator"
+    }
+  },
+  "6": {
+    "inputs": {
+      "ckpt_name": [
+        "126",
+        0
+      ]
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "7": {
+    "inputs": {
+      "text": "",
+      "clip": [
+        "6",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "8": {
+    "inputs": {
+      "model_name": [
+        "128",
+        0
+      ]
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Load Upscale Model"
+    }
+  },
+  "25": {
+    "inputs": {
+      "image": [
+        "143",
+        0
+      ],
+      "alpha": [
+        "44",
+        0
+      ]
+    },
+    "class_type": "JoinImageWithAlpha",
+    "_meta": {
+      "title": "Join Image with Alpha"
+    }
+  },
+  "41": {
+    "inputs": {
+      "model_name": [
+        "124",
+        0
+      ]
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Load Upscale Model"
+    }
+  },
+  "43": {
+    "inputs": {
+      "mask": [
+        "88",
+        1
+      ]
+    },
+    "class_type": "MaskToImage",
+    "_meta": {
+      "title": "Convert Mask to Image"
+    }
+  },
+  "44": {
+    "inputs": {
+      "channel": "red",
+      "image": [
+        "75",
+        0
+      ]
+    },
+    "class_type": "ImageToMask",
+    "_meta": {
+      "title": "Convert Image to Mask"
+    }
+  },
+  "47": {
+    "inputs": {
+      "threshold": 0.5,
+      "image": [
+        "91",
+        0
+      ]
+    },
+    "class_type": "AIXPOLY_BlackThreshold",
+    "_meta": {
+      "title": "Black Threshold Filter"
+    }
+  },
+  "54": {
+    "inputs": {
+      "brightness": 0.25,
+      "contrast": 1.5,
+      "saturation": 1,
+      "sharpness": 1,
+      "blur": 0,
+      "gaussian_blur": 1,
+      "edge_enhance": 0,
+      "detail_enhance": "false",
+      "image": [
+        "55",
+        0
+      ]
+    },
+    "class_type": "Image Filter Adjustments",
+    "_meta": {
+      "title": "Image Filter Adjustments"
+    }
+  },
+  "55": {
+    "inputs": {
+      "blend_factor": 0.5,
+      "blend_mode": "multiply",
+      "image1": [
+        "1",
+        1
+      ],
+      "image2": [
+        "1",
+        4
+      ]
+    },
+    "class_type": "ImageBlend",
+    "_meta": {
+      "title": "Image Blend"
+    }
+  },
+  "63": {
+    "inputs": {
+      "image": [
+        "93",
+        0
+      ],
+      "alpha": [
+        "44",
+        0
+      ]
+    },
+    "class_type": "JoinImageWithAlpha",
+    "_meta": {
+      "title": "Join Image with Alpha"
+    }
+  },
+  "72": {
+    "inputs": {
+      "target_resolution": "2k",
+      "image": [
+        "88",
+        0
+      ]
+    },
+    "class_type": "AIXPOLY_SmartUpscaleCalculator",
+    "_meta": {
+      "title": "Smart Upscale Calculator"
+    }
+  },
+  "75": {
+    "inputs": {
+      "mode": "resize",
+      "supersample": "true",
+      "resampling": "nearest",
+      "rescale_factor": 2,
+      "resize_width": [
+        "72",
+        0
+      ],
+      "resize_height": [
+        "72",
+        1
+      ],
+      "image": [
+        "47",
+        0
+      ]
+    },
+    "class_type": "Image Resize",
+    "_meta": {
+      "title": "Image Resize"
+    }
+  },
+  "88": {
+    "inputs": {
+      "image": "example.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image",
+      "rtx-remix": {
+        "inputs": {
+          "image": {
+            "name": "texture",
+            "type": "str",
+            "remix_type": "texture_file_path",
+            "order": 1,
+            "additional_data": {
+              "tooltip": "Input texture file to be processed by the workflow",
+              "group": ""
+            }
+          }
+        }
+      }
+    }
+  },
+  "91": {
+    "inputs": {
+      "enable": [
+        "72",
+        3
+      ],
+      "upscale_model": [
+        "41",
+        0
+      ],
+      "image": [
+        "43",
+        0
+      ]
+    },
+    "class_type": "AIXPOLY_ConditionalUpscale",
+    "_meta": {
+      "title": "Conditional Upscale (using Model)"
+    }
+  },
+  "93": {
+    "inputs": {
+      "method": "reinhard",
+      "strength": 1,
+      "multithread": true,
+      "image_ref": [
+        "143",
+        0
+      ],
+      "image_target": [
+        "118",
+        0
+      ]
+    },
+    "class_type": "ColorMatch",
+    "_meta": {
+      "title": "Color Match"
+    }
+  },
+  "94": {
+    "inputs": {
+      "url": "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/text_encoders/qwen_3_4b.safetensors",
+      "model_type": "text_encoders",
+      "subdirectory": "",
+      "force_download": false,
+      "extract_archive": false,
+      "model_source": "huggingface",
+      "file_hash": "6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a",
+      "archive_model_filename": "",
+      "extracted_model_hash": "",
+      "hf_repo_id": "Comfy-Org/z_image_turbo",
+      "hf_filename": "split_files/text_encoders/qwen_3_4b.safetensors",
+      "hf_token": "",
+      "civitai_model_id": "",
+      "civitai_api_key": "",
+      "custom_filename": ""
+    },
+    "class_type": "RTXRemixDownloadModel",
+    "_meta": {
+      "title": "\ud83e\uddf2 RTX Remix Download Model"
+    }
+  },
+  "95": {
+    "inputs": {
+      "url": "https://huggingface.co/Comfy-Org/flux2-dev/resolve/main/split_files/vae/flux2-vae.safetensors",
+      "model_type": "vae",
+      "subdirectory": "",
+      "force_download": false,
+      "extract_archive": false,
+      "model_source": "huggingface",
+      "file_hash": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5",
+      "archive_model_filename": "",
+      "extracted_model_hash": "",
+      "hf_repo_id": "Comfy-Org/flux2-dev",
+      "hf_filename": "split_files/vae/flux2-vae.safetensors",
+      "hf_token": "",
+      "civitai_model_id": "",
+      "civitai_api_key": "",
+      "custom_filename": ""
+    },
+    "class_type": "RTXRemixDownloadModel",
+    "_meta": {
+      "title": "\ud83e\uddf2 RTX Remix Download Model"
+    }
+  },
+  "96": {
+    "inputs": {
+      "url": "https://huggingface.co/black-forest-labs/FLUX.2-klein-4b-fp8/blob/main/flux-2-klein-4b-fp8.safetensors",
+      "model_type": "diffusion_models",
+      "subdirectory": "",
+      "force_download": false,
+      "extract_archive": false,
+      "model_source": "huggingface",
+      "file_hash": "97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6",
+      "archive_model_filename": "",
+      "extracted_model_hash": "",
+      "hf_repo_id": "black-forest-labs/FLUX.2-klein-4b-fp8",
+      "hf_filename": "flux-2-klein-4b-fp8.safetensors",
+      "hf_token": "",
+      "civitai_model_id": "",
+      "civitai_api_key": "",
+      "custom_filename": ""
+    },
+    "class_type": "RTXRemixDownloadModel",
+    "_meta": {
+      "title": "\ud83e\uddf2 RTX Remix Download Model"
+    }
+  },
+  "97": {
+    "inputs": {
+      "url": "https://huggingface.co/NightRaven109/PBRFusion4/resolve/main/PBRFusion4_Albedo.safetensors",
+      "model_type": "loras",
+      "subdirectory": "",
+      "force_download": false,
+      "extract_archive": false,
+      "model_source": "huggingface",
+      "file_hash": "905cc66fc7a773b4068a9b520868608187330d8a7ed18e5598f5449e17cae044",
+      "archive_model_filename": "",
+      "extracted_model_hash": "",
+      "hf_repo_id": "NightRaven109/PBRFusion4",
+      "hf_filename": "PBRFusion4_Albedo.safetensors",
+      "hf_token": "",
+      "civitai_model_id": "",
+      "civitai_api_key": "",
+      "custom_filename": ""
+    },
+    "class_type": "RTXRemixDownloadModel",
+    "_meta": {
+      "title": "\ud83e\uddf2 RTX Remix Download Model"
+    }
+  },
+  "98": {
+    "inputs": {
+      "texture_type": "albedo",
+      "file_extension": ".png",
+      "colorspace": "linear",
+      "textures": [
+        "63",
+        0
+      ]
+    },
+    "class_type": "RTXRemixSaveTexture",
+    "_meta": {
+      "title": "\ud83d\udcbe RTX Remix Save Texture",
+      "rtx-remix": {
+        "output": {
+          "name": "albedo",
+          "type": "str",
+          "remix_type": "texture_file_path",
+          "order": 1,
+          "additional_data": {
+            "texture_type": "albedo",
+            "tooltip": "Generated texture output for RTX Remix (albedo, roughness, normal, etc.)"
+          }
+        }
+      }
+    }
+  },
+  "99": {
+    "inputs": {
+      "texture_type": "normal_dx",
+      "file_extension": ".png",
+      "colorspace": "linear",
+      "textures": [
+        "1",
+        3
+      ]
+    },
+    "class_type": "RTXRemixSaveTexture",
+    "_meta": {
+      "title": "\ud83d\udcbe RTX Remix Save Texture",
+      "rtx-remix": {
+        "output": {
+          "name": "normal_dx",
+          "type": "str",
+          "remix_type": "texture_file_path",
+          "order": 2,
+          "additional_data": {
+            "texture_type": "normal_dx",
+            "tooltip": "Generated texture output for RTX Remix (albedo, roughness, normal, etc.)"
+          }
+        }
+      }
+    }
+  },
+  "100": {
+    "inputs": {
+      "texture_type": "height",
+      "file_extension": ".png",
+      "colorspace": "linear",
+      "textures": [
+        "1",
+        1
+      ]
+    },
+    "class_type": "RTXRemixSaveTexture",
+    "_meta": {
+      "title": "\ud83d\udcbe RTX Remix Save Texture",
+      "rtx-remix": {
+        "output": {
+          "name": "height",
+          "type": "str",
+          "remix_type": "texture_file_path",
+          "order": 3,
+          "additional_data": {
+            "texture_type": "height",
+            "tooltip": "Generated texture output for RTX Remix (albedo, roughness, normal, etc.)"
+          }
+        }
+      }
+    }
+  },
+  "101": {
+    "inputs": {
+      "texture_type": "roughness",
+      "file_extension": ".png",
+      "colorspace": "linear",
+      "textures": [
+        "54",
+        0
+      ]
+    },
+    "class_type": "RTXRemixSaveTexture",
+    "_meta": {
+      "title": "\ud83d\udcbe RTX Remix Save Texture",
+      "rtx-remix": {
+        "output": {
+          "name": "roughness",
+          "type": "str",
+          "remix_type": "texture_file_path",
+          "order": 4,
+          "additional_data": {
+            "texture_type": "roughness",
+            "tooltip": "Generated texture output for RTX Remix (albedo, roughness, normal, etc.)"
+          }
+        }
+      }
+    }
+  },
+  "102": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "103": {
+    "inputs": {
+      "noise": [
+        "105",
+        0
+      ],
+      "guider": [
+        "110",
+        0
+      ],
+      "sampler": [
+        "102",
+        0
+      ],
+      "sigmas": [
+        "121",
+        0
+      ],
+      "latent_image": [
+        "109",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "104": {
+    "inputs": {
+      "samples": [
+        "103",
+        0
+      ],
+      "vae": [
+        "108",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "105": {
+    "inputs": {
+      "noise_seed": 875310927410574
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "RandomNoise"
+    }
+  },
+  "106": {
+    "inputs": {
+      "unet_name": [
+        "96",
+        0
+      ],
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "107": {
+    "inputs": {
+      "clip_name": [
+        "94",
+        0
+      ],
+      "type": "flux2",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "108": {
+    "inputs": {
+      "vae_name": [
+        "95",
+        0
+      ]
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "109": {
+    "inputs": {
+      "width": [
+        "113",
+        0
+      ],
+      "height": [
+        "113",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyFlux2LatentImage",
+    "_meta": {
+      "title": "Empty Flux 2 Latent"
+    }
+  },
+  "110": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "115",
+        0
+      ],
+      "positive": [
+        "114:77",
+        0
+      ],
+      "negative": [
+        "114:76",
+        0
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFGGuider"
+    }
+  },
+  "111": {
+    "inputs": {
+      "text": "Basecolor, no shadows, flat lighting, keep color",
+      "clip": [
+        "107",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Positive Prompt)"
+    }
+  },
+  "112": {
+    "inputs": {
+      "conditioning": [
+        "111",
+        0
+      ]
+    },
+    "class_type": "ConditioningZeroOut",
+    "_meta": {
+      "title": "ConditioningZeroOut"
+    }
+  },
+  "113": {
+    "inputs": {
+      "image": [
+        "139",
+        0
+      ]
+    },
+    "class_type": "GetImageSize",
+    "_meta": {
+      "title": "Get Image Size"
+    }
+  },
+  "115": {
+    "inputs": {
+      "lora_name": [
+        "97",
+        0
+      ],
+      "strength_model": 1,
+      "model": [
+        "106",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Load LoRA"
+    }
+  },
+  "116": {
+    "inputs": {
+      "mode": "resize",
+      "supersample": "false",
+      "resampling": "lanczos",
+      "rescale_factor": 2,
+      "resize_width": [
+        "119",
+        0
+      ],
+      "resize_height": [
+        "119",
+        1
+      ],
+      "image": [
+        "143",
+        0
+      ]
+    },
+    "class_type": "Image Resize",
+    "_meta": {
+      "title": "Image Resize"
+    }
+  },
+  "117": {
+    "inputs": {
+      "model_name": [
+        "134",
+        0
+      ]
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Load Upscale Model"
+    }
+  },
+  "118": {
+    "inputs": {
+      "enable": [
+        "119",
+        2
+      ],
+      "upscale_model": [
+        "117",
+        0
+      ],
+      "image": [
+        "142",
+        0
+      ]
+    },
+    "class_type": "AIXPOLY_ConditionalUpscale",
+    "_meta": {
+      "title": "Conditional Upscale (using Model)"
+    }
+  },
+  "119": {
+    "inputs": {
+      "width": [
+        "72",
+        0
+      ],
+      "height": [
+        "72",
+        1
+      ],
+      "max_size": 2048
+    },
+    "class_type": "AIXPOLY_ClampResolution",
+    "_meta": {
+      "title": "Clamp Resolution"
+    }
+  },
+  "121": {
+    "inputs": {
+      "steps": 1,
+      "width": [
+        "113",
+        0
+      ],
+      "height": [
+        "113",
+        1
+      ]
+    },
+    "class_type": "Flux2Scheduler",
+    "_meta": {
+      "title": "Flux2Scheduler"
+    }
+  },
+  "124": {
+    "inputs": {
+      "url": "https://github.com/Kim2091/PBRify_Remix/raw/main/Extras/Alternate_Models/4x-PBRify_UpscalerSPAN_Neutral.pth",
+      "model_type": "upscale_models",
+      "subdirectory": "",
+      "force_download": false,
+      "extract_archive": false,
+      "model_source": "custom",
+      "file_hash": "614aace45a13a6252db323b1c3556bf908e24d7f98be8956ba6643b7cadd77d4",
+      "archive_model_filename": "",
+      "extracted_model_hash": "",
+      "hf_repo_id": "",
+      "hf_filename": "",
+      "hf_token": "",
+      "civitai_model_id": "",
+      "civitai_api_key": "",
+      "custom_filename": "4x-PBRify_UpscalerSPAN_Neutral.pth"
+    },
+    "class_type": "RTXRemixDownloadModel",
+    "_meta": {
+      "title": "\ud83e\uddf2 RTX Remix Download Model"
+    }
+  },
+  "126": {
+    "inputs": {
+      "url": "https://huggingface.co/oguzm/dreamshaper-xl-lightning-dpmsde/resolve/main/dreamshaperXL_lightningDPMSDE.safetensors",
+      "model_type": "checkpoints",
+      "subdirectory": "",
+      "force_download": false,
+      "extract_archive": false,
+      "model_source": "huggingface",
+      "file_hash": "fdbe56354b8f876b736f24d3ad867ecd4140c019f57642ec8ddd878088d44f64",
+      "archive_model_filename": "",
+      "extracted_model_hash": "",
+      "hf_repo_id": "oguzm/dreamshaper-xl-lightning-dpmsde",
+      "hf_filename": "dreamshaperXL_lightningDPMSDE.safetensors",
+      "hf_token": "",
+      "civitai_model_id": "",
+      "civitai_api_key": "",
+      "custom_filename": ""
+    },
+    "class_type": "RTXRemixDownloadModel",
+    "_meta": {
+      "title": "\ud83e\uddf2 RTX Remix Download Model"
+    }
+  },
+  "128": {
+    "inputs": {
+      "url": "https://github.com/Kim2091/PBRify_Remix/raw/main/Extras/Old_Models/4x-PBRify_UpscalerSPANV4.pth",
+      "model_type": "upscale_models",
+      "subdirectory": "",
+      "force_download": false,
+      "extract_archive": false,
+      "model_source": "custom",
+      "file_hash": "d1f1fa1af7a5ab23fcf143e75aac4951e6c52d56bf77d9ccd4d004a4831d0461",
+      "archive_model_filename": "",
+      "extracted_model_hash": "",
+      "hf_repo_id": "",
+      "hf_filename": "",
+      "hf_token": "",
+      "civitai_model_id": "",
+      "civitai_api_key": "",
+      "custom_filename": "4x-PBRify_UpscalerSPANV4.pth"
+    },
+    "class_type": "RTXRemixDownloadModel",
+    "_meta": {
+      "title": "\ud83e\uddf2 RTX Remix Download Model"
+    }
+  },
+  "134": {
+    "inputs": {
+      "url": "https://huggingface.co/Phips/2xAoMR_mosr/blob/main/2xAoMR_mosr.safetensors",
+      "model_type": "upscale_models",
+      "subdirectory": "",
+      "force_download": false,
+      "extract_archive": false,
+      "model_source": "huggingface",
+      "file_hash": "eb954295716706d728d458070b64fb070c73bd65a70197dfa8e98d7563e964dd",
+      "archive_model_filename": "",
+      "extracted_model_hash": "",
+      "hf_repo_id": "Phips/2xAoMR_mosr",
+      "hf_filename": "2xAoMR_mosr.safetensors",
+      "hf_token": "",
+      "civitai_model_id": "",
+      "civitai_api_key": "",
+      "custom_filename": ""
+    },
+    "class_type": "RTXRemixDownloadModel",
+    "_meta": {
+      "title": "\ud83e\uddf2 RTX Remix Download Model"
+    }
+  },
+  "139": {
+    "inputs": {
+      "feathering": 0,
+      "feather_second_pass": "false",
+      "left_padding": 8,
+      "right_padding": 8,
+      "top_padding": 8,
+      "bottom_padding": 8,
+      "image": [
+        "116",
+        0
+      ]
+    },
+    "class_type": "Image Padding",
+    "_meta": {
+      "title": "Image Padding"
+    }
+  },
+  "142": {
+    "inputs": {
+      "width": [
+        "119",
+        0
+      ],
+      "height": [
+        "119",
+        1
+      ],
+      "x": 0,
+      "y": 0,
+      "image": [
+        "104",
+        0
+      ]
+    },
+    "class_type": "ImageCrop",
+    "_meta": {
+      "title": "Image Crop (Deprecated)"
+    }
+  },
+  "143": {
+    "inputs": {
+      "cond": [
+        "72",
+        3
+      ],
+      "tt_value": [
+        "144",
+        0
+      ],
+      "ff_value": [
+        "88",
+        0
+      ]
+    },
+    "class_type": "ImpactConditionalBranch",
+    "_meta": {
+      "title": "ImpactConditionalBranch"
+    }
+  },
+  "144": {
+    "inputs": {
+      "upscale_by": [
+        "72",
+        2
+      ],
+      "seed": 311066806048791,
+      "steps": 6,
+      "cfg": 1.5,
+      "sampler_name": "dpmpp_sde",
+      "scheduler": "karras",
+      "denoise": 0.2,
+      "mode_type": "Linear",
+      "tile_width": 1024,
+      "tile_height": 1024,
+      "mask_blur": 8,
+      "tile_padding": 32,
+      "seam_fix_mode": "None",
+      "seam_fix_denoise": 1,
+      "seam_fix_width": 64,
+      "seam_fix_mask_blur": 8,
+      "seam_fix_padding": 16,
+      "force_uniform_tiles": true,
+      "tiled_decode": false,
+      "batch_size": 1,
+      "image": [
+        "88",
+        0
+      ],
+      "model": [
+        "6",
+        0
+      ],
+      "positive": [
+        "7",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ],
+      "vae": [
+        "6",
+        2
+      ],
+      "upscale_model": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "UltimateSDUpscale",
+    "_meta": {
+      "title": "Ultimate SD Upscale"
+    }
+  },
+  "114:76": {
+    "inputs": {
+      "conditioning": [
+        "112",
+        0
+      ],
+      "latent": [
+        "114:78",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "ReferenceLatent"
+    }
+  },
+  "114:78": {
+    "inputs": {
+      "pixels": [
+        "139",
+        0
+      ],
+      "vae": [
+        "108",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "114:77": {
+    "inputs": {
+      "conditioning": [
+        "111",
+        0
+      ],
+      "latent": [
+        "114:78",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "ReferenceLatent"
+    }
+  }
+}
