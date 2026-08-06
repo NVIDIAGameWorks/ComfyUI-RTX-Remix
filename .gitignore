@@ -1,4 +1,5 @@
 /_repo/
 /_build/
+/docs/superpowers/
 .idea
 *.pyc
