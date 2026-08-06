@@ -562,7 +562,7 @@ export function renderSidebarPanel(el, app) {
    * Writes the value to the store right away so it survives Discard.
    * The override removal remains pending (requires Save to finalize).
    * @param {string} key - Input key in format "nodeId.slotName"
-   * @param {number} nodeId - Node ID
+   * @param {string|number} nodeId - Node ID
    * @param {string} slotName - Slot name
    * @param {*} value - Value to apply to default
    */

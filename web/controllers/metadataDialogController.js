@@ -227,7 +227,7 @@ export function extractFormValues(form) {
  *
  * @param {Object} options - Dialog options
  * @param {Object} options.app - ComfyUI app instance
- * @param {number} options.nodeId - Node ID
+ * @param {string|number} options.nodeId - Node ID
  * @param {string} options.slotName - Slot name
  * @param {string} options.nodeTitle - Node title for display
  * @param {Function} [options.onSave] - Callback when changes are saved

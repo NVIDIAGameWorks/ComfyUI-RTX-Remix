@@ -35,6 +35,16 @@
   visibility: hidden;
 }
 
+.rtx-remix-menu-item::before {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.5em;
+  vertical-align: middle;
+  background: url("../images/remix_icon.png") center / contain no-repeat;
+}
+
 /* --------------------------------------------------------------------------
    Flexbox Utilities
    -------------------------------------------------------------------------- */

@@ -21,7 +21,7 @@
 
 /**
  * Generate a unique input key from node ID and slot name.
- * @param {number} nodeId - Node ID
+ * @param {string|number} nodeId - Node ID
  * @param {string} slotName - Slot name
  * @returns {string} Input key in format "nodeId.slotName"
  */
@@ -33,12 +33,12 @@ export function getInputKey(nodeId, slotName) {
  * Parse an input key back into its node ID and slot name components.
  * Handles slot names that contain dots by only splitting on the first dot.
  * @param {string} key - Input key in format "nodeId.slotName"
- * @returns {{nodeId: number, slotName: string}}
+ * @returns {{nodeId: string, slotName: string}}
  */
 export function parseInputKey(key) {
   const dotIdx = key.indexOf(".");
   return {
-    nodeId: Number(key.slice(0, dotIdx)),
+    nodeId: key.slice(0, dotIdx),
     slotName: key.slice(dotIdx + 1),
   };
 }

@@ -54,7 +54,7 @@ export function getExistingGroups(app) {
  * Combines context building with field filtering for convenience.
  *
  * @param {Object} app - ComfyUI app instance
- * @param {number} nodeId - Node ID
+ * @param {string|number} nodeId - Node ID
  * @param {string} slotName - Slot name
  * @returns {Object[]} Array of applicable field configs from METADATA_FIELD_CONFIG
  */
@@ -81,7 +81,7 @@ export function getApplicableMetadataFieldsForInput(app, nodeId, slotName) {
  * Get current metadata values for a tagged input.
  *
  * @param {Object} app - ComfyUI app instance
- * @param {number} nodeId - Node ID
+ * @param {string|number} nodeId - Node ID
  * @param {string} slotName - Slot name
  * @returns {Object|null} Metadata values or null if not found
  */
@@ -105,7 +105,7 @@ export function getInputMetadata(app, nodeId, slotName) {
  * Update metadata for a tagged input.
  *
  * @param {Object} app - ComfyUI app instance
- * @param {number} nodeId - Node ID
+ * @param {string|number} nodeId - Node ID
  * @param {string} slotName - Slot name
  * @param {Object} updates - Fields to update {name?, remixType?, additionalData?}
  * @returns {boolean} True if update was successful

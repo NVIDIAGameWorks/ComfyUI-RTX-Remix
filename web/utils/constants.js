@@ -203,7 +203,6 @@ export const TEMPLATE_IDS = {
   METADATA_ACCORDION: "rtx-remix-metadata-accordion-template",
   SLIDER_INPUT: "rtx-remix-slider-input-template",
   SPINNER: "rtx-remix-spinner-template",
-  MENU_ITEM: "rtx-remix-menu-item-template",
 
   // Popover/Menu
   POPOVER: "rtx-remix-popover-template",

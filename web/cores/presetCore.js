@@ -358,7 +358,7 @@ export function getEffectiveValue(app, presetName, nodeId, slotName) {
  * Called when an input is tagged while a non-default preset is active.
  * This ensures the input's current value becomes the default, not an override.
  * @param {Object} app - ComfyUI app instance
- * @param {number} nodeId - Node ID
+ * @param {string|number} nodeId - Node ID
  * @param {string} slotName - Slot name
  */
 export function registerNewlyTaggedInput(app, nodeId, slotName) {
