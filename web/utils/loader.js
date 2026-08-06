@@ -42,7 +42,6 @@ export function loadResources() {
   loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/spinner.html`);
   loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/metadataAccordion.html`);
   loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/warningRow.html`);
-  loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/menuItem.html`);
   loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/sidebarPanel.html`);
   loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/presetItem.html`);
   loadHTMLTemplate(`${EXTENSION_BASE}/resources/templates/presetInputField.html`);

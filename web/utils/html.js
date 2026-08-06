@@ -153,19 +153,3 @@ export function bindTemplateData(element, data) {
 
   return element;
 }
-
-/**
- * Create HTML for RTX Remix menu item with icon
- * @param {string} text - Menu text
- * @returns {string} HTML string
- */
-export function createMenuItemHTML(text) {
-  const element = cloneTemplate(TEMPLATE_IDS.MENU_ITEM);
-  if (!element) {
-    // Fallback if template not loaded yet
-    return text;
-  }
-
-  bindTemplateData(element, { text });
-  return element.outerHTML;
-}

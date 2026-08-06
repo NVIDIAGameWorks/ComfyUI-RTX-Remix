@@ -747,11 +747,11 @@ export function createGroupedList(options) {
 
     let orderIndex = 0;
     rows.forEach((row) => {
-      const nodeId = parseInt(row.dataset.nodeId, 10);
+      const nodeId = row.dataset.nodeId;
       const slotName = row.dataset.slotName;
 
       // Find the item in currentItems
-      const item = currentItems.find((i) => i.nodeId === nodeId && i.slotName === slotName);
+      const item = currentItems.find((i) => String(i.nodeId) === nodeId && i.slotName === slotName);
       if (item) {
         item.order = orderIndex;
         orderedItems.push({ ...item, order: orderIndex });

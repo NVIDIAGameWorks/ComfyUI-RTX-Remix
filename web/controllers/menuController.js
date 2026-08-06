@@ -24,7 +24,6 @@
  */
 
 import { COMFYUI_INPUT_TYPE_MAP, COMFYUI_OUTPUT_TYPE_MAP, EVENTS } from "../utils/constants.js";
-import { createMenuItemHTML } from "../utils/html.js";
 import { getPrimitiveTypeName } from "../utils/types.js";
 import {
   isInputSlotMarked,
@@ -132,7 +131,8 @@ export function getCanvasMenuItems(app) {
   return [
     null, // separator above
     {
-      content: createMenuItemHTML("Export Workflow for RTX Remix"),
+      content: "Export Workflow for RTX Remix",
+      className: "rtx-remix-menu-item",
       callback: () => {
         // Dispatch event - exportDialogController listens and handles export
         app.api.dispatchEvent(new CustomEvent(EVENTS.EXPORT_WORKFLOW_REQUESTED, { detail: { app } }));
@@ -152,7 +152,8 @@ export function getNodeMenuItems(node, app) {
   return [
     null, // separator above
     {
-      content: createMenuItemHTML("Tag for RTX Remix"),
+      content: "Tag for RTX Remix",
+      className: "rtx-remix-menu-item",
       submenu: buildSlotTaggingMenu(node, app),
     },
     null, // separator below

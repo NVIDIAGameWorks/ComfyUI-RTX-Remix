@@ -48,14 +48,14 @@ export function addRemixMetadataToPrompt(apiWorkflow, workflowGraph) {
   const nodeMap = new Map();
   if (workflowGraph?.nodes) {
     workflowGraph.nodes.forEach((node) => {
-      nodeMap.set(node.id, node);
+      nodeMap.set(String(node.id), node);
     });
   }
 
   const enrichedPrompt = JSON.parse(JSON.stringify(apiWorkflow));
 
   for (const [nodeId, nodeData] of Object.entries(enrichedPrompt)) {
-    const graphNode = nodeMap.get(Number(nodeId));
+    const graphNode = nodeMap.get(nodeId);
     if (!graphNode?.properties?.[REMIX_KEYS.ROOT]) continue;
 
     const remixInputs = graphNode.properties[REMIX_KEYS.ROOT][REMIX_KEYS.STRUCTURE.INPUTS];
@@ -304,19 +304,19 @@ export function applySlotEditsToGraphNodes(app, inputsContainer, outputsContaine
   // Helper to extract slot data from a row (handles both old and new structures)
   function extractSlotData(row) {
     // Try new grouped list structure first (data on row)
-    let nodeId = parseInt(row.dataset.nodeId, 10);
+    let nodeId = row.dataset.nodeId;
     let slotName = row.dataset.slotName;
 
     // Fall back to old structure (data on input element)
-    if (isNaN(nodeId)) {
+    if (nodeId === undefined) {
       const nameInput = row.querySelector(".rtx-remix-slot-name-input");
       if (nameInput) {
-        nodeId = parseInt(nameInput.dataset.nodeId, 10);
+        nodeId = nameInput.dataset.nodeId;
         slotName = nameInput.dataset.slotName;
       }
     }
 
-    if (isNaN(nodeId) || !slotName) return null;
+    if (nodeId === undefined || !slotName) return null;
 
     // Get export name
     const nameInput = row.querySelector(".rtx-remix-slot-name-input, [data-field-key='exportName']");
@@ -363,7 +363,7 @@ export function applySlotEditsToGraphNodes(app, inputsContainer, outputsContaine
     const data = extractSlotData(row);
     if (!data) return;
 
-    const node = graphNodes.find((n) => n.id === data.nodeId);
+    const node = graphNodes.find((n) => String(n.id) === data.nodeId);
     if (!node) return;
 
     if (!node.properties) node.properties = {};
@@ -388,7 +388,7 @@ export function applySlotEditsToGraphNodes(app, inputsContainer, outputsContaine
     const data = extractSlotData(row);
     if (!data) return;
 
-    const node = graphNodes.find((n) => n.id === data.nodeId);
+    const node = graphNodes.find((n) => String(n.id) === data.nodeId);
     if (!node) return;
 
     if (!node.properties) node.properties = {};
