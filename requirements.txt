@@ -1,7 +1,7 @@
 huggingface-hub     # OSRB filed under: https://nvbugs/5571291
 numpy               # OSRB filed under: https://nvbugs/4702469
 OpenEXR             # OSRB filed under: https://nvbugs/5642859
-pillow>=10.0.1      # OSRB filed under: https://nvbugs/4702475
+pillow>=12.3.0      # OSRB filed under: https://nvbugs/4702475
 pydantic==2.11.5    # OSRB filed under: https://nvbugs/3952548
 requests            # OSRB filed under: https://nvbugs/4702237
 torch               # OSRB filed under: https://nvbugs/4702252
