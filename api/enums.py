@@ -15,7 +15,7 @@
 * limitations under the License.
 """
 
-__all__ = ["PathType", "SourceType"]
+__all__ = ["PathType", "SourceType", "WorkflowType"]
 
 from enum import Enum
 
@@ -32,3 +32,20 @@ class SourceType(Enum):
 
     USER = "user"
     RTX_REMIX = "rtx-remix"
+
+
+class WorkflowType(Enum):
+    """Enumeration for the workflow types authored at export time.
+
+    The value is both the serialized form and the label shown in the RTX Remix Toolkit picker, so
+    nothing derives a display string from it. Add members here only, and describe them in
+    WORKFLOW_TYPES_BY_CATEGORY.
+    """
+
+    ASSET_GENERATION = "Asset Generation"
+    MATERIAL_GENERATION = "Material Generation"
+    ASSET_UPSCALING = "Asset Upscaling"
+    MESH_UPSCALING = "Mesh Upscaling"
+    TEXTURE_UPSCALING = "Texture Upscaling"
+    ASSET_TAGGING = "Asset Tagging"
+    OTHER = "Other"

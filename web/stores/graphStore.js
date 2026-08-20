@@ -101,3 +101,36 @@ export function setGroupOrder(app, groupOrder) {
   app.graph.setDirtyCanvas?.(true, true);
   app.graph.change?.();
 }
+
+// ============================================================
+// WORKFLOW INFO
+// ============================================================
+
+/**
+ * Get the workflow display metadata from graph-level metadata.
+ * @param {Object} app - ComfyUI app instance
+ * @returns {{displayName: string, description: string, workflowType: string}} Workflow info
+ */
+export function getWorkflowInfo(app) {
+  const meta = getGraphMetadata(app);
+  return {
+    displayName: meta[REMIX_KEYS.WORKFLOW.DISPLAY_NAME] || "",
+    description: meta[REMIX_KEYS.WORKFLOW.DESCRIPTION] || "",
+    workflowType: meta[REMIX_KEYS.WORKFLOW.WORKFLOW_TYPE] || "",
+  };
+}
+
+/**
+ * Set the workflow display metadata in graph-level metadata.
+ * @param {Object} app - ComfyUI app instance
+ * @param {{displayName: string, description: string, workflowType: string}} info - Workflow info
+ */
+export function setWorkflowInfo(app, { displayName, description, workflowType }) {
+  const meta = ensureGraphMetadata(app);
+  if (!meta) return;
+  meta[REMIX_KEYS.WORKFLOW.DISPLAY_NAME] = displayName;
+  meta[REMIX_KEYS.WORKFLOW.DESCRIPTION] = description;
+  meta[REMIX_KEYS.WORKFLOW.WORKFLOW_TYPE] = workflowType;
+  app.graph.setDirtyCanvas?.(true, true);
+  app.graph.change?.();
+}

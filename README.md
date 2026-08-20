@@ -189,7 +189,7 @@ Once you've tagged your inputs and outputs, export the workflow for use in the R
    - Options to edit export names and RTX Remix types
    - Additional metadata fields (description, min/max values, texture types for outputs, etc.)
 4. Configure texture types for outputs if needed (especially important when using standard save nodes instead of `RTX Remix Save Texture`)
-5. Enter a filename for your workflow
+5. Enter the **Display Name** (the name shown in the RTX Remix Toolkit; the `.json` filename is derived from it), pick a **Workflow Type**, and optionally add a **Description** (used as the workflow tooltip in the RTX Remix Toolkit)
 6. Click **"Export"**
 
 The exported workflow is saved to the `user/rtx-remix/workflows/` and `user/rtx-remix/api_workflows/` directories in the ComfyUI installation and includes:
@@ -207,6 +207,7 @@ The exported workflow is saved to the `user/rtx-remix/workflows/` and `user/rtx-
 - **Reorder inputs/outputs** - Drag and drop rows to change order within a group
 - **Reorder groups** - Drag group headers to change the order of entire groups
 - **Expand metadata** - Click the chevron to see and edit additional fields
+- **Author workflow details** - Display name, workflow type and description are stored in the workflow and returned by the workflow list endpoint
 
 ### Using Your Workflow in the RTX Remix Toolkit
 

@@ -15,6 +15,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [3.1.0] - 2026-08-19
+
+### Added
+
+- **Workflow Details**: The export dialog collects a display name, a workflow type and a description. The description
+  is the workflow tooltip in the RTX Remix Toolkit, and the `.json` file name is derived from the display name
+- **Workflow Types**: New `GET /rtx-remix/v1/workflows/types` endpoint listing the workflow types grouped by category
+  (Generation, Upscaling, Miscellaneous, Other), each with its own description
+- **Workflow Metadata in the Listing**: `GET /rtx-remix/v1/workflows` returns `displayName`, `description` and
+  `workflowType` for every workflow. Workflows without metadata report their file name and no type
+- **Workflow Listing Filters**: `GET /rtx-remix/v1/workflows` accepts `pathType`, `sourceType`, `workflowType` and
+  `search`, each repeatable and comma-separated
+- **Bundled Workflows**: PBR Fusion 4 and PBRify carry display metadata
+
+### Changed
+
+- **Export Dialog**: The workflow file name field is replaced by Display Name, Workflow Type and Description. Display
+  name and workflow type are mandatory, so Export stays disabled until both are set
+- **Workflow Save Endpoint**: `POST /rtx-remix/v1/workflows/save` takes `displayName`, `description` and
+  `workflowType` instead of `name`, and derives the file name from the display name
+
+### Fixed
+
+- Workflow names that point outside the workflow directory are now rejected when reading a workflow
+
 ## [3.0.2] - 2026-08-06
 
 ### Fixed

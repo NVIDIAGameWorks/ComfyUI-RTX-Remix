@@ -16,12 +16,13 @@
 """
 
 from .ui import get_all_ui, get_node_ui
-from .workflows import get_workflow, list_workflows, save_workflow
+from .workflows import get_workflow, list_workflow_types, list_workflows, save_workflow
 
 __all__ = [
     "get_all_ui",
     "get_node_ui",
     "get_workflow",
+    "list_workflow_types",
     "list_workflows",
     "save_workflow",
 ]

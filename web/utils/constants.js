@@ -45,6 +45,7 @@ export const SIDEBAR = {
 export const API_ENDPOINTS = {
   WORKFLOWS_BASE: "/rtx-remix/v1/workflows",
   WORKFLOWS_SAVE: "/rtx-remix/v1/workflows/save",
+  WORKFLOW_TYPES: "/rtx-remix/v1/workflows/types",
 };
 
 // Prefix for all RTX Remix nodes
@@ -86,6 +87,12 @@ export const REMIX_KEYS = {
 
   DYNAMIC: {
     REF: "ref",
+  },
+
+  WORKFLOW: {
+    DISPLAY_NAME: "displayName",
+    DESCRIPTION: "description",
+    WORKFLOW_TYPE: "workflowType",
   },
 };
 

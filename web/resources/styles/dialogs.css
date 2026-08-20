@@ -182,6 +182,88 @@
   border-color: var(--status-error);
 }
 
+/* Dropdown built from a button plus a popover menu, because a native <select> popup cannot render
+   the faded category dividers. */
+.rtx-remix-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  cursor: pointer;
+  text-align: left;
+}
+
+.rtx-remix-select-value.placeholder {
+  color: var(--text-subtle);
+}
+
+.rtx-remix-select-caret {
+  color: var(--text-subtle);
+  font-size: var(--font-sm);
+}
+
+/* The shared popover sits below the dialog overlay, so lift it when it holds this menu */
+.rtx-remix-popover:has(.rtx-remix-select-menu) {
+  z-index: var(--rtx-z-dropdown);
+  padding: var(--space-1) 0;
+}
+
+.rtx-remix-select-menu {
+  display: flex;
+  flex-direction: column;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+/* The faded divider line runs inline with the category name, on every category */
+.rtx-remix-select-category {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  padding: var(--space-2) var(--space-3) var(--space-1);
+  color: var(--text-subtle);
+  font-size: var(--font-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+}
+
+.rtx-remix-select-category::after {
+  content: "";
+  flex: 1;
+  border-top: var(--border-width-thin) solid var(--border-base);
+}
+
+.rtx-remix-select-option {
+  padding: var(--space-2) var(--space-3);
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: var(--font-md);
+  text-align: left;
+  cursor: pointer;
+}
+
+.rtx-remix-select-option:hover {
+  background: var(--bg-hover);
+}
+
+.rtx-remix-select-option.selected {
+  color: var(--remix-color);
+}
+
+textarea.rtx-remix-input {
+  resize: vertical;
+  min-height: 60px;
+  font-family: inherit;
+}
+
+.rtx-remix-required {
+  color: var(--status-error);
+}
+
 .rtx-remix-validation-msg {
   margin-top: var(--space-2);
   font-size: var(--font-base);

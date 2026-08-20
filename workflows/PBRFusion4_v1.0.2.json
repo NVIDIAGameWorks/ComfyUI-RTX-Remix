@@ -7159,6 +7159,11 @@
         298.25338979290666,
         -1767.0309979428139
       ]
+    },
+    "rtx-remix": {
+      "displayName": "PBR Fusion 4",
+      "description": "Upscales a single color texture and creates a complete PBR material from it, using the PBR Fusion 4 AI model.",
+      "workflowType": "Material Generation"
     }
   },
   "version": 0.4

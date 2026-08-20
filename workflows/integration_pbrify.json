@@ -2448,7 +2448,12 @@
         "id": 440,
         "parentId": 12
       }
-    ]
+    ],
+    "rtx-remix": {
+      "displayName": "PBRify",
+      "description": "Upscales a single color texture and creates a complete PBR material from it, using the PBRify AI model.",
+      "workflowType": "Material Generation"
+    }
   },
   "version": 0.4
 }
