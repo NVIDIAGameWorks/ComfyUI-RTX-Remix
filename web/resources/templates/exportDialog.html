@@ -26,14 +26,47 @@
 
       <!-- Body -->
       <div class="rtx-remix-dialog-body">
-        <h3 class="rtx-remix-section-title">Workflow Filename</h3>
+        <h3 class="rtx-remix-section-title">Workflow Details</h3>
         <div class="rtx-remix-input-container">
-          <input type="text" class="rtx-remix-input" placeholder="workflow.json" data-input="filename" />
+          <label class="rtx-remix-metadata-label" for="rtx-remix-display-name">
+            Display Name <span class="rtx-remix-required" title="Required">*</span>
+          </label>
+          <input
+            id="rtx-remix-display-name"
+            type="text"
+            class="rtx-remix-input"
+            placeholder="Generate PBR Textures"
+            data-input="display-name"
+          />
+          <div class="rtx-remix-validation-msg" data-element="display-name-error"></div>
+        </div>
+        <div class="rtx-remix-input-container">
+          <label class="rtx-remix-metadata-label" for="rtx-remix-workflow-type">
+            Workflow Type <span class="rtx-remix-required" title="Required">*</span>
+          </label>
+          <button
+            id="rtx-remix-workflow-type"
+            type="button"
+            class="rtx-remix-input rtx-remix-select"
+            data-input="workflow-type"
+          >
+            <span class="rtx-remix-select-value" data-element="workflow-type-value"></span>
+            <span class="rtx-remix-select-caret">&#9662;</span>
+          </button>
+          <div class="rtx-remix-validation-msg" data-element="workflow-type-error"></div>
+        </div>
+        <div class="rtx-remix-input-container">
+          <label class="rtx-remix-metadata-label" for="rtx-remix-description">Description</label>
+          <textarea
+            id="rtx-remix-description"
+            class="rtx-remix-input"
+            rows="3"
+            placeholder="Shown as the workflow tooltip in the RTX Remix Toolkit."
+            data-input="description"
+          ></textarea>
         </div>
         <div class="rtx-remix-validation-msg" data-element="validation"></div>
-        <div class="rtx-remix-info-msg" data-element="info">
-          The .json extension will be added automatically at the end of the workflow name.
-        </div>
+        <div class="rtx-remix-info-msg" data-element="info">Saved as workflow.json</div>
 
         <!-- RTX Remix Slots Section -->
         <div class="rtx-remix-slots-section" data-element="slots-section">

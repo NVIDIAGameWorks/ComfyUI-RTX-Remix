@@ -37,14 +37,16 @@ import {
 import {
   addRemixMetadataToPrompt,
   applySlotEditsToGraphNodes,
+  deriveWorkflowFilename,
   extractTaggedSlots,
   getApplicableMetadataFields,
   updateGroupOrder,
 } from "../cores/workflowExportCore.js";
-import { getGroupOrder } from "../stores/graphStore.js";
+import { getGroupOrder, getWorkflowInfo, setWorkflowInfo } from "../stores/graphStore.js";
 import { createGroupedList } from "./groupedListController.js";
 import { updateInputMetadata } from "../cores/metadataEditorCore.js";
 import { createGroupPicker } from "./groupPickerController.js";
+import { closePopover, isPopoverOpenFor, openPopoverWithContent } from "./popoverController.js";
 import { cleanupDeletedInputs } from "../cores/presetCore.js";
 import { handlePendingChangesBeforeAction } from "./presetSidebarController.js";
 
@@ -67,20 +69,27 @@ export async function exportWorkflow(app) {
     return; // User cancelled, don't show export dialog
   }
 
-  // Get current workflow filename (without extension)
-  let workflowName = "workflow";
+  // Prefill from the graph metadata, falling back to the active workflow filename
+  const info = getWorkflowInfo(app);
+  const displayName = info.displayName || app.extensionManager?.workflow?.activeWorkflow?.filename || "";
 
-  // Use the active workflow filename from the workflow store
-  const activeWorkflow = app.extensionManager?.workflow?.activeWorkflow;
-  if (activeWorkflow?.filename) {
-    // Use filename without extension (the dialog will add .json automatically)
-    workflowName = activeWorkflow.filename;
+  // The workflow types and their categories are owned by the backend enum - never hardcode them here
+  let typeCategories = [];
+  try {
+    const response = await api.fetchApi(API_ENDPOINTS.WORKFLOW_TYPES);
+    const payload = await response.json();
+    typeCategories = payload?.categories || [];
+  } catch (error) {
+    console.error("Failed to load RTX Remix workflow types:", error);
   }
 
   // Show custom export dialog which handles the entire export process
   await showExportDialog({
     app,
-    defaultValue: workflowName,
+    typeCategories,
+    displayName,
+    description: info.description,
+    workflowType: info.workflowType,
   });
 }
 
@@ -175,10 +184,20 @@ function createMetadataAccordion({ app, context, slotData, includeGroup = true }
  * Shows a rich export dialog for RTX Remix workflows and handles the entire export process
  * @param {Object} options - Dialog options
  * @param {Object} options.app - The ComfyUI app instance
- * @param {string} options.defaultValue - Default filename
+ * @param {Array<{name: string, types: Array<{value: string, description: string}>}>} [options.typeCategories]
+ *   - Selectable workflow types grouped by category, each type with its tooltip
+ * @param {string} [options.displayName] - Prefilled workflow display name
+ * @param {string} [options.description] - Prefilled workflow description
+ * @param {string} [options.workflowType] - Prefilled workflow type value
  * @returns {Promise<boolean>} - True if export succeeded, false if cancelled or failed
  */
-export async function showExportDialog({ app, defaultValue = "workflow" } = {}) {
+export async function showExportDialog({
+  app,
+  typeCategories = [],
+  displayName = "",
+  description = "",
+  workflowType = "",
+} = {}) {
   return new Promise((resolve) => {
     // Clone the dialog template
     const overlay = cloneTemplate(TEMPLATE_IDS.EXPORT_DIALOG);
@@ -193,7 +212,12 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
 
     // Get references to elements
     const dialog = overlay.querySelector(".rtx-remix-dialog");
-    const input = overlay.querySelector('[data-input="filename"]');
+    const displayNameInput = overlay.querySelector('[data-input="display-name"]');
+    const typeTrigger = overlay.querySelector('[data-input="workflow-type"]');
+    const typeValueLabel = overlay.querySelector('[data-element="workflow-type-value"]');
+    const descriptionInput = overlay.querySelector('[data-input="description"]');
+    const displayNameError = overlay.querySelector('[data-element="display-name-error"]');
+    const typeError = overlay.querySelector('[data-element="workflow-type-error"]');
     const validationMsg = overlay.querySelector('[data-element="validation"]');
     const infoMsg = overlay.querySelector('[data-element="info"]');
     const cancelBtn = overlay.querySelector('[data-action="cancel"]');
@@ -206,8 +230,67 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
     // Note: inputs use grouped list (no inputsTbody), outputs use traditional tbody
     const outputsTbody = overlay.querySelector('[data-element="outputs-tbody"]');
 
+    let isLoading = false;
+
     // Set up initial values
-    input.value = defaultValue;
+    displayNameInput.value = displayName;
+    descriptionInput.value = description;
+
+    // A stale or unknown stored value shows the placeholder, forcing a re-pick
+    const typeDescriptions = new Map(
+      typeCategories.flatMap(({ types }) => types.map(({ value, description }) => [value, description || ""]))
+    );
+    let selectedType = typeDescriptions.has(workflowType) ? workflowType : "";
+
+    function renderSelectedType() {
+      typeValueLabel.textContent = selectedType || "Select a type...";
+      typeValueLabel.classList.toggle("placeholder", selectedType === "");
+      // The type explains itself on hover, so the dialog spends no line on it
+      typeTrigger.title = typeDescriptions.get(selectedType) || "";
+    }
+    renderSelectedType();
+
+    // A native <select> popup cannot render the faded category dividers, so the trigger opens the
+    // shared popover with a menu of category headers plus their types.
+    function openTypeMenu() {
+      const menu = document.createElement("div");
+      menu.className = "rtx-remix-select-menu";
+      menu.style.width = `${typeTrigger.offsetWidth}px`;
+
+      typeCategories.forEach(({ name, types }) => {
+        const category = document.createElement("div");
+        category.className = "rtx-remix-select-category";
+        category.textContent = name;
+        menu.appendChild(category);
+
+        types.forEach(({ value, description }) => {
+          const option = document.createElement("button");
+          option.type = "button";
+          option.className = "rtx-remix-select-option";
+          option.classList.toggle("selected", value === selectedType);
+          option.textContent = value;
+          option.title = description || "";
+          option.addEventListener("click", () => {
+            selectedType = value;
+            renderSelectedType();
+            closePopover();
+            hideValidation();
+            syncExportState();
+          });
+          menu.appendChild(option);
+        });
+      });
+
+      openPopoverWithContent(typeTrigger, menu);
+    }
+
+    typeTrigger.addEventListener("click", () => {
+      if (isPopoverOpenFor(typeTrigger)) {
+        closePopover();
+      } else if (typeCategories.length > 0) {
+        openTypeMenu();
+      }
+    });
 
     // Track collapsed groups state for inputs (must be before populateSlotsTable call)
     const inputsCollapsedGroups = new Set();
@@ -216,46 +299,54 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
     const slotData = extractTaggedSlots(app);
     populateSlotsTable(slotData);
 
-    // Validation function
-    function validateFilename(filename) {
-      if (!filename) {
-        showValidation("Filename cannot be empty");
-        return false;
-      }
-
-      const invalidChars = /[<>:"|?*\\/]/;
-      if (invalidChars.test(filename)) {
-        showValidation("Filename contains invalid characters");
-        return false;
-      }
-
-      hideValidation();
-      return true;
-    }
-
     function showValidation(message) {
       validationMsg.textContent = message;
       validationMsg.classList.add("show");
-      input.classList.add("error");
     }
 
     function hideValidation() {
       validationMsg.classList.remove("show");
-      input.classList.remove("error");
     }
 
-    // Real-time validation
-    input.addEventListener("input", () => {
-      const filename = input.value.trim();
-      if (filename) {
-        validateFilename(filename);
-      } else {
-        hideValidation();
+    function setFieldError(field, element, message) {
+      element.textContent = message;
+      element.classList.toggle("show", message !== "");
+      field.classList.toggle("error", message !== "");
+    }
+
+    // Display name and workflow type are mandatory and there is no sane default for the type, so
+    // Export stays disabled until both are set and each field states its own problem in place.
+    function syncExportState() {
+      const nameMessage = displayNameInput.value.trim() ? "" : "Display name is required";
+      const typeMessage =
+        typeCategories.length === 0
+          ? "Workflow types could not be loaded from the ComfyUI server"
+          : selectedType
+            ? ""
+            : "Workflow type is required";
+
+      setFieldError(displayNameInput, displayNameError, nameMessage);
+      setFieldError(typeTrigger, typeError, typeMessage);
+
+      exportBtn.disabled = isLoading || nameMessage !== "" || typeMessage !== "";
+      exportBtn.title = isLoading ? "" : nameMessage || typeMessage;
+
+      if (!isLoading) {
+        // The filename is derived, so it can never contain path characters - just show what it will be
+        infoMsg.textContent = `Saved as ${deriveWorkflowFilename(displayNameInput.value)}.json`;
       }
+    }
+
+    displayNameInput.addEventListener("input", () => {
+      hideValidation();
+      syncExportState();
     });
+
+    syncExportState();
 
     // Close dialog function
     function closeDialog(result) {
+      closePopover();
       overlay.style.animation = "rtx-fadeOut 0.15s ease-out";
       dialog.style.animation = "rtx-slideOut 0.15s ease-out";
 
@@ -266,9 +357,8 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
     }
 
     // Handle export process
-    async function handleExport(filename) {
-      // Strip .json extension if present - backend adds it automatically
-      const workflowName = filename.endsWith(".json") ? filename.slice(0, -5) : filename;
+    async function handleExport() {
+      const workflowName = deriveWorkflowFilename(displayNameInput.value);
 
       setLoading(true, "Checking if file exists...");
 
@@ -297,6 +387,13 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
         // Clean up stale metadata (orphaned groups, empty presets) before serialization
         cleanupDeletedInputs(app);
 
+        // Persist the metadata in the graph so it round trips with the user's own workflow save
+        setWorkflowInfo(app, {
+          displayName: displayNameInput.value.trim(),
+          description: descriptionInput.value.trim(),
+          workflowType: selectedType,
+        });
+
         // Now serialize the graph (which has updated metadata)
         setLoading(true, "Generating workflow data...");
         const promptResult = await app.graphToPrompt();
@@ -312,7 +409,9 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            name: workflowName,
+            displayName: displayNameInput.value.trim(),
+            description: descriptionInput.value.trim(),
+            workflowType: selectedType,
             workflows: {
               api: enrichedPrompt,
               full: workflowGraph,
@@ -383,9 +482,12 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
 
     // Set loading state
     function setLoading(loading, message = "") {
-      input.disabled = loading;
+      isLoading = loading;
+      displayNameInput.disabled = loading;
+      typeTrigger.disabled = loading;
+      descriptionInput.disabled = loading;
       cancelBtn.disabled = loading;
-      exportBtn.disabled = loading;
+      syncExportState();
 
       if (loading) {
         const spinner = cloneTemplate(TEMPLATE_IDS.SPINNER);
@@ -402,7 +504,6 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
         }
       } else {
         exportBtn.textContent = "Export";
-        infoMsg.textContent = "The .json extension will be added automatically if not provided.";
         infoMsg.classList.remove("loading");
       }
     }
@@ -422,31 +523,30 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
     function handleKeyDown(e) {
       if (e.key === "Escape") {
         e.preventDefault();
-        if (!exportBtn.disabled) {
+        // The open type menu owns Escape first, so it closes without dismissing the dialog
+        if (isPopoverOpenFor(typeTrigger)) {
+          closePopover();
+        } else if (!isLoading) {
           closeDialog(false);
         }
-      } else if (e.key === "Enter") {
+      } else if (e.key === "Enter" && e.target !== descriptionInput && e.target !== typeTrigger) {
         e.preventDefault();
         if (!exportBtn.disabled) {
-          const filename = input.value.trim();
-          if (validateFilename(filename)) {
-            handleExport(filename);
-          }
+          handleExport();
         }
       }
     }
 
     // Event listeners
     cancelBtn.addEventListener("click", () => {
-      if (!exportBtn.disabled) {
+      if (!isLoading) {
         closeDialog(false);
       }
     });
 
     exportBtn.addEventListener("click", async () => {
-      const filename = input.value.trim();
-      if (validateFilename(filename)) {
-        await handleExport(filename);
+      if (!exportBtn.disabled) {
+        await handleExport();
       }
     });
 
@@ -774,8 +874,8 @@ export async function showExportDialog({ app, defaultValue = "workflow" } = {}) 
 
     // Focus input and select all text
     setTimeout(() => {
-      input.focus();
-      input.select();
+      displayNameInput.focus();
+      displayNameInput.select();
     }, 100);
   });
 }

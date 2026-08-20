@@ -42,6 +42,22 @@ export function updateGroupOrder(app, groupOrder) {
 // ============================================================
 
 /**
+ * Derive the exported workflow filename (no extension) from its display name.
+ * Mirrors derive_filename() in utils/workflow_metadata.py - keep both in sync.
+ * @param {string} displayName - User facing workflow name
+ * @returns {string} Lowercase underscore separated filename stem
+ */
+export function deriveWorkflowFilename(displayName) {
+  return (
+    (displayName || "")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "") || "workflow"
+  );
+}
+
+/**
  * Add RTX Remix metadata inline to the API workflow prompt
  */
 export function addRemixMetadataToPrompt(apiWorkflow, workflowGraph) {

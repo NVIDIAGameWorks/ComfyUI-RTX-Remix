@@ -15,9 +15,10 @@
 * limitations under the License.
 """
 
-__all__ = ["list_workflows", "get_workflow", "save_workflow"]
+__all__ = ["list_workflow_types", "list_workflows", "get_workflow", "save_workflow"]
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -26,8 +27,19 @@ from aiohttp import web
 import folder_paths
 from server import PromptServer
 
-from .constants import get_base_url, WORKFLOWS_PREFIX, API_WORKFLOWS_DIR, WORKFLOWS_DIR, REMIX_USER_ID
-from .enums import PathType, SourceType
+from .constants import (
+    get_base_url,
+    API_WORKFLOWS_DIR,
+    DESCRIPTION_KEY,
+    DISPLAY_NAME_KEY,
+    REMIX_EXTRA_KEY,
+    REMIX_USER_ID,
+    WORKFLOWS_DIR,
+    WORKFLOWS_PREFIX,
+    WORKFLOW_TYPE_KEY,
+    WORKFLOW_TYPES_BY_CATEGORY,
+)
+from .enums import PathType, SourceType, WorkflowType
 
 prompt_server = PromptServer.instance
 routes = prompt_server.routes
@@ -150,15 +162,105 @@ def _save_workflow_file(file_path: Path, workflow_data: dict[str, Any]):
         json.dump(workflow_data, f, indent=2)
 
 
+def _safe_stem(workflow_name: str) -> str | None:
+    """Return a filename stem safe to join with a workflow directory, or None if it escapes it."""
+    stem = workflow_name.strip()
+    if stem.lower().endswith(".json"):
+        stem = stem[:-5]
+    if not stem or "/" in stem or "\\" in stem or stem.strip(".") == "":
+        return None
+    return stem
+
+
+def _query_values(request: web.Request, key: str) -> list[str]:
+    """Collect repeated and comma-separated query values for a single key."""
+    return [part.strip() for raw in request.query.getall(key, []) for part in raw.split(",") if part.strip()]
+
+
+def _derive_filename(display_name: str) -> str:
+    """
+    Derive the on-disk workflow stem from a display name.
+
+    "PBR Fusion 4 v1.0.2" -> "pbr_fusion_4_v1_0_2". Names with no ASCII alphanumerics
+    (for example non-Latin scripts) collapse to "workflow".
+    """
+    return re.sub(r"[^a-z0-9]+", "_", display_name.strip().lower()).strip("_") or "workflow"
+
+
+def _read_metadata(workflow_data: Any, fallback_display_name: str) -> dict[str, Any]:
+    """
+    Read export metadata from a full workflow, tolerating legacy and malformed data.
+
+    Legacy and malformed fallbacks: displayName -> fallback_display_name (the filename stem),
+    description -> "", workflowType -> None so consumers fall back to their own grouping instead
+    of guessing a type.
+    """
+    extra = workflow_data.get("extra") if isinstance(workflow_data, dict) else None
+    remix = extra.get(REMIX_EXTRA_KEY) if isinstance(extra, dict) else None
+    remix = remix if isinstance(remix, dict) else {}
+
+    display_name = remix.get(DISPLAY_NAME_KEY)
+    description = remix.get(DESCRIPTION_KEY)
+    try:
+        workflow_type = WorkflowType(remix.get(WORKFLOW_TYPE_KEY))
+    except (ValueError, TypeError):  # unknown value, missing key, or unhashable garbage
+        workflow_type = None
+
+    return {
+        DISPLAY_NAME_KEY: (
+            display_name.strip() if isinstance(display_name, str) and display_name.strip() else fallback_display_name
+        ),
+        DESCRIPTION_KEY: description if isinstance(description, str) else "",
+        WORKFLOW_TYPE_KEY: workflow_type.value if workflow_type else None,
+    }
+
+
+@routes.get(f"{get_base_url()}/{WORKFLOWS_PREFIX}/types")
+async def list_workflow_types(_request: web.Request) -> web.Response:
+    """
+    List the valid workflow types, grouped by category and in display order.
+
+    Returns:
+        JSON response containing a "categories" list of {"name": ..., "types": [...]} entries, where
+        each type is {"value": ..., "description": ...}. A type value is its own label, so clients
+        display it as it comes, and the description is its tooltip.
+    """
+    categories = [
+        {
+            "name": category,
+            "types": [{"value": item.value, DESCRIPTION_KEY: description} for item, description in types.items()],
+        }
+        for category, types in WORKFLOW_TYPES_BY_CATEGORY.items()
+    ]
+    return _success_response({"categories": categories})
+
+
 @routes.get(f"{get_base_url()}/{WORKFLOWS_PREFIX}")
-async def list_workflows(_request: web.Request) -> web.Response:
+async def list_workflows(request: web.Request) -> web.Response:
     """
     List all workflows from both user and rtx-remix node pack directories.
 
+    Query Parameters (all optional, repeatable and comma-separated):
+        pathType: Keep only these path types ("api", "full").
+        sourceType: Keep only these sources ("user", "rtx-remix").
+        workflowType: Keep only workflows with these types, matched exactly as the "types" endpoint
+            spells them, for example "Material Generation". Workflows without a type never match.
+        search: Case-insensitive substring matched against the filename, display name and
+            description.
+
     Returns:
         JSON response containing workflows organized by path type first,
-        then by source (user vs rtx-remix)
+        then by source (user vs rtx-remix). Filtered out buckets are present but empty.
     """
+    try:
+        path_filter = {PathType(value.lower()) for value in _query_values(request, "pathType")}
+        source_filter = {SourceType(value.lower()) for value in _query_values(request, "sourceType")}
+        type_filter = {WorkflowType(value).value for value in _query_values(request, WORKFLOW_TYPE_KEY)}
+    except ValueError as e:
+        return _error_response(f"Invalid filter value: {str(e)}", status=400)
+
+    search = request.query.get("search", "").strip().lower()
+
     # Initialize structure: path_type -> source -> list of workflows
     workflows = {
         PathType.API.value: {
@@ -174,9 +276,29 @@ async def list_workflows(_request: web.Request) -> web.Response:
     # Get all workflow directories (path_type -> source -> directory)
     all_directories = _get_workflow_directories()
 
+    # Metadata only exists in the full workflows (API workflow files are flat prompt dicts with no
+    # "extra"), so index it by filename stem and reuse it for the matching API entries, which the
+    # save endpoint always writes under the same stem.
+    # ponytail: parses every full workflow per call, add an mtime keyed cache if profiling shows it
+    metadata_by_source: dict[SourceType, dict[str, dict[str, Any]]] = {}
+    for source, directory in all_directories[PathType.FULL].items():
+        entries: dict[str, dict[str, Any]] = {}
+        if (not source_filter or source in source_filter) and directory.exists():
+            for file_path in sorted(directory.glob("*.json")):
+                try:
+                    workflow_data = _load_workflow_file(file_path)
+                except (OSError, IOError, json.JSONDecodeError):
+                    workflow_data = {}
+                entries[file_path.stem] = _read_metadata(workflow_data, file_path.stem)
+        metadata_by_source[source] = entries
+
     # Iterate through path types and sources
     for path_type, source_dirs in all_directories.items():
+        if path_filter and path_type not in path_filter:
+            continue
         for source, directory in source_dirs.items():
+            if source_filter and source not in source_filter:
+                continue
             if not directory.exists():
                 continue
 
@@ -184,17 +306,27 @@ async def list_workflows(_request: web.Request) -> web.Response:
                 try:
                     stat = file_path.stat()
                     relative_path = file_path.relative_to(_get_comfyui_directory())
-                    workflows[path_type.value][source.value].append(
-                        {
-                            "name": file_path.stem,
-                            "path": relative_path.as_posix(),
-                            "size": stat.st_size,
-                            "modified": stat.st_mtime,
-                        }
-                    )
                 except (OSError, IOError):
                     # Skip files that can't be accessed
                     continue
+
+                metadata = metadata_by_source[source].get(file_path.stem) or _read_metadata({}, file_path.stem)
+                if type_filter and metadata[WORKFLOW_TYPE_KEY] not in type_filter:
+                    continue
+                if search:
+                    haystack = f"{file_path.stem} {metadata[DISPLAY_NAME_KEY]} {metadata[DESCRIPTION_KEY]}".lower()
+                    if search not in haystack:
+                        continue
+
+                workflows[path_type.value][source.value].append(
+                    {
+                        "name": file_path.stem,
+                        "path": relative_path.as_posix(),
+                        "size": stat.st_size,
+                        "modified": stat.st_mtime,
+                        **metadata,
+                    }
+                )
 
     return _success_response({"workflows": workflows})
 
@@ -246,9 +378,10 @@ async def get_workflow(request: web.Request) -> web.Response:
                 status=400,
             )
 
-    # Remove extension if provided
-    if workflow_name.lower().endswith(".json"):
-        workflow_name = workflow_name[:-5]
+    stem = _safe_stem(workflow_name)
+    if stem is None:
+        return _error_response(f"Invalid workflow name: {workflow_name}", status=400)
+    workflow_name = stem
 
     all_directories = _get_workflow_directories()
     workflow_directory = all_directories[path_type][source_type]
@@ -288,7 +421,9 @@ async def save_workflow(request: web.Request) -> web.Response:
         rtx-remix node pack.
 
     Request body:
-        name: Name of the workflow to save
+        displayName: User facing workflow name, the filename is derived from it
+        description: Workflow description, shown as the workflow tooltip in the RTX Remix Toolkit
+        workflowType: One of the type values returned by the workflow "types" endpoint
         workflows: Dictionary containing the workflow data for each path type
 
     Returns:
@@ -299,15 +434,26 @@ async def save_workflow(request: web.Request) -> web.Response:
     except json.JSONDecodeError:
         return _error_response("Invalid JSON in request body", status=400)
 
-    workflow_name = data.get("name", "").strip()
+    display_name = data.get(DISPLAY_NAME_KEY)
+    display_name = display_name.strip() if isinstance(display_name, str) else ""
+    description = data.get(DESCRIPTION_KEY)
+    description = description.strip() if isinstance(description, str) else ""
+    type_value = data.get(WORKFLOW_TYPE_KEY)
     workflows = data.get("workflows", {})
 
-    if not workflow_name:
-        return _error_response("Workflow name is required", status=400)
+    if not display_name:
+        return _error_response("Workflow display name is required", status=400)
 
-    # Remove extension if provided
-    if workflow_name.lower().endswith(".json"):
-        workflow_name = workflow_name[:-5]
+    try:
+        workflow_type = WorkflowType(type_value)
+    except (ValueError, TypeError):
+        return _error_response(
+            f"Invalid workflow type: {type_value}. "
+            f"Valid workflow types are: {', '.join([item.value for item in WorkflowType])}",
+            status=400,
+        )
+
+    workflow_name = _derive_filename(display_name)
 
     # Get all workflow directories (path_type -> source -> directory)
     all_directories = _get_workflow_directories()
@@ -331,6 +477,21 @@ async def save_workflow(request: web.Request) -> web.Response:
             user_workflow_dir = all_directories[path_type][SourceType.USER]
             file_path = Path((user_workflow_dir / workflow_name).as_posix() + ".json")
 
+            # Stamp the metadata into the full workflow so the workflow list is correct
+            # regardless of what the client serialized
+            if path_type is PathType.FULL and isinstance(workflow_data, dict):
+                extra = workflow_data.get("extra")
+                if not isinstance(extra, dict):
+                    extra = {}
+                    workflow_data["extra"] = extra
+                remix_extra = extra.get(REMIX_EXTRA_KEY)
+                if not isinstance(remix_extra, dict):
+                    remix_extra = {}
+                    extra[REMIX_EXTRA_KEY] = remix_extra
+                remix_extra[DISPLAY_NAME_KEY] = display_name
+                remix_extra[DESCRIPTION_KEY] = description
+                remix_extra[WORKFLOW_TYPE_KEY] = workflow_type.value
+
             _save_workflow_file(file_path, workflow_data)
 
             relative_path = file_path.relative_to(_get_comfyui_directory())
@@ -342,6 +503,9 @@ async def save_workflow(request: web.Request) -> web.Response:
             {
                 "message": "Workflow saved successfully",
                 "name": workflow_name,
+                DISPLAY_NAME_KEY: display_name,
+                DESCRIPTION_KEY: description,
+                WORKFLOW_TYPE_KEY: workflow_type.value,
                 "workflows": response_data,
             }
         )
