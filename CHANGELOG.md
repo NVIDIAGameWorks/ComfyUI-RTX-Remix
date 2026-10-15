@@ -15,6 +15,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [3.1.1] - 2026-10-15
+
+### Changed
+
+- **README**: Removes the integration beta note. Documents the missing REST API nodes
+  (`String Concatenate`, `Switch`, `Invert Boolean Value`, `String to List`, `Delete File`) and the PBR Fusion 4
+  example workflow. The bundled integration workflows show their Display Name (`PBRify`, `PBR Fusion 4`) and their
+  Workflow Type
+
+### Fixed
+
+- **README**: The minimum ComfyUI version matches `pyproject.toml` (`v0.3.72`). The manual install step uses
+  `python -m pip install -r requirements.txt` with the Python interpreter of ComfyUI, instead of `install.bat` and
+  the `install.sh` script that does not exist
+
+### Removed
+
+- `install.bat`. It worked only for ComfyUI Portable. Install the dependencies with
+  `python -m pip install -r requirements.txt` and the Python interpreter that runs ComfyUI
+
 ## [3.1.0] - 2026-08-19
 
 ### Added
