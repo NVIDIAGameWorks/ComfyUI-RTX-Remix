@@ -4,11 +4,6 @@
 
 ComfyUI custom nodes for creating AI texture processing workflows that integrate seamlessly with the NVIDIA RTX Remix Toolkit.
 
-> [!NOTE]  
-> The RTX Remix Toolkit Integration is currently a work in progress and is not yet ready for production use.
-> Beta releases may be available for testing and feedback on the [RTX Remix Toolkit GitHub repository](https://github.com/NVIDIAGameWorks/toolkit-remix).
-> If not, please check back later or contact the NVIDIA RTX Remix team on the [RTX Remix Showcase Discord server](https://discord.gg/c7J6gUhXMk).
-
 ## Installation
 
 ### Simple (Recommended)
@@ -21,12 +16,17 @@ ComfyUI custom nodes for creating AI texture processing workflows that integrate
 
 1. Navigate to your `/ComfyUI/custom_nodes/` folder
 2. Git clone this repo: `git clone https://github.com/NVIDIA/ComfyUI-RTX_Remix.git comfyui-rtx_remix`
-3. Navigate to your `comfyui-rtx_remix` folder and run `install.bat` (Windows) or `install.sh` (Linux/Mac)
+3. In your `comfyui-rtx_remix` folder, install the Python dependencies with the Python interpreter that runs ComfyUI.
+   Use `python -m pip`, so that pip installs into the ComfyUI environment and not into a different Python:
+   - ComfyUI Portable (Windows): `..\..\..\python_embeded\python.exe -m pip install -r requirements.txt`
+   - ComfyUI in a virtual environment: activate the ComfyUI environment, then run `python -m pip install -r requirements.txt`
 4. Restart ComfyUI
 
 ## Requirements
 
-- **ComfyUI `v0.3.48` or newer**. Nodes V3 support was introduced in [`v0.3.48`](https://github.com/Comfy-Org/ComfyUI/releases/tag/v0.3.48), and this pack uses the V3 schema API.
+- **ComfyUI `v0.3.72` or newer**. This pack uses the Nodes V3 schema API, and
+  [`v0.3.72`](https://github.com/Comfy-Org/ComfyUI/releases/tag/v0.3.72) is the first release that bundles the
+  frontend 1.30.0 or newer that the pack requires.
 
 ## Multiple Approaches to Use These Nodes
 
@@ -387,9 +387,11 @@ The recommended node for integration workflows. This node provides the cleanest 
 
 We provide example workflows demonstrating both integration and REST API approaches.
 
-#### Integration Workflow: PBRify_Remix
+#### PBRify
 
 **File:** `./workflows/integration_pbrify.json`
+
+**Workflow Type:** Material Generation
 
 A complete example showing the integration workflow approach. This workflow:
 
@@ -403,7 +405,18 @@ A complete example showing the integration workflow approach. This workflow:
 1. Load the workflow in ComfyUI
 2. Install [PBRify_Remix](https://github.com/Kim2091/PBRify_Remix) models (follow their installation guide)
 3. The workflow is already tagged and ready to use
-4. In the RTX Remix Toolkit, select your exported workflow from the workflow menu
+4. In the RTX Remix Toolkit, select **PBRify** in the workflow menu
+
+#### PBR Fusion 4
+
+**File:** `./workflows/PBRFusion4_v1.0.2.json`
+
+**Workflow Type:** Material Generation
+
+Upscales a single color texture and creates a complete PBR material from it, with the
+[PBR Fusion 4](https://huggingface.co/NightRaven109/PBRFusion4) model. The workflow uses `RTX Remix Download Model`
+nodes, so ComfyUI downloads the missing models the first time the workflow runs. It saves its outputs with tagged
+`RTX Remix Save Texture` nodes.
 
 ## REST API Workflow Guide (Advanced)
 
@@ -457,6 +470,14 @@ All REST API nodes are located under the `RTX Remix > REST API` category and pre
 - **🌐 RTX Remix String Constant**: Declare a string constant
 - **🌐 RTX Remix Start Context**: Use this node to begin a graph, then pass context along to determine execution order
 - **🌐 RTX Remix End Context**: Put this node at the end of your graph to evaluate prior nodes
+- **🌐 RTX Remix String Concatenate**: Join two strings
+- **🌐 RTX Remix Switch**: Output one of two values, selected by a boolean
+- **🌐 RTX Remix Invert Boolean Value**: Change `True` to `False`, or `False` to `True`
+- **🌐 RTX Remix String to List**: Convert a string into a list output
+
+### File Nodes
+
+- **🌐 RTX Remix Delete File**: Delete a file from the disk. `fail_on_error` stops the workflow when the delete fails
 
 ### Texture Nodes
 
