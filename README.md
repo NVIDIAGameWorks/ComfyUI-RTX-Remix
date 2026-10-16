@@ -8,9 +8,15 @@ ComfyUI custom nodes for creating AI texture processing workflows that integrate
 
 ### Simple (Recommended)
 
-1. Open ComfyUI Manager
-2. Search for "RTX Remix" or "comfyui-rtx_remix"
-3. Click **Install** and restart ComfyUI
+1. Open the ComfyUI Manager (the **Manager** button in the top menu bar).
+2. Search for "RTX Remix" in the search field of the ComfyUI Manager.
+3. Find **NVIDIA RTX Remix Nodes** in the search results, then click its **Install** button.
+4. Accept the restart when ComfyUI asks you to restart the backend.
+5. Click the **Templates** button in the left sidebar after the restart.
+6. Scroll to the bottom of the left panel, then click **ComfyUI-RTX-Remix**. The template workflows of the node pack
+   appear.
+7. Check the installation status in the ComfyUI Manager and the ComfyUI backend startup log for import errors if the
+   templates do not appear.
 
 ### Advanced
 
