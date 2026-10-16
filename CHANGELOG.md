@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **README**: Gives the exact ComfyUI Manager steps to install the node pack: the **NVIDIA RTX Remix Nodes** package,
+  the backend restart, and the **ComfyUI-RTX-Remix** templates that confirm the installation.
+
 ### Fixed
 
 ### Removed
